@@ -1,0 +1,43 @@
+<project name="MySpringBootApp" basedir="." default="build">
+
+    <!-- Define properties -->
+    <property name="src.dir" value="src/main/java" />
+    <property name="build.dir" value="target" />
+    <property name="jar.name" value="my-spring-boot-app.jar" />
+
+    <!-- Define classpath -->
+    <path id="classpath">
+        <fileset dir="${build.dir}/lib">
+            <include name="*.jar" />
+        </fileset>
+    </path>
+
+    <!-- Clean target -->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+    <!-- Compile Java code -->
+    <target name="compile" depends="clean">
+        <mkdir dir="${build.dir}/classes" />
+        <javac srcdir="${src.dir}" destdir="${build.dir}/classes" includeantruntime="false">
+            <classpath refid="classpath" />
+        </javac>
+    </target>
+
+    <!-- Create a JAR file -->
+    <target name="jar" depends="compile">
+        <mkdir dir="${build.dir}/lib" />
+        <jar destfile="${build.dir}/lib/${jar.name}" basedir="${build.dir}/classes">
+            <manifest>
+                <attribute name="Main-Class" value="com.example.MySpringBootApplication" />
+            </manifest>
+        </jar>
+    </target>
+
+    <!-- Build the project -->
+    <target name="build" depends="jar">
+        <echo message="Build successful!" />
+    </target>
+
+</project>
