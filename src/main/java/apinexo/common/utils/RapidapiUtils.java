@@ -28,7 +28,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -74,7 +73,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import org.yaml.snakeyaml.Yaml;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -653,40 +651,6 @@ public class RapidapiUtils {
         return UUID.randomUUID().toString();
     }
 
-    public String convertObjNodeToParams(ObjectNode objectNode) {
-        try {
-            StringBuilder paramsBuilder = new StringBuilder();
-            Iterator<Map.Entry<String, JsonNode>> fields = objectNode.fields();
-            while (fields.hasNext()) {
-                Map.Entry<String, JsonNode> entry = fields.next();
-                String key = entry.getKey();
-                String value = "";
-                JsonNode valueNode = entry.getValue();
-                if (valueNode instanceof ArrayNode && !valueNode.isEmpty()) {
-                    List<String> list = new ArrayList<>();
-                    for (JsonNode node : valueNode) {
-                        if (Objects.isNull(node) || node.isNull()) {
-                            list.add("");
-                        } else {
-                            list.add(node.asText());
-                        }
-                    }
-                    value = convertLstToStr(list, ",");
-                } else {
-                    value = valueNode.asText();
-                }
-                if (paramsBuilder.length() > 0) {
-                    paramsBuilder.append("&");
-                }
-                paramsBuilder.append(key).append("=").append(value);
-            }
-
-            return paramsBuilder.toString();
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
     public String convertObjNodeToParams(JsonNode jsonNode) {
         try {
             if (jsonNode instanceof ObjectNode) {
@@ -711,29 +675,6 @@ public class RapidapiUtils {
         }
     }
 
-    public <T> URI convertToUri(String endpoint, T clazz) {
-        try {
-            Map<String, String> params = objectMapper.convertValue(clazz, new TypeReference<Map<String, String>>() {
-            });
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(endpoint);
-            params.forEach(builder::queryParam);
-            URI uri = builder.build().encode().toUri();
-            return uri;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    public <T> URI convertToUri(String fullUrl) {
-        try {
-            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(fullUrl);
-            URI uri = builder.build().encode().toUri();
-            return uri;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
     public String convertObjNodeToParamsMultiParam(Object obj) {
         try {
             if (Objects.isNull(obj)) {
@@ -753,46 +694,6 @@ public class RapidapiUtils {
                 return convertObjNodeToParamsMultiParam(objectNode);
             }
             return "";
-        } catch (Exception e) {
-            return "";
-        }
-    }
-
-    private String convertObjNodeToParamsMultiParam(ObjectNode objectNode) {
-        try {
-            StringBuilder paramsBuilder = new StringBuilder();
-            Iterator<Map.Entry<String, JsonNode>> fields = objectNode.fields();
-            while (fields.hasNext()) {
-                Map.Entry<String, JsonNode> entry = fields.next();
-                String key = entry.getKey();
-                String value = "";
-                JsonNode valueNode = entry.getValue();
-                boolean appendKey = true;
-                if (valueNode instanceof ArrayNode && !valueNode.isEmpty()) {
-                    List<String> list = new ArrayList<>();
-                    for (JsonNode node : valueNode) {
-                        if (Objects.isNull(node) || node.isNull()) {
-                            list.add("");
-                        } else {
-                            list.add(node.asText());
-                        }
-                    }
-                    value = list.stream().map(listItem -> key + "=" + listItem).collect(Collectors.joining("&"));
-                    appendKey = false;
-                } else {
-                    value = valueNode.asText();
-                }
-                if (paramsBuilder.length() > 0) {
-                    paramsBuilder.append("&");
-                }
-                if (appendKey) {
-                    paramsBuilder.append(key).append("=").append(value);
-                } else {
-                    paramsBuilder.append(value);
-                }
-            }
-
-            return paramsBuilder.toString();
         } catch (Exception e) {
             return "";
         }
@@ -1213,21 +1114,6 @@ public class RapidapiUtils {
             currentNode = currentNode.get(fieldName);
         }
         return currentNode;
-    }
-
-    public JsonNode nestedNodeOne(JsonNode jsonNode, String fieldName) {
-        if (Objects.isNull(jsonNode) || jsonNode.isEmpty()) {
-            return jsonNode;
-        }
-        Iterator<Map.Entry<String, JsonNode>> fieldsIterator = jsonNode.fields();
-        while (fieldsIterator.hasNext()) {
-            Map.Entry<String, JsonNode> field = fieldsIterator.next();
-            String key = field.getKey();
-            if (key.startsWith(fieldName)) {
-                return field.getValue();
-            }
-        }
-        return jsonNode;
     }
 
     public JsonNode convertYamlToJson(String yamlString) throws JsonProcessingException {
