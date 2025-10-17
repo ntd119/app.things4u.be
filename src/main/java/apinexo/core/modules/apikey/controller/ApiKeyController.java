@@ -19,5 +19,4 @@ public class ApiKeyController {
     public ResponseEntity<Object> getOrCreateApiKey(@AuthenticationPrincipal Jwt jwt) {
         return apiKeyService.getOrCreateApiKey(jwt);
     }
-
 }

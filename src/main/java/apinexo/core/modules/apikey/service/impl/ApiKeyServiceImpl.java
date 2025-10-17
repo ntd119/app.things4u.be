@@ -1,10 +1,8 @@
 package apinexo.core.modules.apikey.service.impl;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
@@ -21,13 +19,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ApiKeyServiceImpl implements ApiKeyService {
 
-    private final ApiKeyRepository repository;
+    private final ApiKeyRepository apiKeyRepository;
 
     @Override
     public ResponseEntity<Object> getOrCreateApiKey(Jwt jwt) {
         try {
             String userId = jwt.getClaimAsString("sub");
-            Optional<ApiKey> existing = repository.findByUserIdAndActiveTrue(userId);
+            Optional<ApiKey> existing = apiKeyRepository.findByUserIdAndActiveTrue(userId);
             String apikey = null;
             if (existing.isPresent()) {
                 apikey = existing.get().getKeyValue();
@@ -43,29 +41,37 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     }
 
     private String generateApiKey(String userId, String issuer, String azp) throws NoSuchAlgorithmException {
-        String raw = userId + "|" + issuer + "|" + azp + "|" + System.currentTimeMillis();
-        MessageDigest digest = MessageDigest.getInstance("SHA-256");
-        byte[] hash = digest.digest(raw.getBytes(StandardCharsets.UTF_8));
-        String encoded = Base64.getUrlEncoder().withoutPadding().encodeToString(hash);
-        String apiKey = "ak_" + encoded.substring(0, 40).toLowerCase();
+        String prefix = "ak_";
+        String charset = "abcdefghijklmnopqrstuvwxyz0123456789";
+        int keyLength = 47;
+        SecureRandom random = new SecureRandom();
+        String apiKey;
+        do {
+            StringBuilder sb = new StringBuilder(prefix);
+            for (int i = 0; i < keyLength; i++) {
+                int index = random.nextInt(charset.length());
+                sb.append(charset.charAt(index));
+            }
+            apiKey = sb.toString();
+        } while (apiKeyRepository.existsByKeyValue(apiKey));
         ApiKey entity = ApiKey.builder().keyValue(apiKey).userId(userId).active(true).createdAt(Instant.now()).build();
-        repository.save(entity);
+        apiKeyRepository.save(entity);
         return apiKey;
     }
 
     public boolean validateApiKey(String apiKey) {
-        return repository.findByKeyValueAndActiveTrue(apiKey).isPresent();
+        return apiKeyRepository.findByKeyValueAndActiveTrue(apiKey).isPresent();
     }
 
     public boolean revokeApiKey(String apiKey) {
-        Optional<ApiKey> opt = repository.findByKeyValueAndActiveTrue(apiKey);
+        Optional<ApiKey> opt = apiKeyRepository.findByKeyValueAndActiveTrue(apiKey);
         if (opt.isEmpty())
             return false;
 
         ApiKey key = opt.get();
         key.setActive(false);
         key.setRevokedAt(Instant.now());
-        repository.save(key);
+        apiKeyRepository.save(key);
         return true;
     }
 
