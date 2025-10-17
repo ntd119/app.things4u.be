@@ -58,21 +58,4 @@ public class ApiKeyServiceImpl implements ApiKeyService {
         apiKeyRepository.save(entity);
         return apiKey;
     }
-
-    public boolean validateApiKey(String apiKey) {
-        return apiKeyRepository.findByKeyValueAndActiveTrue(apiKey).isPresent();
-    }
-
-    public boolean revokeApiKey(String apiKey) {
-        Optional<ApiKey> opt = apiKeyRepository.findByKeyValueAndActiveTrue(apiKey);
-        if (opt.isEmpty())
-            return false;
-
-        ApiKey key = opt.get();
-        key.setActive(false);
-        key.setRevokedAt(Instant.now());
-        apiKeyRepository.save(key);
-        return true;
-    }
-
 }
