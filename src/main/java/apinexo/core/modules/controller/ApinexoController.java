@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 @RestController
 @RequestMapping("/api")
-public class UserController {
+public class ApinexoController {
     
     @GetMapping("/public/hello")
     public String publicHello() {
@@ -22,8 +22,7 @@ public class UserController {
         return Map.of(
             "sub", jwt.getSubject(),
             "email", jwt.getClaim("email"),
-            "scope", jwt.getClaim("scope"),
-            "issuer", jwt.getIssuer().toString()
+            "scope", jwt.getClaim("scope")
         );
     }
 
