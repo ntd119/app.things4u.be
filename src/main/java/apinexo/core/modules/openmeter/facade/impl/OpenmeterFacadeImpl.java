@@ -1,6 +1,7 @@
 package apinexo.core.modules.openmeter.facade.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
     @Autowired
     private ApinexoUtils utils;
 
+    @Value("${openmeter.secret-token}")
+    private String secretToken;
+
     @Override
     public ResponseEntity<Object> token() {
         try {
@@ -26,6 +30,7 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
                     .allowedMeterSlugs(utils.createList("api_requests_total")).build();
 
             HttpHeaders headers = utils.buildHeader();
+            headers.setBearerAuth(secretToken);
             String url = "https://openmeter.cloud/api/v1/portal/tokens";
             JsonNode response = executePostRequest(JsonNode.class, url, body, headers);
             return ResponseEntity.ok(utils.ok(response));
