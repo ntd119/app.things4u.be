@@ -85,7 +85,7 @@ import apinexo.common.dtos.Response;
 
 @Component
 @Primary
-public class RapidapiUtils {
+public class ApinexoUtils {
 
     @Autowired
     private RestTemplate restTemplate;
