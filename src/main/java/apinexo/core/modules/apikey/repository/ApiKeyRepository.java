@@ -1,4 +1,4 @@
-package apinexo.core.modules.repository;
+package apinexo.core.modules.apikey.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
