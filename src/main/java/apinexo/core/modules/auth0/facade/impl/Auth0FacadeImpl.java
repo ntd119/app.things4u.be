@@ -30,7 +30,7 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
     @Override
     public JsonNode generateToken() {
         Auth0GenerateTokenClientRequest body = Auth0GenerateTokenClientRequest.builder().clientId(clientId)
-                .clientSecret(clientSecret).audience(audience).grantType("client_credentials").build();
+                .clientSecret(clientSecret).audience(audience + "/api/v2/").grantType("client_credentials").build();
         HttpHeaders headers = utils.buildHeader();
         String url = audience + "/oauth/token";
         JsonNode response = executePostRequest(JsonNode.class, url, utils.convertDtoToJson(body), headers);

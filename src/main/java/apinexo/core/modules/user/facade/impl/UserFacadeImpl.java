@@ -42,6 +42,10 @@ public class UserFacadeImpl implements UserFacade {
                     return ResponseEntity.badRequest().body(new ApiException("The user does not exist"));
                 }
 
+                if (utils.isArrayNode(user)) {
+                    user = user.get(0);
+                }
+
                 // userId
                 String userId = this.generateHexId();
 
