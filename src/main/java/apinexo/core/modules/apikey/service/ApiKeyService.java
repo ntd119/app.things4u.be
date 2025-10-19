@@ -1,9 +1,14 @@
 package apinexo.core.modules.apikey.service;
 
-import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.jwt.Jwt;
+import java.util.Optional;
+
+import apinexo.core.modules.entity.ApiKey;
 
 public interface ApiKeyService {
 
-    public ResponseEntity<Object> getOrCreateApiKey(Jwt jwt);
+    Optional<ApiKey> findByUserIdAndActiveTrue(String userId);
+
+    boolean existsByKeyValue(String apiKey);
+
+    ApiKey save(ApiKey entity);
 }
