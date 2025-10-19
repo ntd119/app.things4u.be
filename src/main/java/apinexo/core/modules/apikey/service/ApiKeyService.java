@@ -2,7 +2,7 @@ package apinexo.core.modules.apikey.service;
 
 import java.util.Optional;
 
-import apinexo.core.modules.entity.ApiKey;
+import apinexo.core.modules.apikey.entity.ApiKey;
 
 public interface ApiKeyService {
 

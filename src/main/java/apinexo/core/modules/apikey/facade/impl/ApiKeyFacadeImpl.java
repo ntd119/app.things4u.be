@@ -10,9 +10,9 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import apinexo.core.modules.apikey.dto.ApikeyResponse;
+import apinexo.core.modules.apikey.entity.ApiKey;
 import apinexo.core.modules.apikey.facade.ApiKeyFacade;
 import apinexo.core.modules.apikey.service.ApiKeyService;
-import apinexo.core.modules.entity.ApiKey;
 import lombok.RequiredArgsConstructor;
 
 @Component

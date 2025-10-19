@@ -2,7 +2,7 @@ package apinexo.core.modules.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import apinexo.core.modules.entity.ApiKey;
+import apinexo.core.modules.apikey.entity.ApiKey;
 
 import java.util.Optional;
 

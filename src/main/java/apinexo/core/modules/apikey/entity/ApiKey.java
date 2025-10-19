@@ -1,4 +1,4 @@
-package apinexo.core.modules.entity;
+package apinexo.core.modules.apikey.entity;
 
 import java.time.Instant;
 
