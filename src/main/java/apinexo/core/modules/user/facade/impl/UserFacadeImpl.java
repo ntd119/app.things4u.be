@@ -46,7 +46,7 @@ public class UserFacadeImpl implements UserFacade {
 
                  entity = UserEntity.builder().userId(userId).email(email).emailVerified(emailVerified)
                         .firstName(firstName).lastName(lastName).picture(picture).auth0UserId(auth0UserId).build();
-                service.save(entity);
+                 entity = service.save(entity);
             }
             return ResponseEntity.ok(entity);
         } catch (Exception ex) {
