@@ -24,7 +24,7 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     public boolean existsByKeyValue(String apiKey) {
         return apiKeyRepository.existsByKeyValue(apiKey);
     }
-    
+
     @Override
     public ApiKey save(ApiKey entity) {
         return apiKeyRepository.save(entity);
