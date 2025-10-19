@@ -38,12 +38,12 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
     }
 
     @Override
-    public JsonNode getUser(String email) {
+    public JsonNode getUser(String sub) {
         JsonNode tokenObj = this.generateToken();
         String token = utils.jsonNodeAt(tokenObj, "/access_token", String.class);
         HttpHeaders headers = utils.buildHeader();
         headers.setBearerAuth(token);
-        String url = audience + "users?q=email:\"" + email + "\"&search_engine=v3";
+        String url = audience + "users?q=user_id:\"" + sub + "\"&search_engine=v3";
         JsonNode response = executeGetRequest(JsonNode.class, url, null, headers);
         return response;
     }

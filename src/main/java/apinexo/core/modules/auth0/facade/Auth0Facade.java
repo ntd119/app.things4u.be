@@ -6,5 +6,5 @@ public interface Auth0Facade {
 
     JsonNode generateToken();
 
-    JsonNode getUser(String email);
+    JsonNode getUser(String sub);
 }

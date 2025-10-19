@@ -16,8 +16,8 @@ public class UserServiceImpl implements UserService {
     private final UserRepository repository;
 
     @Override
-    public Optional<UserEntity> findByEmail(String userId) {
-        return repository.findByEmail(userId);
+    public Optional<UserEntity> findBySub(String sub) {
+        return repository.findBySub(sub);
     }
 
     @Override

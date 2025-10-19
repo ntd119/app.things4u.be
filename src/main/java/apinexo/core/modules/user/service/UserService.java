@@ -6,7 +6,7 @@ import apinexo.core.modules.user.entity.UserEntity;
 
 public interface UserService {
 
-    Optional<UserEntity> findByEmail(String email);
+    Optional<UserEntity> findBySub(String sub);
 
     Optional<UserEntity> findByid(String id);
 
