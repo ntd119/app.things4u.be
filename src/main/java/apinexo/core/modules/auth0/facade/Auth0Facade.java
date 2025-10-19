@@ -5,4 +5,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 public interface Auth0Facade {
 
     JsonNode generateToken();
+
+    JsonNode getUser(String email);
 }

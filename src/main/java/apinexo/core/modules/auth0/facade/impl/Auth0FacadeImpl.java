@@ -36,4 +36,15 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
         JsonNode response = executePostRequest(JsonNode.class, url, body, headers);
         return response;
     }
+
+    @Override
+    public JsonNode getUser(String email) {
+        JsonNode tokenObj = this.generateToken();
+        String token = utils.jsonNodeAt(tokenObj, "/access_token", String.class);
+        HttpHeaders headers = utils.buildHeader();
+        headers.setBearerAuth(token);
+        String url = audience + "users?q=email:\"" + email + "\"&search_engine=v3";
+        JsonNode response = executeGetRequest(JsonNode.class, url, null, headers);
+        return response;
+    }
 }
