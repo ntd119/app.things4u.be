@@ -24,7 +24,7 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
     @Value("${auth0.client-secret}")
     private String clientSecret;
 
-    @Value("${auth0.auth0.audience}")
+    @Value("${auth0.audience}")
     private String audience;
 
     @Override

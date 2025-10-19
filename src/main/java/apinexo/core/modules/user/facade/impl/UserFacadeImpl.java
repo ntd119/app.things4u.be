@@ -32,7 +32,7 @@ public class UserFacadeImpl implements UserFacade {
     public ResponseEntity<Object> getUser(Jwt jwt) {
         try {
             String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> existing = service.findBySub(sub);
+            Optional<UserEntity> existing = service.findByAuth0UserId(sub);
             UserEntity entity = null;
             if (existing.isPresent()) {
                 entity = existing.get();
