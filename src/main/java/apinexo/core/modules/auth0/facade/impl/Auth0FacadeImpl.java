@@ -32,8 +32,8 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
         Auth0GenerateTokenClientRequest body = Auth0GenerateTokenClientRequest.builder().clientId(clientId)
                 .clientSecret(clientSecret).audience(audience).grantType("client_credentials").build();
         HttpHeaders headers = utils.buildHeader();
-        String url = "https://openmeter.cloud/api/v1/portal/tokens";
-        JsonNode response = executePostRequest(JsonNode.class, url, body, headers);
+        String url = audience + "/oauth/token";
+        JsonNode response = executePostRequest(JsonNode.class, url, utils.convertDtoToJson(body), headers);
         return response;
     }
 
@@ -43,7 +43,7 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
         String token = utils.jsonNodeAt(tokenObj, "/access_token", String.class);
         HttpHeaders headers = utils.buildHeader();
         headers.setBearerAuth(token);
-        String url = audience + "users?q=user_id:\"" + sub + "\"&search_engine=v3";
+        String url = audience + "/api/v2/users?q=user_id:\"" + sub + "\"&search_engine=v3";
         JsonNode response = executeGetRequest(JsonNode.class, url, null, headers);
         return response;
     }
