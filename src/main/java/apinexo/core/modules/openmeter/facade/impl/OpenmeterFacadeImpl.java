@@ -71,7 +71,7 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             OpenmeterSendEventClientRequest body = OpenmeterSendEventClientRequest.builder().specversion("1.0")
                     .type("request").id(utils.uuidRandom()).time(formatDate + "Z").source("api_requests_total")
                     .subject(user.get().getUserId()).data(OpenmeterSendEventClientRequest.DataContent.builder()
-                            .value("1").method("method").route("route").build())
+                            .value("1").apiName("jsearch").build())
                     .build();
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
