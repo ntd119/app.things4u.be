@@ -9,11 +9,10 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
-import com.fasterxml.jackson.databind.JsonNode;
-
 import apinexo.client.exception.ApiException;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.core.modules.openmeter.dto.OpenmeterOmTokenResponse;
 import apinexo.core.modules.openmeter.facade.OpenmeterFacade;
 import apinexo.core.modules.openmeter.request.client.OpenmeterTokenClientRequest;
 import apinexo.core.modules.user.entity.UserEntity;
@@ -46,13 +45,12 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
             String url = "https://openmeter.cloud/api/v1/portal/tokens";
-            JsonNode response = executePostRequest(JsonNode.class, url, body, headers);
-            return ResponseEntity.ok(utils.ok(response));
+            OpenmeterOmTokenResponse response = executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+            return ResponseEntity.ok(response);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
         }
     }
-
 }
