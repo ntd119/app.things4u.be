@@ -13,6 +13,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.client.exception.ApiException;
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.core.modules.apikey.dto.ApikeyResponse;
 import apinexo.core.modules.apikey.facade.ApiKeyFacade;
 import apinexo.core.modules.auth0.facade.Auth0Facade;
 import apinexo.core.modules.user.entity.UserEntity;
@@ -72,8 +73,10 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
                 entity = UserEntity.builder().userId(userId).apiKey(apikey).email(email).emailVerified(emailVerified)
                         .firstName(firstName).lastName(lastName).picture(picture).auth0UserId(auth0UserId).build();
                 entity = userService.save(entity);
+
             }
-            return ResponseEntity.ok(entity);
+            ApikeyResponse apikeyResponse = ApikeyResponse.builder().apiKey(entity.getApiKey()).build();
+            return ResponseEntity.ok(apikeyResponse);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
