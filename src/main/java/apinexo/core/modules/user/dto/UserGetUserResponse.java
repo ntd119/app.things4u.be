@@ -9,7 +9,7 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class UserResponse {
+public class UserGetUserResponse {
     @JsonProperty("user_id")
     private String userId;
 
