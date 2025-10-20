@@ -1,5 +1,7 @@
 package apinexo.core.modules.user.entity;
 
+import java.time.Instant;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -19,6 +21,9 @@ public class UserEntity {
     @Id
     @Column(name = "user_id")
     private String userId;
+
+    @Column(name = "api_key")
+    private String apiKey;
 
     @Column(name = "email")
     private String email;
@@ -46,4 +51,13 @@ public class UserEntity {
 
     @Column(name = "stripe_customer_id")
     private String stripeCustomerId;
+
+    @Column(nullable = false, name = "active")
+    private boolean active;
+
+    @Column(name = "created_at")
+    private Instant createdAt;
+
+    @Column(name = "revoked_at")
+    private Instant revokedAt;
 }

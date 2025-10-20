@@ -4,5 +4,5 @@ import org.springframework.http.ResponseEntity;
 
 public interface OpenmeterFacade {
 
-    ResponseEntity<Object> token();
+    ResponseEntity<Object> omToken();
 }

@@ -10,5 +10,7 @@ public interface UserService {
 
     Optional<UserEntity> findByid(String id);
 
+    Optional<UserEntity> findByApiKey(String apiKey);
+
     UserEntity save(UserEntity entity);
 }

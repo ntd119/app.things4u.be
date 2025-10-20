@@ -24,7 +24,7 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
     private String secretToken;
 
     @Override
-    public ResponseEntity<Object> token() {
+    public ResponseEntity<Object> omToken() {
         try {
             OpenmeterTokenClientRequest body = OpenmeterTokenClientRequest.builder().subject("customer-1")
                     .allowedMeterSlugs(utils.createList("api_requests_total")).build();

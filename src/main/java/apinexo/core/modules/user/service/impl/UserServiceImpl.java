@@ -29,4 +29,9 @@ public class UserServiceImpl implements UserService {
     public UserEntity save(UserEntity entity) {
         return repository.save(entity);
     }
+
+    @Override
+    public Optional<UserEntity> findByApiKey(String apiKey) {
+        return repository.findByApiKey(apiKey);
+    }
 }

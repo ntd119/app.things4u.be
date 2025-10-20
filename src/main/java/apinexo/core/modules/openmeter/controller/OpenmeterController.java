@@ -13,8 +13,8 @@ public class OpenmeterController {
 
     private final OpenmeterFacade openmeterFacade;
 
-    @GetMapping("/token")
-    public ResponseEntity<Object> getOrCreateApiKey() {
-        return openmeterFacade.token();
+    @GetMapping("/om-token")
+    public ResponseEntity<Object> omToken() {
+        return openmeterFacade.omToken();
     }
 }
