@@ -19,4 +19,9 @@ public class OpenmeterController {
     public ResponseEntity<Object> omToken(@AuthenticationPrincipal Jwt jwt) {
         return openmeterFacade.omToken(jwt);
     }
+
+    @GetMapping("/send-event")
+    public ResponseEntity<Object> sendEvent(@AuthenticationPrincipal Jwt jwt) {
+        return openmeterFacade.sendEvent(jwt);
+    }
 }

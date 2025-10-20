@@ -6,4 +6,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 public interface OpenmeterFacade {
 
     ResponseEntity<Object> omToken(Jwt jwt);
+
+    ResponseEntity<Object> sendEvent(Jwt jwt);
 }
