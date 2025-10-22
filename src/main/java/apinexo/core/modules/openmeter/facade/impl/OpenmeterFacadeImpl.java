@@ -115,9 +115,14 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             url = "https://openmeter.cloud/api/v1/features";
             body = "{\r\n"
                     + "  \"key\": \"requests_per_month\",\r\n"
-                    + "  \"name\": \"Requests Per Month\",\r\n"
+                    + "  \"name\": \"Requests per month\",\r\n"
                     + "  \"metadata\": {\r\n"
-                    + "    \"key\": \"basic\"\r\n"
+                    + "    \"key\": \"basic\",\r\n"
+                    + "    \"rate_limit\": \"1000\",\r\n"
+                    + "    \"rate_limit_period\": \"hour\",\r\n"
+                    + "    \"is_soft_limit\": \"false\",\r\n"
+                    + "    \"private\": \"false\",\r\n"
+                    + "    \"api_id\": \"jsearch\"\r\n"
                     + "  },\r\n"
                     + "  \"meterSlug\": \"api_requests\"\r\n"
                     + "}";
