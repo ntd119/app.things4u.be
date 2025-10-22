@@ -51,6 +51,9 @@ public class OpenmeterSendEventClientRequest {
 
         @JsonProperty("api_name")
         private String apiName;
+
+        @JsonProperty("result")
+        private String result;
     }
 
 }
