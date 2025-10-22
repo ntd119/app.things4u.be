@@ -84,4 +84,35 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
         }
     }
+    
+    @Override
+    public ResponseEntity<Object> generate() {
+        try {
+            // generate meters API Requests
+            String body = "{\r\n"
+                    + "  \"key\": \"requests\",\r\n"
+                    + "  \"name\": \"API Requests\",\r\n"
+                    + "  \"slug\": \"api_requests\",\r\n"
+                    + "  \"description\": \"Count number of API requests made by customers.\",\r\n"
+                    + "  \"aggregation\": \"COUNT\",\r\n"
+                    + "  \"eventType\": \"api_request\",\r\n"
+                    + "  \"event\": {\r\n"
+                    + "    \"type\": \"api_request\",\r\n"
+                    + "    \"property\": \"customer_id\"\r\n"
+                    + "  },\r\n"
+                    + "  \"window\": {\r\n"
+                    + "    \"size\": \"month\"\r\n"
+                    + "  }\r\n"
+                    + "}";
+            HttpHeaders headers = utils.buildHeader();
+            headers.setBearerAuth(secretToken);
+            String url = "https://openmeter.cloud/api/v1/meters";
+            OpenmeterOmTokenResponse response = executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+            return ResponseEntity.ok(response);
+        } catch (HttpClientErrorException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
+        }
+    }
 }

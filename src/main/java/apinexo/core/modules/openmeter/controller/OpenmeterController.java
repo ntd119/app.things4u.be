@@ -24,4 +24,9 @@ public class OpenmeterController {
     public ResponseEntity<Object> sendEvent(@AuthenticationPrincipal Jwt jwt) {
         return openmeterFacade.sendEvent(jwt);
     }
+
+    @GetMapping("/generate")
+    public ResponseEntity<Object> generate() {
+        return openmeterFacade.generate();
+    }
 }

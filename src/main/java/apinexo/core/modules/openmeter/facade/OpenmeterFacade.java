@@ -8,4 +8,6 @@ public interface OpenmeterFacade {
     ResponseEntity<Object> omToken(Jwt jwt);
 
     ResponseEntity<Object> sendEvent(Jwt jwt);
+
+    ResponseEntity<Object> generate();
 }
