@@ -109,6 +109,18 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
                     + "  \"event\": {\r\n" + "    \"type\": \"api_request\",\r\n"
                     + "    \"property\": \"customer_id\"\r\n" + "  },\r\n" + "  \"window\": {\r\n"
                     + "    \"size\": \"hour\"\r\n" + "  }\r\n" + "}";
+            // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+
+            // generate feature requests_per_month
+            url = "https://openmeter.cloud/api/v1/features";
+            body = "{\r\n"
+                    + "  \"key\": \"requests_per_month\",\r\n"
+                    + "  \"name\": \"Requests Per Month\",\r\n"
+                    + "  \"metadata\": {\r\n"
+                    + "    \"key\": \"basic\"\r\n"
+                    + "  },\r\n"
+                    + "  \"meterSlug\": \"api_requests\"\r\n"
+                    + "}";
             executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
             return ResponseEntity.ok("OK");
         } catch (HttpClientErrorException ex) {
