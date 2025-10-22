@@ -70,8 +70,8 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
 
             OpenmeterSendEventClientRequest body = OpenmeterSendEventClientRequest.builder().specversion("1.0")
                     .type("request").id(utils.uuidRandom()).time(formatDate + "Z").source("api_requests_total")
-                    .subject(user.get().getUserId()).data(OpenmeterSendEventClientRequest.DataContent.builder()
-                            .value("1").apiName("jsearch").build())
+                    .subject(user.get().getUserId())
+                    .data(OpenmeterSendEventClientRequest.DataContent.builder().value("1").apiName("jsearch").build())
                     .build();
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
@@ -84,31 +84,33 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
         }
     }
-    
+
     @Override
     public ResponseEntity<Object> generate() {
         try {
-            // generate meters API Requests
-            String body = "{\r\n"
-                    + "  \"key\": \"requests\",\r\n"
-                    + "  \"name\": \"API Requests\",\r\n"
+            // generate meters api_requests
+            String body = "{\r\n" + "  \"key\": \"requests\",\r\n" + "  \"name\": \"API Requests\",\r\n"
                     + "  \"slug\": \"api_requests\",\r\n"
                     + "  \"description\": \"Count number of API requests made by customers.\",\r\n"
-                    + "  \"aggregation\": \"COUNT\",\r\n"
-                    + "  \"eventType\": \"api_request\",\r\n"
-                    + "  \"event\": {\r\n"
-                    + "    \"type\": \"api_request\",\r\n"
-                    + "    \"property\": \"customer_id\"\r\n"
-                    + "  },\r\n"
-                    + "  \"window\": {\r\n"
-                    + "    \"size\": \"month\"\r\n"
-                    + "  }\r\n"
-                    + "}";
+                    + "  \"aggregation\": \"COUNT\",\r\n" + "  \"eventType\": \"api_request\",\r\n"
+                    + "  \"event\": {\r\n" + "    \"type\": \"api_request\",\r\n"
+                    + "    \"property\": \"customer_id\"\r\n" + "  },\r\n" + "  \"window\": {\r\n"
+                    + "    \"size\": \"month\"\r\n" + "  }\r\n" + "}";
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
             String url = "https://openmeter.cloud/api/v1/meters";
-            OpenmeterOmTokenResponse response = executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
-            return ResponseEntity.ok(response);
+            // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+
+            // generate meters hourly_requests
+            body = "{\r\n" + "  \"key\": \"hourly_requests\",\r\n" + "  \"name\": \"Hourly API Requests\",\r\n"
+                    + "  \"slug\": \"hourly_requests\",\r\n"
+                    + "  \"description\": \"Count number of API requests per customer per hour.\",\r\n"
+                    + "  \"aggregation\": \"COUNT\",\r\n" + "  \"eventType\": \"api_request\",\r\n"
+                    + "  \"event\": {\r\n" + "    \"type\": \"api_request\",\r\n"
+                    + "    \"property\": \"customer_id\"\r\n" + "  },\r\n" + "  \"window\": {\r\n"
+                    + "    \"size\": \"hour\"\r\n" + "  }\r\n" + "}";
+            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+            return ResponseEntity.ok("OK");
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {
