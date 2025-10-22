@@ -1,0 +1,15 @@
+{
+	"key": "requests",
+	"name": "API Requests",
+	"slug": "api_requests",
+	"description": "Count number of API requests made by customers.",
+	"aggregation": "COUNT",
+	"eventType": "api_request",
+	"event": {
+		"type": "api_request",
+		"property": "customer_id"
+	},
+	"window": {
+		"size": "month"
+	}
+}

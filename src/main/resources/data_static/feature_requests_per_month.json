@@ -1,0 +1,13 @@
+{
+	"key": "requests_per_month",
+	"name": "Requests per month",
+	"metadata": {
+		"key": "basic",
+		"rate_limit": "1000",
+		"rate_limit_period": "hour",
+		"is_soft_limit": "false",
+		"private": "false",
+		"api_id": "jsearch"
+	},
+	"meterSlug": "api_requests"
+}

@@ -10,6 +10,8 @@ import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.fasterxml.jackson.databind.JsonNode;
+
 import apinexo.client.exception.ApiException;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
@@ -32,6 +34,8 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
 
     @Value("${openmeter.secret-token}")
     private String secretToken;
+
+    private static final String PATH_FILE = "data_static/";
 
     @Override
     public ResponseEntity<Object> omToken(Jwt jwt) {
@@ -89,43 +93,19 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
     public ResponseEntity<Object> generate() {
         try {
             // generate meters api_requests
-            String body = "{\r\n" + "  \"key\": \"requests\",\r\n" + "  \"name\": \"API Requests\",\r\n"
-                    + "  \"slug\": \"api_requests\",\r\n"
-                    + "  \"description\": \"Count number of API requests made by customers.\",\r\n"
-                    + "  \"aggregation\": \"COUNT\",\r\n" + "  \"eventType\": \"api_request\",\r\n"
-                    + "  \"event\": {\r\n" + "    \"type\": \"api_request\",\r\n"
-                    + "    \"property\": \"customer_id\"\r\n" + "  },\r\n" + "  \"window\": {\r\n"
-                    + "    \"size\": \"month\"\r\n" + "  }\r\n" + "}";
+            JsonNode body = utils.readJsonFile(PATH_FILE + "meters_api_requests.json", JsonNode.class);
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
             String url = "https://openmeter.cloud/api/v1/meters";
             // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             // generate meters hourly_requests
-            body = "{\r\n" + "  \"key\": \"hourly_requests\",\r\n" + "  \"name\": \"Hourly API Requests\",\r\n"
-                    + "  \"slug\": \"hourly_requests\",\r\n"
-                    + "  \"description\": \"Count number of API requests per customer per hour.\",\r\n"
-                    + "  \"aggregation\": \"COUNT\",\r\n" + "  \"eventType\": \"api_request\",\r\n"
-                    + "  \"event\": {\r\n" + "    \"type\": \"api_request\",\r\n"
-                    + "    \"property\": \"customer_id\"\r\n" + "  },\r\n" + "  \"window\": {\r\n"
-                    + "    \"size\": \"hour\"\r\n" + "  }\r\n" + "}";
+            body = utils.readJsonFile(PATH_FILE + "meters_hourly_requests.json", JsonNode.class);
             // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             // generate feature requests_per_month
             url = "https://openmeter.cloud/api/v1/features";
-            body = "{\r\n"
-                    + "  \"key\": \"requests_per_month\",\r\n"
-                    + "  \"name\": \"Requests per month\",\r\n"
-                    + "  \"metadata\": {\r\n"
-                    + "    \"key\": \"basic\",\r\n"
-                    + "    \"rate_limit\": \"1000\",\r\n"
-                    + "    \"rate_limit_period\": \"hour\",\r\n"
-                    + "    \"is_soft_limit\": \"false\",\r\n"
-                    + "    \"private\": \"false\",\r\n"
-                    + "    \"api_id\": \"jsearch\"\r\n"
-                    + "  },\r\n"
-                    + "  \"meterSlug\": \"api_requests\"\r\n"
-                    + "}";
+            body = utils.readJsonFile(PATH_FILE + "feature_requests_per_month.json", JsonNode.class);
             executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
             return ResponseEntity.ok("OK");
         } catch (HttpClientErrorException ex) {
@@ -134,4 +114,5 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
         }
     }
+
 }
