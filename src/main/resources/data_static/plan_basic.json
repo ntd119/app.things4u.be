@@ -1,0 +1,64 @@
+{
+	"name": "Basic",
+	"description": "Free plan with hourly and monthly rate limits",
+	"metadata": {
+		"externalId": "019142cc-a016-796a-8113-1a942fecd26d"
+	},
+	"key": "basic",
+	"alignment": null,
+	"currency": "USD",
+	"billingCadence": "P1M",
+	"proRatingConfig": {
+		"enabled": true,
+		"mode": "prorate_prices"
+	},
+	"phases": [
+		{
+			"key": "string",
+			"name": "string",
+			"description": "string",
+			"metadata": {
+				"externalId": "019142cc-a016-796a-8113-1a942fecd26d"
+			},
+			"duration": "P1Y",
+			"rateCards": [
+				{
+					"type": "flat_fee",
+					"key": "string",
+					"name": "string",
+					"description": "string",
+					"metadata": {
+						"externalId": "019142cc-a016-796a-8113-1a942fecd26d"
+					},
+					"featureKey": "string",
+					"entitlementTemplate": {
+						"metadata": {
+							"externalId": "019142cc-a016-796a-8113-1a942fecd26d"
+						},
+						"type": "metered",
+						"isSoftLimit": false,
+						"issueAfterReset": 0,
+						"issueAfterResetPriority": 1,
+						"preserveOverageAtReset": false,
+						"usagePeriod": "string"
+					},
+					"taxConfig": {
+						"behavior": "inclusive",
+						"stripe": {
+							"code": "txcd_10000000"
+						},
+						"customInvoicing": {
+							"code": "string"
+						}
+					},
+					"billingCadence": "P1M",
+					"price": {
+						"type": "flat",
+						"amount": "100",
+						"paymentTerm": "in_arrears"
+					}
+				}
+			]
+		}
+	]
+}

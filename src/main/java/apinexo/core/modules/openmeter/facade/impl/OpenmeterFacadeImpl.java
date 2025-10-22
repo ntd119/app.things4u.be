@@ -100,13 +100,27 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             // generate meters hourly_requests
-            body = utils.readJsonFile(PATH_FILE + "meters_hourly_requests.json", JsonNode.class);
+            // body = utils.readJsonFile(PATH_FILE + "meters_hourly_requests.json",
+            // JsonNode.class);
             // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             // generate feature requests_per_month
-            url = "https://openmeter.cloud/api/v1/features";
-            body = utils.readJsonFile(PATH_FILE + "feature_requests_per_month.json", JsonNode.class);
+            // url = "https://openmeter.cloud/api/v1/features";
+            // body = utils.readJsonFile(PATH_FILE + "feature_requests_per_month.json",
+            // JsonNode.class);
+            // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+
+            // generate feature hourly_requests
+            // url = "https://openmeter.cloud/api/v1/features";
+            // body = utils.readJsonFile(PATH_FILE + "feature_hourly_requests.json",
+            // JsonNode.class);
+            // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+
+            // generate plan basic
+            url = "https://openmeter.cloud/api/v1/plans";
+            body = utils.readJsonFile(PATH_FILE + "plan_basic.json", JsonNode.class);
             executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+
             return ResponseEntity.ok("OK");
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
