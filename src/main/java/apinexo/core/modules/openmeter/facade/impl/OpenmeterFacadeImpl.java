@@ -96,7 +96,7 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
             String url = "https://openmeter.cloud/api/v1/meters";
-            JsonNode body = utils.readJsonFile(PATH_FILE + "meters_api_requests.json", JsonNode.class);
+            JsonNode body = utils.readJsonFile(PATH_FILE + "meters_api_requests_per_month.json", JsonNode.class);
 //            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             // generate meters meters_requests_per_hour.json
