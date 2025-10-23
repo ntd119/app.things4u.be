@@ -1,29 +1,26 @@
 {
-	"name": "Basic Plan",
-	"description": "Basic plan with monthly and hourly request limits.",
-	"key": "basic",
-	"currency": "USD",
+	"key": "ultra",
+	"name": "Ultra Plan",
+	"description": "Main billing phase for Ultra users",
+	"duration": "P1M",
 	"billingCadence": "P1M",
-	"proRatingConfig": {
-		"enabled": true,
-		"mode": "prorate_prices"
-	},
+	"currency": "USD",
 	"phases": [
 		{
-			"key": "phase_basic",
-			"name": "Basic Phase",
-			"description": "Default pricing phase for Basic plan.",
+			"key": "phase_ultra",
+			"name": "Ultra Phase",
+			"description": "Default pricing phase for Ultra plan.",
 			"duration": "P1M",
 			"rateCards": [
 				{
 					"type": "flat_fee",
 					"key": "base_fee",
 					"name": "Base Subscription Fee",
-					"description": "Flat monthly fee for Basic users",
+					"description": "Flat monthly fee for Ultra users",
 					"billingCadence": "P1M",
 					"price": {
 						"type": "flat",
-						"amount": "0",
+						"amount": "35",
 						"paymentTerm": "in_advance"
 					}
 				},
@@ -31,14 +28,13 @@
 					"type": "flat_fee",
 					"key": "api_requests_per_month",
 					"name": "API requests per month",
-					"description": "Limit of 200 requests per month",
-					"billingCadence": "P1M",
+					"description": "Limit of 110000 requests per month",
 					"featureKey": "api_requests_per_month",
+					"billingCadence": "P1M",
 					"entitlementTemplate": {
 						"type": "metered",
-						"isSoftLimit": false,
-						"issueAfterReset": 100 ,
-						"issueAfterResetPriority": 1,
+						"isSoftLimit": true,
+						"issueAfterReset": 110000,
 						"preserveOverageAtReset": false,
 						"usagePeriod": "P1M"
 					},
@@ -50,15 +46,15 @@
 				},
 				{
 					"type": "flat_fee",
-					"key": "api_requests_per_hour",
-					"name": "API requests per hour",
-					"description": "Limit of 1000 requests per hour",
+					"key": "api_requests_per_second",
+					"name": "API requests per second",
+					"description": "Limit of 5 requests per second",
 					"billingCadence": "P1M",
-					"featureKey": "api_requests_per_hour",
+					"featureKey": "api_requests_per_second",
 					"entitlementTemplate": {
 						"type": "metered",
 						"isSoftLimit": false,
-						"issueAfterReset": 1000,
+						"issueAfterReset": 5,
 						"issueAfterResetPriority": 2,
 						"preserveOverageAtReset": false,
 						"usagePeriod": "PT1H"

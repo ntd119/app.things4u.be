@@ -25,23 +25,46 @@
 					}
 				},
 				{
-					"type": "flat_fee",
+					"type": "usage_based",
 					"key": "api_requests_per_month",
 					"name": "API requests per month",
-					"description": "Limit of 35000 requests per month",
+					"description": "Charge $0.003 per request over 10,000/month",
 					"featureKey": "api_requests_per_month",
 					"billingCadence": "P1M",
 					"entitlementTemplate": {
 						"type": "metered",
 						"isSoftLimit": true,
-						"issueAfterReset": 35000,
+						"issueAfterReset": 35000 ,
 						"preserveOverageAtReset": false,
 						"usagePeriod": "P1M"
 					},
 					"price": {
-						"type": "flat",
-						"amount": "0",
-						"paymentTerm": "in_advance"
+						"type": "tiered",
+						"mode": "volume",
+						"paymentTerm": "in_arrears",
+						"tiers": [
+							{
+								"upToAmount": "35000",
+								"flatPrice": {
+									"type": "flat",
+									"amount": "0"
+								},
+								"unitPrice": {
+									"type": "unit",
+									"amount": "0"
+								}
+							},
+							{
+								"flatPrice": {
+									"type": "flat",
+									"amount": "0"
+								},
+								"unitPrice": {
+									"type": "unit",
+									"amount": "0.003"
+								}
+							}
+						]
 					}
 				},
 				{
