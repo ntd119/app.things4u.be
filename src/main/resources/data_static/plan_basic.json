@@ -13,7 +13,7 @@
 			"key": "phase_basic",
 			"name": "Basic Phase",
 			"description": "Default pricing phase for Basic plan.",
-			"duration": "P1Y",
+			"duration": "P1M",
 			"rateCards": [
 				{
 					"type": "flat_fee",
