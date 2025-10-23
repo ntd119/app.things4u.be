@@ -1,6 +1,6 @@
 {
-	"key": "phase_pro",
-	"name": "Pro Monthly Phase",
+	"key": "pro",
+	"name": "Pro Plan",
 	"description": "Main billing phase for Pro users",
 	"duration": "P1M",
 	"billingCadence": "P1M",
@@ -14,9 +14,19 @@
 			"rateCards": [
 				{
 					"type": "flat_fee",
-					"key": "base_price",
-					"name": "Monthly Base Fee",
+					"key": "api_requests_per_month",
+					"name": "API requests per month",
+					"description": "Limit of 10000 requests per month",
 					"billingCadence": "P1M",
+					"featureKey": "api_requests_per_month",
+					"entitlementTemplate": {
+						"type": "metered",
+						"isSoftLimit": false,
+						"issueAfterReset": 10000,
+						"issueAfterResetPriority": 1,
+						"preserveOverageAtReset": false,
+						"usagePeriod": "P1M"
+					},
 					"price": {
 						"type": "flat",
 						"amount": "25",
@@ -24,52 +34,20 @@
 					}
 				},
 				{
-					"type": "usage_based",
-					"key": "api_requests_per_month",
-					"name": "Monthly Requests",
-					"featureKey": "api_requests_per_month",
-					"billingCadence": "P1M",
-					"entitlementTemplate": {
-						"type": "metered",
-						"isSoftLimit": true,
-						"issueAfterReset": 10000,
-						"preserveOverageAtReset": false,
-						"usagePeriod": "P1M"
-					},
-					"price": {
-						"type": "tiered",
-						"mode": "volume",
-						"paymentTerm": "in_arrears",
-						"tiers": [
-							{
-								"upToAmount": "10000",
-								"flatPrice": {
-									"type": "flat",
-									"amount": "0"
-								},
-								"unitPrice": {
-									"type": "unit",
-									"amount": "0"
-								}
-							},
-							{
-								"flatPrice": {
-									"type": "flat",
-									"amount": "0"
-								},
-								"unitPrice": {
-									"type": "unit",
-									"amount": "0.003"
-								}
-							}
-						]
-					}
-				},
-				{
 					"type": "flat_fee",
 					"key": "api_requests_per_second",
-					"name": "Rate Limit",
+					"name": "API requests per second",
+					"description": "Limit of 5 requests per second",
 					"billingCadence": "P1M",
+					"featureKey": "api_requests_per_second",
+					"entitlementTemplate": {
+						"type": "metered",
+						"isSoftLimit": false,
+						"issueAfterReset": 5,
+						"issueAfterResetPriority": 2,
+						"preserveOverageAtReset": false,
+						"usagePeriod": "PT1H"
+					},
 					"price": {
 						"type": "flat",
 						"amount": "0",
