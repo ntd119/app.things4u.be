@@ -30,7 +30,31 @@
 					"price": {
 						"type": "flat",
 						"amount": "25",
-						"paymentTerm": "in_advance"
+						"paymentTerm": "in_advance",
+						"tiers": [
+							{
+								"upToAmount": "10000",
+								"flatPrice": {
+									"type": "flat",
+									"amount": "0"
+								},
+								"unitPrice": {
+									"type": "unit",
+									"amount": "0"
+								}
+							},
+							{
+								"upToAmount": "999999999",
+								"flatPrice": {
+									"type": "flat",
+									"amount": "0"
+								},
+								"unitPrice": {
+									"type": "unit",
+									"amount": "0.003"
+								}
+							}
+						]
 					}
 				},
 				{
