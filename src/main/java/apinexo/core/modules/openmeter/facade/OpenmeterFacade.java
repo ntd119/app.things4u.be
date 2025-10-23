@@ -7,6 +7,8 @@ public interface OpenmeterFacade {
 
     ResponseEntity<Object> omToken(Jwt jwt);
 
+    void upsertSubject(String key, String displayName);
+
     ResponseEntity<Object> sendEvent(Jwt jwt);
 
     ResponseEntity<Object> generate();
