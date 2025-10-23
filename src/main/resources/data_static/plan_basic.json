@@ -1,11 +1,7 @@
 {
-	"name": "Basic",
-	"description": "Free plan with hourly and monthly rate limits",
-	"metadata": {
-		"externalId": "019142cc-a016-796a-8113-1a942fecd26d"
-	},
+	"name": "Basic Plan",
+	"description": "Basic plan with monthly and hourly request limits.",
 	"key": "basic",
-	"alignment": null,
 	"currency": "USD",
 	"billingCadence": "P1M",
 	"proRatingConfig": {
@@ -14,48 +10,51 @@
 	},
 	"phases": [
 		{
-			"key": "string",
-			"name": "string",
-			"description": "string",
-			"metadata": {
-				"externalId": "019142cc-a016-796a-8113-1a942fecd26d"
-			},
+			"key": "phase_basic",
+			"name": "Basic Phase",
+			"description": "Default pricing phase for Basic plan.",
 			"duration": "P1Y",
 			"rateCards": [
 				{
 					"type": "flat_fee",
-					"key": "string",
-					"name": "string",
-					"description": "string",
-					"metadata": {
-						"externalId": "019142cc-a016-796a-8113-1a942fecd26d"
-					},
-					"featureKey": "string",
+					"key": "requests_per_month",
+					"name": "Monthly Requests Limit",
+					"description": "Limit of 200 requests per month",
+					"billingCadence": "P1M",
+					"featureKey": "requests_per_month",
 					"entitlementTemplate": {
-						"metadata": {
-							"externalId": "019142cc-a016-796a-8113-1a942fecd26d"
-						},
 						"type": "metered",
 						"isSoftLimit": false,
-						"issueAfterReset": 0,
+						"issueAfterReset": 200,
 						"issueAfterResetPriority": 1,
 						"preserveOverageAtReset": false,
-						"usagePeriod": "string"
+						"usagePeriod": "P1M"
 					},
-					"taxConfig": {
-						"behavior": "inclusive",
-						"stripe": {
-							"code": "txcd_10000000"
-						},
-						"customInvoicing": {
-							"code": "string"
-						}
-					},
-					"billingCadence": "P1M",
 					"price": {
 						"type": "flat",
-						"amount": "100",
-						"paymentTerm": "in_arrears"
+						"amount": "0",
+						"paymentTerm": "in_advance"
+					}
+				},
+				{
+					"type": "flat_fee",
+					"key": "hourly_requests",
+					"name": "Hourly Requests Limit",
+					"description": "Limit of 1000 requests per hour",
+					"billingCadence": "P1M",
+					"featureKey": "hourly_requests",
+					"entitlementTemplate": {
+						"type": "metered",
+						"isSoftLimit": false,
+						"issueAfterReset": 1000,
+						"issueAfterResetPriority": 2,
+						"preserveOverageAtReset": false,
+						"usagePeriod": "PT1H"
+					},
+					"price": {
+						"type": "flat",
+						"amount": "0",
+						"paymentTerm": "in_advance"
 					}
 				}
 			]
