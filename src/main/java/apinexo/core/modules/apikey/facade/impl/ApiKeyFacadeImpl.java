@@ -19,6 +19,7 @@ import apinexo.core.modules.auth0.service.Auth0Service;
 import apinexo.core.modules.openmeter.service.OpenmeterService;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -34,6 +35,7 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
     private final OpenmeterService openmeterService;
 
     @Override
+    @Transactional
     public ResponseEntity<Object> getOrCreateApiKey(Jwt jwt) {
         try {
             String sub = jwt.getClaimAsString("sub");
