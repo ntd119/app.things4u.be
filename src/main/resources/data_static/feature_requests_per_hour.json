@@ -1,6 +1,6 @@
 {
-	"key": "hourly_requests",
-	"name": "Hourly requests",
+	"key": "requests_per_hour",
+	"name": "Requests per hour",
 	"description": "Limit API requests per hour per customer.",
 	"metadata": {
 		"key": "basic",
@@ -10,5 +10,5 @@
 		"private": "false",
 		"api_id": "jsearch"
 	},
-	"meterSlug": "hourly_requests"
+	"meterSlug": "requests_per_hour"
 }

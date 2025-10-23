@@ -1,7 +1,7 @@
 {
-	"key": "hourly_requests",
-	"name": "Hourly API Requests",
-	"slug": "hourly_requests",
+	"key": "requests_per_hour",
+	"name": "Requests per hour",
+	"slug": "requests_per_hour",
 	"description": "Count number of API requests per customer per hour.",
 	"aggregation": "COUNT",
 	"eventType": "api_request",
