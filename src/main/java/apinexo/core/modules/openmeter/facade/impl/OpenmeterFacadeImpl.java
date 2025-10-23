@@ -93,16 +93,19 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
     public ResponseEntity<Object> generate() {
         try {
             // generate meters api_requests
-            JsonNode body = utils.readJsonFile(PATH_FILE + "meters_api_requests.json", JsonNode.class);
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
             String url = "https://openmeter.cloud/api/v1/meters";
-            // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+            JsonNode body = utils.readJsonFile(PATH_FILE + "meters_api_requests.json", JsonNode.class);
+             executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
-            // generate meters hourly_requests
-            // body = utils.readJsonFile(PATH_FILE + "meters_hourly_requests.json",
-            // JsonNode.class);
-            // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+            // generate meters meters_requests_per_hour.json
+            body = utils.readJsonFile(PATH_FILE + "meters_requests_per_hour.json", JsonNode.class);
+            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+
+            // generate meters meters_requests_per_hour.json
+            body = utils.readJsonFile(PATH_FILE + "meters_requests_per_second.json", JsonNode.class);
+            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             // generate feature requests_per_month
             // url = "https://openmeter.cloud/api/v1/features";
@@ -117,9 +120,9 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             // generate plan basic
-            url = "https://openmeter.cloud/api/v1/plans";
-            body = utils.readJsonFile(PATH_FILE + "plan_basic.json", JsonNode.class);
-            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+//            url = "https://openmeter.cloud/api/v1/plans";
+//            body = utils.readJsonFile(PATH_FILE + "plan_basic.json", JsonNode.class);
+//            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             return ResponseEntity.ok("OK");
         } catch (HttpClientErrorException ex) {

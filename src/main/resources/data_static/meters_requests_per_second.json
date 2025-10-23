@@ -1,0 +1,14 @@
+{
+	"key": "api_requests_per_second",
+	"name": "API requests per second",
+	"meterKey": "api_requests_per_second",
+	"slug": "api_requests_per_second",
+	"aggregation": "COUNT",
+	"eventType": "request",
+	"entitlementTemplate": {
+		"isSoftLimit": false,
+		"issueAfterReset": 5,
+		"preserveOverageAtReset": false,
+		"usagePeriod": "PT1S"
+	}
+}
