@@ -107,17 +107,20 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
 //            body = utils.readJsonFile(PATH_FILE + "meters_requests_per_second.json", JsonNode.class);
 //            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
-            // generate feature requests_per_month
-            // url = "https://openmeter.cloud/api/v1/features";
-            // body = utils.readJsonFile(PATH_FILE + "feature_requests_per_month.json",
-            // JsonNode.class);
-            // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+            // generate feature requests_per_month.json
+//            url = "https://openmeter.cloud/api/v1/features";
+//            body = utils.readJsonFile(PATH_FILE + "feature_requests_per_month.json", JsonNode.class);
+//            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
-            // generate feature hourly_requests
-            // url = "https://openmeter.cloud/api/v1/features";
-            // body = utils.readJsonFile(PATH_FILE + "feature_hourly_requests.json",
-            // JsonNode.class);
-            // executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+            // generate feature api_requests_per_hour
+//            url = "https://openmeter.cloud/api/v1/features";
+//            body = utils.readJsonFile(PATH_FILE + "feature_api_requests_per_hour.json", JsonNode.class);
+//            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+
+            // generate feature api_requests_per_second
+//            url = "https://openmeter.cloud/api/v1/features";
+//            body = utils.readJsonFile(PATH_FILE + "feature_api_requests_per_second.json", JsonNode.class);
+//            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             // generate plan basic
 //            url = "https://openmeter.cloud/api/v1/plans";

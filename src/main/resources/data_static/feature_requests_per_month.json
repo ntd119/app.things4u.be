@@ -1,6 +1,7 @@
 {
-	"key": "requests_per_month",
-	"name": "Requests per month",
+	"key": "api_requests_per_month",
+	"name": "API requests per month",
+	"description": "Limit API requests per month per customer.",
 	"metadata": {
 		"key": "basic",
 		"rate_limit": "1000",
@@ -9,5 +10,5 @@
 		"private": "false",
 		"api_id": "jsearch"
 	},
-	"meterSlug": "api_requests"
+	"meterSlug": "api_requests_per_month"
 }

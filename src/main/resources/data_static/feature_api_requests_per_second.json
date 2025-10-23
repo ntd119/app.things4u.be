@@ -1,0 +1,14 @@
+{
+	"key": "api_requests_per_second",
+	"name": "API requests per second",
+	"description": "Limit API requests per second per customer.",
+	"metadata": {
+		"key": "basic",
+		"rate_limit": "1000",
+		"rate_limit_period": "hour",
+		"is_soft_limit": "false",
+		"private": "false",
+		"api_id": "jsearch"
+	},
+	"meterSlug": "api_requests_per_second"
+}
