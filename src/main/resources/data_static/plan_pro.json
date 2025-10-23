@@ -1,0 +1,82 @@
+{
+	"key": "phase_pro",
+	"name": "Pro Monthly Phase",
+	"description": "Main billing phase for Pro users",
+	"duration": "P1M",
+	"billingCadence": "P1M",
+	"currency": "USD",
+	"phases": [
+		{
+			"key": "phase_pro",
+			"name": "Pro Phase",
+			"description": "Default pricing phase for Pro plan.",
+			"duration": "P1M",
+			"rateCards": [
+				{
+					"type": "flat_fee",
+					"key": "base_price",
+					"name": "Monthly Base Fee",
+					"billingCadence": "P1M",
+					"price": {
+						"type": "flat",
+						"amount": "25",
+						"paymentTerm": "in_advance"
+					}
+				},
+				{
+					"type": "usage_based",
+					"key": "api_requests_per_month",
+					"name": "Monthly Requests",
+					"featureKey": "api_requests_per_month",
+					"billingCadence": "P1M",
+					"entitlementTemplate": {
+						"type": "metered",
+						"isSoftLimit": true,
+						"issueAfterReset": 10000,
+						"preserveOverageAtReset": false,
+						"usagePeriod": "P1M"
+					},
+					"price": {
+						"type": "tiered",
+						"mode": "volume",
+						"paymentTerm": "in_arrears",
+						"tiers": [
+							{
+								"upToAmount": "10000",
+								"flatPrice": {
+									"type": "flat",
+									"amount": "0"
+								},
+								"unitPrice": {
+									"type": "unit",
+									"amount": "0"
+								}
+							},
+							{
+								"flatPrice": {
+									"type": "flat",
+									"amount": "0"
+								},
+								"unitPrice": {
+									"type": "unit",
+									"amount": "0.003"
+								}
+							}
+						]
+					}
+				},
+				{
+					"type": "flat_fee",
+					"key": "api_requests_per_second",
+					"name": "Rate Limit",
+					"billingCadence": "P1M",
+					"price": {
+						"type": "flat",
+						"amount": "0",
+						"paymentTerm": "in_advance"
+					}
+				}
+			]
+		}
+	]
+}
