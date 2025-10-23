@@ -15,8 +15,8 @@ import apinexo.client.exception.ApiException;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.apikey.dto.ApikeyResponse;
 import apinexo.core.modules.apikey.facade.ApiKeyFacade;
-import apinexo.core.modules.auth0.facade.Auth0Facade;
-import apinexo.core.modules.openmeter.facade.OpenmeterFacade;
+import apinexo.core.modules.auth0.service.Auth0Service;
+import apinexo.core.modules.openmeter.service.OpenmeterService;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +29,9 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
 
     private final UserService userService;
 
-    private final Auth0Facade auth0Facade;
+    private final Auth0Service auth0Service;
 
-    private final OpenmeterFacade openmeterFacade;
+    private final OpenmeterService openmeterService;
 
     @Override
     public ResponseEntity<Object> getOrCreateApiKey(Jwt jwt) {
@@ -43,7 +43,7 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
                 entity = existing.get();
             } else {
                 String apikey = this.generateApiKey();
-                JsonNode user = auth0Facade.getUser(sub);
+                JsonNode user = auth0Service.getUser(sub);
                 if (Objects.isNull(user) || user.isEmpty()) {
                     return ResponseEntity.badRequest().body(new ApiException("The user does not exist"));
                 }
@@ -78,7 +78,7 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
                 entity = userService.save(entity);
 
                 // openmeter: Creates or updates subject
-                openmeterFacade.upsertSubject(userId, email);
+                openmeterService.upsertSubject(userId, email);
 
             }
             ApikeyResponse apikeyResponse = ApikeyResponse.builder().apiKey(entity.getApiKey()).build();

@@ -20,7 +20,6 @@ import apinexo.core.modules.openmeter.dto.OpenmeterOmTokenResponse;
 import apinexo.core.modules.openmeter.facade.OpenmeterFacade;
 import apinexo.core.modules.openmeter.request.client.OpenmeterSendEventClientRequest;
 import apinexo.core.modules.openmeter.request.client.OpenmeterTokenClientRequest;
-import apinexo.core.modules.openmeter.request.client.OpenmeterUpsertSubjectClientRequest;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -60,16 +59,6 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
         }
-    }
-
-    @Override
-    public void upsertSubject(String key, String displayName) {
-        OpenmeterUpsertSubjectClientRequest body = OpenmeterUpsertSubjectClientRequest.builder().key(key)
-                .displayName(displayName).build();
-        HttpHeaders headers = utils.buildHeader();
-        headers.setBearerAuth(secretToken);
-        String url = "https://openmeter.cloud/api/v1/subjects";
-        executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
     }
 
     @Override

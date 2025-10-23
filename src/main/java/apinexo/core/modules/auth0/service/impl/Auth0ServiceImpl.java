@@ -1,19 +1,19 @@
-package apinexo.core.modules.auth0.facade.impl;
+package apinexo.core.modules.auth0.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
-import apinexo.core.modules.auth0.facade.Auth0Facade;
 import apinexo.core.modules.auth0.request.client.Auth0GenerateTokenClientRequest;
+import apinexo.core.modules.auth0.service.Auth0Service;
 
-@Component
-public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
+@Service
+public class Auth0ServiceImpl extends AbstractService implements Auth0Service {
 
     @Autowired
     private ApinexoUtils utils;
@@ -28,16 +28,6 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
     private String audience;
 
     @Override
-    public JsonNode generateToken() {
-        Auth0GenerateTokenClientRequest body = Auth0GenerateTokenClientRequest.builder().clientId(clientId)
-                .clientSecret(clientSecret).audience(audience + "/api/v2/").grantType("client_credentials").build();
-        HttpHeaders headers = utils.buildHeader();
-        String url = audience + "/oauth/token";
-        JsonNode response = executePostRequest(JsonNode.class, url, utils.convertDtoToJson(body), headers);
-        return response;
-    }
-
-    @Override
     public JsonNode getUser(String sub) {
         JsonNode tokenObj = this.generateToken();
         String token = utils.jsonNodeAt(tokenObj, "/access_token", String.class);
@@ -47,4 +37,15 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
         JsonNode response = executeGetRequest(JsonNode.class, url, null, headers);
         return response;
     }
+
+    @Override
+    public JsonNode generateToken() {
+        Auth0GenerateTokenClientRequest body = Auth0GenerateTokenClientRequest.builder().clientId(clientId)
+                .clientSecret(clientSecret).audience(audience + "/api/v2/").grantType("client_credentials").build();
+        HttpHeaders headers = utils.buildHeader();
+        String url = audience + "/oauth/token";
+        JsonNode response = executePostRequest(JsonNode.class, url, utils.convertDtoToJson(body), headers);
+        return response;
+    }
+
 }
