@@ -17,11 +17,11 @@
 			"rateCards": [
 				{
 					"type": "flat_fee",
-					"key": "requests_per_month",
-					"name": "Monthly Requests Limit",
+					"key": "api_requests_per_month",
+					"name": "API requests per month",
 					"description": "Limit of 200 requests per month",
 					"billingCadence": "P1M",
-					"featureKey": "requests_per_month",
+					"featureKey": "api_requests_per_month",
 					"entitlementTemplate": {
 						"type": "metered",
 						"isSoftLimit": false,
@@ -38,11 +38,11 @@
 				},
 				{
 					"type": "flat_fee",
-					"key": "hourly_requests",
-					"name": "Hourly Requests Limit",
+					"key": "api_requests_per_hour",
+					"name": "API requests per hour",
 					"description": "Limit of 1000 requests per hour",
 					"billingCadence": "P1M",
-					"featureKey": "hourly_requests",
+					"featureKey": "api_requests_per_hour",
 					"entitlementTemplate": {
 						"type": "metered",
 						"isSoftLimit": false,

@@ -123,9 +123,9 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
 //            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             // generate plan basic
-//            url = "https://openmeter.cloud/api/v1/plans";
-//            body = utils.readJsonFile(PATH_FILE + "plan_basic.json", JsonNode.class);
-//            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
+            url = "https://openmeter.cloud/api/v1/plans";
+            body = utils.readJsonFile(PATH_FILE + "plan_basic.json", JsonNode.class);
+            executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
 
             return ResponseEntity.ok("OK");
         } catch (HttpClientErrorException ex) {
