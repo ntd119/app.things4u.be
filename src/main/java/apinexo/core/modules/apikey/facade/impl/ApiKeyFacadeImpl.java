@@ -80,7 +80,7 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
                 entity = userService.save(entity);
 
                 // openmeter: Creates or updates subject
-                openmeterService.upsertSubject(userId, email);
+                openmeterService.upsertSubject(auth0UserId, email);
 
             }
             ApikeyResponse apikeyResponse = ApikeyResponse.builder().apiKey(entity.getApiKey()).build();
