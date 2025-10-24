@@ -29,12 +29,24 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
     public ResponseEntity<Object> generateProduct() {
         try {
             HttpHeaders headers = utils.buildHeader();
-            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-            body.add("name", "JSearch");
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.setBasicAuth(stripeSecret, "");
-            String url = "https://api.stripe.com/v1/products";
+            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+//            1. Tạo sản phẩm chính (JSearch)
+//            body.add("name", "JSearch");
+//            String url = "https://api.stripe.com/v1/products";
+//            JsonNode response = executePostRequest(JsonNode.class, url, body, headers);
+//            prod_TILPIhZeC5zW3f
+
+//            2. Tạo price cố định $25/tháng (base subscription)
+            String url = "https://api.stripe.com/v1/prices";
+            body.add("unit_amount", "2500");
+            body.add("currency", "usd");
+            body.add("recurring[interval]", "month");
+            body.add("product", "prod_TILPIhZeC5zW3f");
+            body.add("nickname", "Base subscription (monthly)");
             JsonNode response = executePostRequest(JsonNode.class, url, body, headers);
+
             return ResponseEntity.ok(response);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));
