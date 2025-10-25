@@ -56,22 +56,11 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         headers.setBasicAuth(stripeSecret, "");
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("currency", "usd");
+        body.add("unit_amount", "2500");
         body.add("recurring[interval]", "month");
-        body.add("recurring[usage_type]", "metered");
-        body.add("billing_scheme", "tiered");
-        body.add("tiers_mode", "graduated");
-        body.add("product_data[name]", "JSearch");
-        body.add("nickname", "Pro Hard Limit");
-        body.add("tiers[0][up_to]", "10000");
-        body.add("tiers[0][unit_amount]", "0");
-        body.add("tiers[1][up_to]", "inf");
-        body.add("tiers[1][unit_amount_decimal]", "0.003");
-
-        body.add("metadata[api_id]", "jsearch");
-        body.add("metadata[key]", "pro_hard_limit");
-        body.add("metadata[is_soft_limit]", "false");
-        body.add("metadata[rate_limit]", "5");
-        body.add("metadata[rate_limit_period]", "second");
+        body.add("product_data[name]", "JSearch Pro Base Plan");
+        body.add("nickname", "Pro Base Plan");
+        body.add("metadata[plan_type]", "pro_base");
         String url = "https://api.stripe.com/v1/prices";
         return executePostRequest(JsonNode.class, url, body, headers);
     }
