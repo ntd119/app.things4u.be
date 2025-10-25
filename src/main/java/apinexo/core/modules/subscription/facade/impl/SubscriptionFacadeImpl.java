@@ -35,13 +35,15 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.setBasicAuth(stripeSecret, "");
             MultiValueMap<String, String> bodyClient = new LinkedMultiValueMap<>();
-            bodyClient.add("mode", "subscription"); 
-            bodyClient.add("success_url", "https://your-domain.com/success?session_id={CHECKOUT_SESSION_ID}");
-            bodyClient.add("cancel_url", "https://your-domain.com/cancel");
+            bodyClient.add("mode", "subscription");
+            bodyClient.add("success_url", "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}");
+            bodyClient.add("cancel_url", "http://localhost:3000/cancel");
             bodyClient.add("customer_email", userEmail);
             bodyClient.add("line_items[0][price]", "price_1SLySER5bl4Qw3RDCSX3DqlQ");
             bodyClient.add("line_items[0][quantity]", "1");
             bodyClient.add("line_items[1][price]", "price_1SLyGvR5bl4Qw3RDY6UDhkeG");
+            bodyClient.add("payment_method_types[0]", "card");
+            bodyClient.add("payment_method_types[1]", "link");
             String url = "https://api.stripe.com/v1/checkout/sessions";
             JsonNode response = executePostRequest(JsonNode.class, url, bodyClient, headers);
             return ResponseEntity.ok(response);
