@@ -3,11 +3,9 @@ package apinexo.core.modules.plans.facade.impl;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
-import apinexo.client.exception.ApiException;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.plans.dto.ApiPlansResponse;
@@ -25,7 +23,7 @@ public class PlansFacadeImpl extends AbstractService implements PlansFacade {
     private final ApiPlansService apiPlansService;
 
     @Override
-    public ResponseEntity<Object> plans(Jwt jwt, String id) {
+    public ResponseEntity<Object> plans(String id) {
         try {
             Optional<ApiPlansEntity> optional = apiPlansService.findByid(id.toLowerCase());
             if (optional.isPresent()) {
