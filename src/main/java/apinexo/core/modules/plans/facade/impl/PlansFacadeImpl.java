@@ -24,7 +24,7 @@ public class PlansFacadeImpl extends AbstractService implements PlansFacade {
     @Override
     public ResponseEntity<Object> plans(Jwt jwt, String id) {
         try {
-            JsonNode response = stripeService.createPriceHardLimit();
+            JsonNode response = stripeService.createPriceHardLimit(null);
             return ResponseEntity.ok(response);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));

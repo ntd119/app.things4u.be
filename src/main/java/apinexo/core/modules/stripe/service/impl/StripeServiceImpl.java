@@ -1,5 +1,7 @@
 package apinexo.core.modules.stripe.service.impl;
 
+import java.util.Objects;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -50,21 +52,24 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     }
 
     @Override
-    public JsonNode createPriceHardLimit() {
+    public JsonNode createPriceHardLimit(MultiValueMap<String, String> body) {
         HttpHeaders headers = utils.buildHeader();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(stripeSecret, "");
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        if (Objects.isNull(body)) {
+            body = new LinkedMultiValueMap<>();
+            body.add("unit_amount", "2500");
+            body.add("product_data[name]", "JSearch");
+            body.add("nickname", "Pro Base Plan");
+            body.add("metadata[api_id]", "jsearch");
+            body.add("metadata[key]", "pro");
+            body.add("metadata[is_soft_limit]", "false");
+            body.add("metadata[rate_limit]", "5");
+            body.add("metadata[rate_limit_period]", "second");
+        }
         body.add("currency", "usd");
-        body.add("unit_amount", "2500");
         body.add("recurring[interval]", "month");
-        body.add("product_data[name]", "JSearch");
-        body.add("nickname", "Pro Base Plan");
-        body.add("metadata[api_id]", "jsearch");
-        body.add("metadata[key]", "pro");
         body.add("metadata[is_soft_limit]", "false");
-        body.add("metadata[rate_limit]", "5");
-        body.add("metadata[rate_limit_period]", "second");
         String url = "https://api.stripe.com/v1/prices";
         return executePostRequest(JsonNode.class, url, body, headers);
     }

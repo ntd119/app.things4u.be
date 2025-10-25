@@ -1,24 +1,24 @@
 {
-	"jsearch": {
-		"basic": {
+	"JSearch": {
+		"Basic": {
 			"price": null,
 			"up_to": 100,
 			"rate_limit": 1000,
 			"rate_limit_period": "hour"
 		},
-		"pro": {
+		"Pro": {
 			"price": 1500,
 			"up_to": 10000,
 			"rate_limit": 5,
 			"rate_limit_period": "second"
 		},
-		"ultra": {
+		"Ultra": {
 			"price": 7500,
 			"up_to": 50000,
 			"rate_limit": 10,
 			"rate_limit_period": "second"
 		},
-		"mega": {
+		"Mega": {
 			"price": 15000,
 			"up_to": 200000,
 			"rate_limit": 20,
