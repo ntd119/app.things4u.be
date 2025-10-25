@@ -58,9 +58,13 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("currency", "usd");
         body.add("unit_amount", "2500");
         body.add("recurring[interval]", "month");
-        body.add("product_data[name]", "JSearch Pro Base Plan");
+        body.add("product_data[name]", "JSearch");
         body.add("nickname", "Pro Base Plan");
-        body.add("metadata[plan_type]", "pro_base");
+        body.add("metadata[api_id]", "jsearch");
+        body.add("metadata[key]", "pro");
+        body.add("metadata[is_soft_limit]", "false");
+        body.add("metadata[rate_limit]", "5");
+        body.add("metadata[rate_limit_period]", "second");
         String url = "https://api.stripe.com/v1/prices";
         return executePostRequest(JsonNode.class, url, body, headers);
     }
