@@ -39,12 +39,32 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
 //            prod_TILPIhZeC5zW3f
 
 //            2. Tạo price cố định $25/tháng (base subscription)
-            String url = "https://api.stripe.com/v1/prices";
-            body.add("unit_amount", "2500");
-            body.add("currency", "usd");
-            body.add("recurring[interval]", "month");
-            body.add("product", "prod_TILPIhZeC5zW3f");
-            body.add("nickname", "Base subscription (monthly)");
+//            String url = "https://api.stripe.com/v1/prices";
+//            body.add("unit_amount", "2500");
+//            body.add("currency", "usd");
+//            body.add("recurring[interval]", "month");
+//            body.add("product", "prod_TILPIhZeC5zW3f");
+//            body.add("nickname", "Base subscription (monthly)");
+//            JsonNode response = executePostRequest(JsonNode.class, url, body, headers);
+
+//            3. Tạo price theo usage (billed monthly based on usage)
+//            String url = "https://api.stripe.com/v1/prices";
+//            body.add("currency", "usd");
+//            body.add("recurring[interval]", "month");
+//            body.add("recurring[usage_type]", "metered");
+//            body.add("billing_scheme", "per_unit");
+//            body.add("unit_amount", "100");
+//            body.add("product", "prod_TILPIhZeC5zW3f");
+//            body.add("nickname", "Usage-based charges");
+//            JsonNode response = executePostRequest(JsonNode.class, url, body, headers);
+            
+//            4. Tạo Subscription (hiển thị như hình)
+            String url = "https://api.stripe.com/v1/subscriptions";
+            body.add("customer", "cus_TILfB4YNrdSDcu");
+            body.add("items[0][price]", "price_1SLknOR5bl4Qw3RDADr4trRk");
+            body.add("items[1][price]", "price_1SLkrDR5bl4Qw3RDbsPlR0L2");
+            body.add("collection_method", "charge_automatically");
+            body.add("payment_behavior", "default_incomplete");
             JsonNode response = executePostRequest(JsonNode.class, url, body, headers);
 
             return ResponseEntity.ok(response);
