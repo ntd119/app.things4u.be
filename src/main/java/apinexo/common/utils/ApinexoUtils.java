@@ -150,7 +150,6 @@ public class ApinexoUtils {
 
     public Response ok(Object data, String message) {
         Response response = new Response();
-        response.setMessage(message);
         response.setData(data);
         return response;
     }
@@ -159,8 +158,6 @@ public class ApinexoUtils {
         Response response = new Response();
         response.setData(data);
         response.setMeta(meta);
-        if (StringUtils.isNotBlank(message))
-            response.setMessage(message);
         return response;
     }
 
@@ -212,12 +209,7 @@ public class ApinexoUtils {
         if (Objects.nonNull(errorsJson)) {
             errors = errorsJson;
         }
-        response.setErrors(errors);
-        response.setStatus(false);
-        if (Objects.nonNull(message) && message.length > 0)
-            response.setMessage(message[0]);
-        else
-            response.setMessage("Errors");
+        response.setMessage(errors);
         return response;
     }
 
@@ -249,9 +241,7 @@ public class ApinexoUtils {
         if (Objects.nonNull(errorsJson)) {
             errors = errorsJson;
         }
-        response.setErrors(errors);
-        if (Objects.nonNull(message) && message.length > 0)
-            response.setMessage(message[0]);
+        response.setMessage(errors);
         return response;
     }
 

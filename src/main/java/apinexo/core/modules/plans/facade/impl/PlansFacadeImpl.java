@@ -36,7 +36,7 @@ public class PlansFacadeImpl extends AbstractService implements PlansFacade {
                         .build();
                 return ResponseEntity.ok(response);
             } else {
-                return ResponseEntity.badRequest().body(new ApiException("The plans does not exist"));
+                return utils.badRequest("The plans does not exist");
             }
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));

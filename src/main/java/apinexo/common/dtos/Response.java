@@ -9,6 +9,7 @@ import lombok.Data;
 @Data
 public class Response {
 
+    @JsonInclude(value = Include.NON_NULL)
     @JsonProperty("data")
     private Object data;
 
@@ -21,19 +22,8 @@ public class Response {
     private Object filters;
 
     @JsonInclude(value = Include.NON_NULL)
-    @JsonProperty("errors")
-    private Object errors;
-
-    @JsonProperty("status")
-    private boolean status;
-
     @JsonProperty("message")
-    private String message;
-
-    public Response() {
-        this.message = "Successful";
-        this.status = true;
-    }
+    private Object message;
 
     public Object getData() {
         return data;
