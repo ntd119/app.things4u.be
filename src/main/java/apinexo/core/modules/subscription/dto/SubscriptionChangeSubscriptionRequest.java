@@ -9,7 +9,14 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class SubscriptionResponse {
-    @JsonProperty("apiKey")
-    private String apiKey;
+public class SubscriptionChangeSubscriptionRequest {
+
+    @JsonProperty("apiId")
+    private String apiId;
+
+    @JsonProperty("planKey")
+    private String planKey;
+
+    @JsonProperty("url")
+    private String url;
 }

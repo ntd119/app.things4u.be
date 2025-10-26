@@ -1,6 +1,6 @@
 package apinexo.core.modules.subscription.facade.impl;
 
-import java.util.Map;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -15,7 +15,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.core.modules.plans.entity.ApiPlansEntity;
+import apinexo.core.modules.plans.service.ApiPlansService;
+import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
 import apinexo.core.modules.subscription.facade.SubscriptionFacade;
+import apinexo.core.modules.user.entity.UserEntity;
+import apinexo.core.modules.user.service.UserService;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -27,19 +32,46 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     @Value("${stripe.secret.key}")
     private String stripeSecret;
 
+    private final UserService userService;
+
+    private final ApiPlansService apiPlansService;
+
     @Override
-    public ResponseEntity<Object> changeSubscription(Jwt jwt, Map<String, Object> body) {
+    public ResponseEntity<Object> changeSubscription(Jwt jwt, SubscriptionChangeSubscriptionRequest body) {
         try {
-            String userEmail = "marketing202001@gmail.com";
+            String sub = jwt.getClaimAsString("sub");
+            Optional<UserEntity> user = userService.findByAuth0UserId(sub);
+            if (!user.isPresent()) {
+                return utils.badRequest("The user does not exist");
+            }
+
+            Optional<ApiPlansEntity> plans = apiPlansService.findByid(body.getApiId());
+            if (!plans.isPresent()) {
+                return utils.badRequest("The plans does not exist");
+            }
+            String planKey = body.getPlanKey();
+            JsonNode plan = null;
+            if ("Basic".equalsIgnoreCase(planKey)) {
+                plan = utils.convertStrToJson(plans.get().getBasic());
+            } else if ("Pro".equalsIgnoreCase(planKey)) {
+                plan = utils.convertStrToJson(plans.get().getPro());
+            } else if ("Ultra".equalsIgnoreCase(planKey)) {
+                plan = utils.convertStrToJson(plans.get().getUltra());
+            } else if ("Mega".equalsIgnoreCase(planKey)) {
+                plan = utils.convertStrToJson(plans.get().getMega());
+            }
+
+            String priceId = utils.jsonNodeAt(plan, "/id", String.class);
+            String userEmail = user.get().getEmail();
             HttpHeaders headers = utils.buildHeader();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
             headers.setBasicAuth(stripeSecret, "");
             MultiValueMap<String, String> bodyClient = new LinkedMultiValueMap<>();
             bodyClient.add("mode", "subscription");
-            bodyClient.add("success_url", "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}");
-            bodyClient.add("cancel_url", "http://localhost:3000/cancel");
+            bodyClient.add("success_url", body.getUrl());
+            bodyClient.add("cancel_url", body.getUrl());
             bodyClient.add("customer_email", userEmail);
-            bodyClient.add("line_items[0][price]", "price_1SMJiHR5bl4Qw3RDcnBo27XW");
+            bodyClient.add("line_items[0][price]", priceId);
             bodyClient.add("line_items[0][quantity]", "1");
             bodyClient.add("payment_method_types[0]", "card");
             bodyClient.add("payment_method_types[1]", "link");

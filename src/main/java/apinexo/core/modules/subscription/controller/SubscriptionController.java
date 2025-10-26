@@ -1,7 +1,5 @@
 package apinexo.core.modules.subscription.controller;
 
-import java.util.Map;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -9,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
 import apinexo.core.modules.subscription.facade.SubscriptionFacade;
 import lombok.RequiredArgsConstructor;
 
@@ -20,7 +19,7 @@ public class SubscriptionController {
 
     @PostMapping("/change-subscription")
     public ResponseEntity<Object> changeSubscription(@AuthenticationPrincipal Jwt jwt,
-            @RequestBody Map<String, Object> body) {
+            @RequestBody SubscriptionChangeSubscriptionRequest body) {
         return subscriptionFacade.changeSubscription(jwt, body);
     }
 }
