@@ -18,6 +18,7 @@ import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.plans.entity.ApiPlansEntity;
 import apinexo.core.modules.plans.service.ApiPlansService;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
+import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionResponse;
 import apinexo.core.modules.subscription.facade.SubscriptionFacade;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
@@ -77,7 +78,9 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             bodyClient.add("payment_method_types[1]", "link");
             String url = "https://api.stripe.com/v1/checkout/sessions";
             JsonNode response = executePostRequest(JsonNode.class, url, bodyClient, headers);
-            return ResponseEntity.ok(response);
+            SubscriptionChangeSubscriptionResponse subscriptionResponse = SubscriptionChangeSubscriptionResponse
+                    .builder().url(utils.jsonNodeAt(response, "/url", String.class)).build();
+            return ResponseEntity.ok(subscriptionResponse);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
