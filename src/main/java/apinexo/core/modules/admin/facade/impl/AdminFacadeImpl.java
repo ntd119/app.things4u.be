@@ -45,20 +45,25 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                 JsonNode json = utils.readJsonFile(PATH_FILE + "api_plans.json", JsonNode.class);
                 json = utils.jsonNodeAt(json, "/" + apiId);
                 if (Objects.nonNull(json) && !json.isEmpty()) {
-                    List<String> planNames = utils.createList("Pro");
+                    entity = new ApiPlansEntity();
+                    entity.setId(apiId.toLowerCase());
+                    String pro = "Pro";
+                    String ultra = "Ultra";
+                    String mega = "Mega";
+                    List<String> planNames = utils.createList(pro, ultra, mega);
                     for (String planName : planNames) {
-                        JsonNode pro = utils.jsonNodeAt(json, "/" + planName);
-                        if (Objects.nonNull(pro) && !pro.isEmpty()) {
+                        JsonNode planJson = utils.jsonNodeAt(json, "/" + planName);
+                        if (Objects.nonNull(planJson) && !planJson.isEmpty()) {
                             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-                            body.add("unit_amount", utils.jsonNodeAt(pro, "/price", String.class));
+                            body.add("unit_amount", utils.jsonNodeAt(planJson, "/price", String.class));
                             body.add("product_data[name]", apiId + " " + planName);
                             body.add("nickname", planName);
                             body.add("metadata[api_id]", apiId.toLowerCase());
                             body.add("metadata[key]", planName.toLowerCase());
-                            body.add("metadata[rate_limit]", utils.jsonNodeAt(pro, "/rate_limit", String.class));
+                            body.add("metadata[rate_limit]", utils.jsonNodeAt(planJson, "/rate_limit", String.class));
                             body.add("metadata[rate_limit_period]",
-                                    utils.jsonNodeAt(pro, "/rate_limit_period", String.class));
-                            body.add("metadata[up_to]", utils.jsonNodeAt(pro, "/up_to", String.class));
+                                    utils.jsonNodeAt(planJson, "/rate_limit_period", String.class));
+                            body.add("metadata[up_to]", utils.jsonNodeAt(planJson, "/up_to", String.class));
                             JsonNode result = stripeService.createPriceHardLimit(body);
 
                             // id
@@ -94,12 +99,16 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                                             .rateLimit(rateLimit).rateLimitPeriod(rateLimitPeriod).build())
                                     .build();
 
-                            entity = new ApiPlansEntity();
-                            entity.setId(apiId.toLowerCase());
-                            entity.setPro(utils.convertDtoToJson(planResponse).toPrettyString());
-                            apiPlansService.save(entity);
+                            if ("Pro".equals(planName)) {
+                                entity.setPro(utils.convertDtoToJson(planResponse).toPrettyString());
+                            } else if ("Ultra".equals(planName)) {
+                                entity.setUltra(utils.convertDtoToJson(planResponse).toPrettyString());
+                            } else if ("Mega".equals(planName)) {
+                                entity.setMega(utils.convertDtoToJson(planResponse).toPrettyString());
+                            }
                         }
                     }
+                    apiPlansService.save(entity);
                 }
             }
             ApiPlansResponse response = ApiPlansResponse.builder().id(entity.getId())
