@@ -76,6 +76,9 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                             // price
                             Integer price = utils.jsonNodeAt(result, "/unit_amount", Integer.class);
 
+                            // isSoftLimit
+                            String isSoftLimit = utils.jsonNodeAt(result, "/metadata/is_soft_limit", String.class);
+
                             // rateLimit
                             String rateLimit = utils.jsonNodeAt(result, "/metadata/rate_limit", String.class);
 
@@ -87,8 +90,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                                     .key(key).upTo(upTo).period("month").currency("usd").active(true).price(price)
                                     .isFree(false).overagePrices(utils.createList())
                                     .metadata(AdminPlanResponse.Metadata.builder().apiId(apiId.toLowerCase())
-                                            .isSoftLimit("false").key(key).privateField("false").rateLimit(rateLimit)
-                                            .rateLimitPeriod(rateLimitPeriod).build())
+                                            .isSoftLimit(isSoftLimit).key(key).privateField("false")
+                                            .rateLimit(rateLimit).rateLimitPeriod(rateLimitPeriod).build())
                                     .build();
 
                             entity = new ApiPlansEntity();
