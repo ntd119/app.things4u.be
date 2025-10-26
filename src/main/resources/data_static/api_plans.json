@@ -5,6 +5,7 @@
 			"up_to": 100,
 			"rate_limit": 1000,
 			"rate_limit_period": "hour",
+			"is_free": true,
 			"is_soft_limit": false
 		},
 		"Pro": {
@@ -12,6 +13,7 @@
 			"up_to": 10000,
 			"rate_limit": 5,
 			"rate_limit_period": "second",
+			"is_free": false,
 			"is_soft_limit": false
 		},
 		"Ultra": {
@@ -19,6 +21,7 @@
 			"up_to": 50000,
 			"rate_limit": 10,
 			"rate_limit_period": "second",
+			"is_free": false,
 			"is_soft_limit": false
 		},
 		"Mega": {
@@ -26,6 +29,7 @@
 			"up_to": 200000,
 			"rate_limit": 20,
 			"rate_limit_period": "second",
+			"is_free": false,
 			"is_soft_limit": false
 		}
 	}

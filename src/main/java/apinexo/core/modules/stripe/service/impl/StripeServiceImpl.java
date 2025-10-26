@@ -69,7 +69,6 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         }
         body.add("currency", "usd");
         body.add("recurring[interval]", "month");
-        body.add("metadata[is_soft_limit]", "false");
         String url = "https://api.stripe.com/v1/prices";
         return executePostRequest(JsonNode.class, url, body, headers);
     }
