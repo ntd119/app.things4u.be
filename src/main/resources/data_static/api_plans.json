@@ -1,7 +1,7 @@
 {
 	"JSearch": {
 		"Basic": {
-			"price": null,
+			"price": 0,
 			"up_to": 100,
 			"rate_limit": 1000,
 			"rate_limit_period": "hour",
