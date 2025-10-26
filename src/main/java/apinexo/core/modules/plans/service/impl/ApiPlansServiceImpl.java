@@ -19,4 +19,9 @@ public class ApiPlansServiceImpl implements ApiPlansService {
     public Optional<ApiPlansEntity> findByid(String id) {
         return apiPlansRepository.findById(id);
     }
+
+    @Override
+    public ApiPlansEntity save(ApiPlansEntity entity) {
+        return apiPlansRepository.save(entity);
+    }
 }

@@ -8,4 +8,5 @@ public interface ApiPlansService {
 
     Optional<ApiPlansEntity> findByid(String id);
 
+    ApiPlansEntity save(ApiPlansEntity entity);
 }

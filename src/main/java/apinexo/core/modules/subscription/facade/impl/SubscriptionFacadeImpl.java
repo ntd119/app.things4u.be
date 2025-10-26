@@ -39,9 +39,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             bodyClient.add("success_url", "http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}");
             bodyClient.add("cancel_url", "http://localhost:3000/cancel");
             bodyClient.add("customer_email", userEmail);
-            bodyClient.add("line_items[0][price]", "price_1SLySER5bl4Qw3RDCSX3DqlQ");
+            bodyClient.add("line_items[0][price]", "price_1SMIIdR5bl4Qw3RDB8VkfWj5");
             bodyClient.add("line_items[0][quantity]", "1");
-            bodyClient.add("line_items[1][price]", "price_1SLyGvR5bl4Qw3RDY6UDhkeG");
             bodyClient.add("payment_method_types[0]", "card");
             bodyClient.add("payment_method_types[1]", "link");
             String url = "https://api.stripe.com/v1/checkout/sessions";
