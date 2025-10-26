@@ -38,13 +38,9 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     public ResponseEntity<Object> createPlans(String apiId) {
         try {
             Optional<ApiPlansEntity> optional = apiPlansService.findByid(apiId.toLowerCase());
+            ApiPlansEntity entity = null;
             if (optional.isPresent()) {
-                ApiPlansEntity entity = optional.get();
-                ApiPlansResponse response = ApiPlansResponse.builder().id(entity.getId())
-                        .basic(utils.convertStrToJson(entity.getBasic())).pro(utils.convertStrToJson(entity.getPro()))
-                        .ultra(utils.convertStrToJson(entity.getUltra())).mega(utils.convertStrToJson(entity.getMega()))
-                        .build();
-                return ResponseEntity.ok(response);
+                entity = optional.get();
             } else {
                 JsonNode json = utils.readJsonFile(PATH_FILE + "api_plans.json", JsonNode.class);
                 json = utils.jsonNodeAt(json, "/" + apiId);
@@ -95,16 +91,19 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                                             .rateLimitPeriod(rateLimitPeriod).build())
                                     .build();
 
-                            ApiPlansEntity entity = new ApiPlansEntity();
+                            entity = new ApiPlansEntity();
                             entity.setId(apiId.toLowerCase());
                             entity.setPro(utils.convertDtoToJson(planResponse).toPrettyString());
                             apiPlansService.save(entity);
-                            return ResponseEntity.ok(planResponse);
                         }
                     }
                 }
-                return ResponseEntity.ok(json);
             }
+            ApiPlansResponse response = ApiPlansResponse.builder().id(entity.getId())
+                    .basic(utils.convertStrToJson(entity.getBasic())).pro(utils.convertStrToJson(entity.getPro()))
+                    .ultra(utils.convertStrToJson(entity.getUltra())).mega(utils.convertStrToJson(entity.getMega()))
+                    .build();
+            return ResponseEntity.ok(response);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {
