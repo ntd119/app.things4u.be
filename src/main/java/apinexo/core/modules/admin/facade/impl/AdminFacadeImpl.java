@@ -55,7 +55,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                         if (Objects.nonNull(pro) && !pro.isEmpty()) {
                             MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
                             body.add("unit_amount", utils.jsonNodeAt(pro, "/price", String.class));
-                            body.add("product_data[name]", apiId);
+                            body.add("product_data[name]", apiId + " " + planName);
                             body.add("nickname", planName);
                             body.add("metadata[api_id]", apiId.toLowerCase());
                             body.add("metadata[key]", planName.toLowerCase());
@@ -63,25 +63,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                             body.add("metadata[rate_limit_period]",
                                     utils.jsonNodeAt(pro, "/rate_limit_period", String.class));
                             body.add("metadata[up_to]", utils.jsonNodeAt(pro, "/up_to", String.class));
-                            // JsonNode result = stripeService.createPriceHardLimit(body);
-                            JsonNode result = utils.convertStrToJson("{\r\n"
-                                    + "  \"id\": \"price_1SMIIdR5bl4Qw3RDB8VkfWj5\",\r\n"
-                                    + "  \"object\": \"price\",\r\n" + "  \"active\": true,\r\n"
-                                    + "  \"billing_scheme\": \"per_unit\",\r\n" + "  \"created\": 1761440351,\r\n"
-                                    + "  \"currency\": \"usd\",\r\n" + "  \"custom_unit_amount\": null,\r\n"
-                                    + "  \"livemode\": false,\r\n" + "  \"lookup_key\": null,\r\n"
-                                    + "  \"metadata\": {\r\n" + "    \"api_id\": \"jsearch\",\r\n"
-                                    + "    \"is_soft_limit\": \"false\",\r\n" + "    \"key\": \"pro\",\r\n"
-                                    + "    \"rate_limit\": \"5\",\r\n" + "    \"rate_limit_period\": \"second\",\r\n"
-                                    + "    \"up_to\": \"10000\"\r\n" + "  },\r\n" + "  \"nickname\": \"Pro\",\r\n"
-                                    + "  \"product\": \"prod_TIu6MUbt4zzDe8\",\r\n" + "  \"recurring\": {\r\n"
-                                    + "    \"aggregate_usage\": null,\r\n" + "    \"interval\": \"month\",\r\n"
-                                    + "    \"interval_count\": 1,\r\n" + "    \"meter\": null,\r\n"
-                                    + "    \"trial_period_days\": null,\r\n" + "    \"usage_type\": \"licensed\"\r\n"
-                                    + "  },\r\n" + "  \"tax_behavior\": \"unspecified\",\r\n"
-                                    + "  \"tiers_mode\": null,\r\n" + "  \"transform_quantity\": null,\r\n"
-                                    + "  \"type\": \"recurring\",\r\n" + "  \"unit_amount\": 1500,\r\n"
-                                    + "  \"unit_amount_decimal\": \"1500\"\r\n" + "}");
+                            JsonNode result = stripeService.createPriceHardLimit(body);
 
                             // id
                             String id = utils.jsonNodeAt(result, "/id", String.class);
@@ -115,10 +97,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
 
                             ApiPlansEntity entity = new ApiPlansEntity();
                             entity.setId(apiId.toLowerCase());
-                            entity.setBasic(utils.convertDtoToJson(planResponse).toPrettyString());
                             entity.setPro(utils.convertDtoToJson(planResponse).toPrettyString());
-                            entity.setUltra(utils.convertDtoToJson(planResponse).toPrettyString());
-                            entity.setMega(utils.convertDtoToJson(planResponse).toPrettyString());
                             apiPlansService.save(entity);
                             return ResponseEntity.ok(planResponse);
                         }
