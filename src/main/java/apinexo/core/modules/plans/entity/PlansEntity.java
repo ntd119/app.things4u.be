@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.annotations.ColumnTransformer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import apinexo.common.entity.EntityCommon;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.subscription.entity.SubscribeEntity;
@@ -67,6 +69,7 @@ public class PlansEntity extends EntityCommon {
 
     @ManyToOne
     @JoinColumn(name = "api_id")
+    @JsonIgnore
     private ApiEntity api;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)

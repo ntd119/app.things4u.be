@@ -1,9 +1,10 @@
 package apinexo.core.modules.plans.dto;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import jakarta.persistence.Id;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,19 +14,36 @@ import lombok.Data;
 @Builder
 public class ApiPlansResponse {
 
-    @Id
     @JsonProperty("id")
     private String id;
 
-    @JsonProperty("basic")
-    private JsonNode basic;
+    @JsonProperty("nickname")
+    private String nickname;
 
-    @JsonProperty("pro")
-    private JsonNode pro;
+    @JsonProperty("key")
+    private String key;
 
-    @JsonProperty("ultra")
-    private JsonNode ultra;
+    @JsonProperty("up_to")
+    private Long upTo;
 
-    @JsonProperty("mega")
-    private JsonNode mega;
+    @JsonProperty("period")
+    private String period;
+
+    @JsonProperty("currency")
+    private String currency;
+
+    @JsonProperty("active")
+    private Boolean active;
+
+    @JsonProperty("price")
+    private Integer price;
+
+    @JsonProperty("is_free")
+    private Boolean isFree;
+
+    @JsonProperty("overage_prices")
+    private List<String> overagePrices;
+
+    @JsonProperty("metadata")
+    private JsonNode metadata;
 }
