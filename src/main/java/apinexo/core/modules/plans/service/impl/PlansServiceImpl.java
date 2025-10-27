@@ -6,12 +6,12 @@ import org.springframework.stereotype.Service;
 
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.plans.repository.PlansRepository;
-import apinexo.core.modules.plans.service.ApiPlansService;
+import apinexo.core.modules.plans.service.PlansService;
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ApiPlansServiceImpl implements ApiPlansService {
+public class PlansServiceImpl implements PlansService {
     
     private final PlansRepository plansRepository;
 

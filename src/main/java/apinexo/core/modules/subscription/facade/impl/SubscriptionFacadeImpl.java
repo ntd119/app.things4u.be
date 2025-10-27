@@ -19,7 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.plans.entity.PlansEntity;
-import apinexo.core.modules.plans.service.ApiPlansService;
+import apinexo.core.modules.plans.service.PlansService;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionResponse;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -40,7 +40,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
 
     private final UserService userService;
 
-    private final ApiPlansService apiPlansService;
+    private final PlansService apiPlansService;
 
     private final SubscriptionService subscriptionService;
 

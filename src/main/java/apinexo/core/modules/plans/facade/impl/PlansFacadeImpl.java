@@ -13,7 +13,7 @@ import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.plans.facade.PlansFacade;
-import apinexo.core.modules.plans.service.ApiPlansService;
+import apinexo.core.modules.plans.service.PlansService;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -22,7 +22,7 @@ public class PlansFacadeImpl extends AbstractService implements PlansFacade {
 
     private final ApinexoUtils utils;
 
-    private final ApiPlansService apiPlansService;
+    private final PlansService apiPlansService;
 
     @Override
     public ResponseEntity<Object> plans(String id) {

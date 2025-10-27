@@ -22,7 +22,7 @@ import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
 import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
-import apinexo.core.modules.plans.service.ApiPlansService;
+import apinexo.core.modules.plans.service.PlansService;
 import apinexo.core.modules.stripe.service.StripeService;
 import lombok.RequiredArgsConstructor;
 
@@ -34,7 +34,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
 
     private final StripeService stripeService;
 
-    private final ApiPlansService apiPlansService;
+    private final PlansService apiPlansService;
 
     private final ApiService apiService;
 

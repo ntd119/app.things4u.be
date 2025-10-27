@@ -4,7 +4,7 @@ import java.util.List;
 
 import apinexo.core.modules.plans.entity.PlansEntity;
 
-public interface ApiPlansService {
+public interface PlansService {
 
     List<PlansEntity> findByApiId(String apiId);
 }
