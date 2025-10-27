@@ -28,6 +28,7 @@ import apinexo.core.modules.subscription.facade.SubscriptionFacade;
 import apinexo.core.modules.subscription.service.SubscriptionService;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -46,6 +47,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     private final SubscriptionService subscriptionService;
 
     @Override
+    @Transactional
     public ResponseEntity<Object> changeSubscription(Jwt jwt, SubscriptionChangeSubscriptionRequest body) {
         try {
             String sub = jwt.getClaimAsString("sub");
@@ -78,6 +80,12 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 SubscriptionEntity subscribe = SubscriptionEntity.builder().id(subscriptionId).user(userEntity)
                         .api(apiEntity).plan(plansEntity).subscribedAt(LocalDateTime.now()).build();
                 subscribe.setSubscribedAt(LocalDateTime.now());
+                // delete old subscribe
+                Optional<SubscriptionEntity> subscriptionOptional = subscriptionService
+                        .findByUserIdAndApiId(userEntity.getUserId(), apiEntity.getId());
+                if (subscriptionOptional.isPresent()) {
+                    subscriptionService.delete(subscriptionOptional.get());
+                }
                 subscriptionService.save(subscribe);
                 return ResponseEntity.ok("OK");
             } else {
