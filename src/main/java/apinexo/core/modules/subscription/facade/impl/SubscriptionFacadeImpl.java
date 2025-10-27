@@ -18,8 +18,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.core.modules.api.entity.ApiEntity;
+import apinexo.core.modules.api.service.ApiService;
 import apinexo.core.modules.plans.entity.PlansEntity;
-import apinexo.core.modules.plans.service.PlansService;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionResponse;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -40,7 +41,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
 
     private final UserService userService;
 
-    private final PlansService apiPlansService;
+    private final ApiService apiService;
 
     private final SubscriptionService subscriptionService;
 
@@ -55,7 +56,13 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             }
             UserEntity userEntity = userOptional.get();
 
-            List<PlansEntity> plansEntities = apiPlansService.findByApiId(body.getApiId());
+            Optional<ApiEntity> apiOptional = apiService.findbyId(body.getApiId());
+            if (!apiOptional.isPresent()) {
+                return utils.badRequest("The api does not exist");
+            }
+            ApiEntity apiEntity = apiOptional.get();
+
+            List<PlansEntity> plansEntities = apiEntity.getPlans();
             if (CollectionUtils.isEmpty(plansEntities)) {
                 return utils.badRequest("The plans does not exist");
             }
@@ -69,7 +76,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             if (plansEntity.getIsFree()) {
                 String subscriptionId = utils.generateRandomHexString(24);
                 SubscriptionEntity subscribe = SubscriptionEntity.builder().id(subscriptionId).user(userEntity)
-                        .subscribedAt(LocalDateTime.now()).build();
+                        .api(apiEntity).plan(plansEntity).subscribedAt(LocalDateTime.now()).build();
                 subscribe.setSubscribedAt(LocalDateTime.now());
                 subscriptionService.save(subscribe);
                 return ResponseEntity.ok("OK");
