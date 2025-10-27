@@ -2,8 +2,6 @@ package apinexo.core.modules.admin.facade.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -17,13 +15,10 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
-import apinexo.core.modules.admin.dto.AdminPlanResponse;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest.PlanDTO;
 import apinexo.core.modules.admin.facade.AdminFacade;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
-import apinexo.core.modules.plans.dto.ApiPlansResponse;
-import apinexo.core.modules.plans.entity.ApiPlansEntity;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.plans.service.ApiPlansService;
 import apinexo.core.modules.stripe.service.StripeService;
@@ -50,7 +45,25 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             List<PlanDTO> planDTOs = request.getPlans();
             List<PlansEntity> plans = new ArrayList<>();
             for (PlanDTO planDTO : planDTOs) {
-                String id = utils.generateRandomHexString(24);
+                String id = null;
+                if (planDTO.getIsFree()) {
+                    id = utils.generateRandomHexString(24);
+                } else {
+                    MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
+                    body.add("unit_amount", planDTO.getPrice());
+                    body.add("product_data[name]", request.getName() + " " + planDTO.getNickname());
+                    body.add("nickname", planDTO.getNickname());
+                    body.add("metadata[api_id]", request.getId());
+                    body.add("metadata[key]", planDTO.getKey());
+                    body.add("metadata[is_free]", planDTO.getIsFree());
+                    body.add("metadata[is_soft_limit]", planDTO.getMetadata().getIsSoftLimit());
+                    body.add("metadata[rate_limit]", planDTO.getMetadata().getRateLimit());
+                    body.add("metadata[rate_limit_period]", planDTO.getMetadata().getRateLimitPeriod());
+                    body.add("metadata[up_to]", planDTO.getUpTo());
+                    JsonNode result = stripeService.createPriceHardLimit(body);
+                    id = utils.jsonNodeAt(result, "/id", String.class);
+                }
+
                 JsonNode metadata = utils.convertDtoToJson(planDTO.getMetadata());
                 ((ObjectNode) metadata).put("key", planDTO.getKey());
                 ((ObjectNode) metadata).put("api_id", request.getId());
@@ -62,91 +75,6 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             }
             apiEntity.setPlans(plans);
             apiService.save(apiEntity);
-
-//            Optional<ApiPlansEntity> optional = apiPlansService.findByid(apiId.toLowerCase());
-//            ApiPlansEntity entity = null;
-//            if (optional.isPresent()) {
-//                entity = optional.get();
-//            } else {
-//                JsonNode json = utils.readJsonFile(PATH_FILE + "api_plans.json", JsonNode.class);
-//                json = utils.jsonNodeAt(json, "/" + apiId);
-//                if (Objects.nonNull(json) && !json.isEmpty()) {
-//                    entity = new ApiPlansEntity();
-//                    entity.setId(apiId.toLowerCase());
-//                    List<String> planNames = utils.createList("Basic", "Pro", "Ultra", "Mega");
-//                    // List<String> planNames = utils.createList("Basic");
-//                    for (String planName : planNames) {
-//                        JsonNode planJson = utils.jsonNodeAt(json, "/" + planName);
-//                        if (Objects.nonNull(planJson) && !planJson.isEmpty()) {
-//                            MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-//
-//                            // key
-//                            String key = planName.toLowerCase();
-//
-//                            // upTo
-//                            Long upTo = utils.jsonNodeAt(planJson, "/up_to", Long.class);
-//
-//                            // price
-//                            Integer price = utils.jsonNodeAt(planJson, "/price", Integer.class);
-//
-//                            // is_free
-//                            Boolean isFree = utils.jsonNodeAt(planJson, "/is_free", Boolean.class);
-//
-//                            // isSoftLimit
-//                            String isSoftLimit = utils.jsonNodeAt(planJson, "/is_soft_limit", String.class);
-//
-//                            // rateLimit
-//                            String rateLimit = utils.jsonNodeAt(planJson, "/rate_limit", String.class);
-//
-//                            // rateLimitPeriod
-//                            String rateLimitPeriod = utils.jsonNodeAt(planJson, "/rate_limit_period", String.class);
-//
-//                            body.add("unit_amount", String.valueOf(price));
-//                            body.add("product_data[name]", apiId + " " + planName);
-//                            body.add("nickname", planName);
-//                            body.add("metadata[api_id]", apiId.toLowerCase());
-//                            body.add("metadata[key]", key);
-//                            body.add("metadata[is_free]", String.valueOf(isFree));
-//                            body.add("metadata[is_soft_limit]", String.valueOf(isSoftLimit));
-//                            body.add("metadata[rate_limit]", rateLimit);
-//                            body.add("metadata[rate_limit_period]", rateLimitPeriod);
-//                            body.add("metadata[up_to]", String.valueOf(upTo));
-//                            JsonNode result = null;
-//                            AdminPlanResponse planResponse = null;
-//                            String id = null;
-//                            if ("Basic".equalsIgnoreCase(planName)) {
-//                                id = utils.generateRandomHexString(24);
-//                            } else {
-//                                result = stripeService.createPriceHardLimit(body);
-//                                // id
-//                                id = utils.jsonNodeAt(result, "/id", String.class);
-//                            }
-//
-//                            planResponse = AdminPlanResponse.builder().id(id).nickname(planName).key(key).upTo(upTo)
-//                                    .period("month").currency("usd").active(true).price(price).isFree(isFree)
-//                                    .overagePrices(utils.createList())
-//                                    .metadata(AdminPlanResponse.Metadata.builder().apiId(apiId.toLowerCase())
-//                                            .isSoftLimit(isSoftLimit).key(key).privateField("false")
-//                                            .rateLimit(rateLimit).rateLimitPeriod(rateLimitPeriod).build())
-//                                    .build();
-//                            if ("Basic".equalsIgnoreCase(planName)) {
-//                                entity.setBasic(utils.convertDtoToJson(planResponse).toPrettyString());
-//                            } else if ("Pro".equalsIgnoreCase(planName)) {
-//                                entity.setPro(utils.convertDtoToJson(planResponse).toPrettyString());
-//                            } else if ("Ultra".equalsIgnoreCase(planName)) {
-//                                entity.setUltra(utils.convertDtoToJson(planResponse).toPrettyString());
-//                            } else if ("Mega".equalsIgnoreCase(planName)) {
-//                                entity.setMega(utils.convertDtoToJson(planResponse).toPrettyString());
-//                            }
-//                        }
-//                    }
-//                    apiPlansService.save(entity);
-//                }
-//            }
-//            ApiPlansResponse response = ApiPlansResponse.builder().id(entity.getId())
-//                    .basic(utils.convertStrToJson(entity.getBasic())).pro(utils.convertStrToJson(entity.getPro()))
-//                    .ultra(utils.convertStrToJson(entity.getUltra())).mega(utils.convertStrToJson(entity.getMega()))
-//                    .build();
             return ResponseEntity.ok("OK");
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));

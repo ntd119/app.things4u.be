@@ -52,7 +52,7 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     }
 
     @Override
-    public JsonNode createPriceHardLimit(MultiValueMap<String, String> body) {
+    public JsonNode createPriceHardLimit(MultiValueMap<String, Object> body) {
         HttpHeaders headers = utils.buildHeader();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(stripeSecret, "");

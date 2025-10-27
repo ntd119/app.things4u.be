@@ -8,5 +8,5 @@ public interface StripeService {
 
     JsonNode createPriceSoftLimit();
 
-    JsonNode createPriceHardLimit(MultiValueMap<String, String> body);
+    JsonNode createPriceHardLimit(MultiValueMap<String, Object> body);
 }
