@@ -1,5 +1,6 @@
 package apinexo.core.modules.subscription.facade.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,7 +22,9 @@ import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.plans.service.ApiPlansService;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionResponse;
+import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.facade.SubscriptionFacade;
+import apinexo.core.modules.subscription.service.SubscriptionService;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -39,14 +42,18 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
 
     private final ApiPlansService apiPlansService;
 
+    private final SubscriptionService subscriptionService;
+
     @Override
     public ResponseEntity<Object> changeSubscription(Jwt jwt, SubscriptionChangeSubscriptionRequest body) {
         try {
             String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> user = userService.findByAuth0UserId(sub);
-            if (!user.isPresent()) {
+            Optional<UserEntity> userOptional = userService.findByAuth0UserId(sub);
+
+            if (!userOptional.isPresent()) {
                 return utils.badRequest("The user does not exist");
             }
+            UserEntity userEntity = userOptional.get();
 
             List<PlansEntity> plansEntities = apiPlansService.findByApiId(body.getApiId());
             if (CollectionUtils.isEmpty(plansEntities)) {
@@ -60,13 +67,18 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             }
             PlansEntity plansEntity = plansOptional.get();
             if (plansEntity.getIsFree()) {
+                String subscriptionId = utils.generateRandomHexString(24);
+                SubscriptionEntity subscribe = SubscriptionEntity.builder().id(subscriptionId).user(userEntity)
+                        .subscribedAt(LocalDateTime.now()).build();
+                subscribe.setSubscribedAt(LocalDateTime.now());
+                subscriptionService.save(subscribe);
                 return ResponseEntity.ok("OK");
             } else {
                 String priceId = plansEntities.stream()
                         .filter(plan -> plan.getKey().equalsIgnoreCase(body.getPlanKey())).map(PlansEntity::getId)
                         .findFirst().orElse(null);
 
-                String userEmail = user.get().getEmail();
+                String userEmail = userEntity.getEmail();
                 HttpHeaders headers = utils.buildHeader();
                 headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
                 headers.setBasicAuth(stripeSecret, "");

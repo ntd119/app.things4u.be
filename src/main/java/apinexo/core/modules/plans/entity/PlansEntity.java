@@ -8,7 +8,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import apinexo.common.entity.EntityCommon;
 import apinexo.core.modules.api.entity.ApiEntity;
-import apinexo.core.modules.subscription.entity.SubscribeEntity;
+import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -73,6 +73,6 @@ public class PlansEntity extends EntityCommon {
     private ApiEntity api;
 
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SubscribeEntity> subscriptions;
+    private List<SubscriptionEntity> subscriptions;
 
 }

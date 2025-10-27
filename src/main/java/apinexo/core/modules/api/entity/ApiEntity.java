@@ -4,7 +4,7 @@ import java.util.List;
 
 import apinexo.common.entity.EntityCommon;
 import apinexo.core.modules.plans.entity.PlansEntity;
-import apinexo.core.modules.subscription.entity.SubscribeEntity;
+import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -45,5 +45,5 @@ public class ApiEntity extends EntityCommon {
     private List<PlansEntity> plans;
 
     @OneToMany(mappedBy = "api", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<SubscribeEntity> subscriptions;
+    private List<SubscriptionEntity> subscriptions;
 }

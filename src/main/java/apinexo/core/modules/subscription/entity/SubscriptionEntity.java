@@ -5,9 +5,8 @@ import java.time.LocalDateTime;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.user.entity.UserEntity;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -27,11 +26,10 @@ import lombok.Setter;
 @Builder
 @Entity
 @Table(name = "subscribe")
-public class SubscribeEntity {
+public class SubscriptionEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private String id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -45,5 +43,6 @@ public class SubscribeEntity {
     @JoinColumn(name = "plan_id")
     private PlansEntity plan;
 
+    @Column(name = "subscribed_at")
     private LocalDateTime subscribedAt;
 }
