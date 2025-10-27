@@ -44,7 +44,7 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
             if (existing.isPresent()) {
                 entity = existing.get();
             } else {
-                String apikey = this.generateApiKey();
+                String apikey = String.format("ak_%s", utils.generateRandomHexString(47));
                 JsonNode user = auth0Service.getUser(sub);
                 if (Objects.isNull(user) || user.isEmpty()) {
                     return ResponseEntity.badRequest().body(new ApiException("The user does not exist"));
@@ -55,7 +55,7 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
                 }
 
                 // userId
-                String userId = this.generateHexId();
+                String userId = utils.generateRandomHexString(24);
 
                 // email
                 String email = utils.jsonNodeAt(user, "/email", String.class);
@@ -75,7 +75,7 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
                 // auth0_user_id
                 String auth0UserId = utils.jsonNodeAt(user, "/user_id", String.class);
 
-                entity = UserEntity.builder().userId(userId).apiKey(apikey).email(email).emailVerified(emailVerified)
+                entity = UserEntity.builder().id(userId).apiKey(apikey).email(email).emailVerified(emailVerified)
                         .firstName(firstName).lastName(lastName).picture(picture).auth0UserId(auth0UserId).build();
                 entity = userService.save(entity);
 
@@ -89,37 +89,4 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
-
-    private String generateApiKey() throws NoSuchAlgorithmException {
-        String prefix = "ak_";
-        String charset = "abcdefghijklmnopqrstuvwxyz0123456789";
-        int keyLength = 47;
-        SecureRandom random = new SecureRandom();
-        String apiKey;
-        do {
-            StringBuilder sb = new StringBuilder(prefix);
-            for (int i = 0; i < keyLength; i++) {
-                int index = random.nextInt(charset.length());
-                sb.append(charset.charAt(index));
-            }
-            apiKey = sb.toString();
-        } while (userService.findByApiKey(apiKey).isPresent());
-        return apiKey;
-    }
-
-    private String generateHexId() {
-        String hex = "0123456789abcdef";
-        SecureRandom random = new SecureRandom();
-        int length = 24;
-        String id = null;
-        do {
-            StringBuilder sb = new StringBuilder(length);
-            for (int i = 0; i < length; i++) {
-                sb.append(hex.charAt(random.nextInt(hex.length())));
-            }
-            id = sb.toString();
-        } while (userService.findByid(id).isPresent());
-        return id;
-    }
-
 }

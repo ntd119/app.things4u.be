@@ -19,8 +19,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 public class UserEntity {
     @Id
-    @Column(name = "user_id")
-    private String userId;
+    private String id;
 
     @Column(name = "api_key")
     private String apiKey;

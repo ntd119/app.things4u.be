@@ -46,7 +46,7 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
                 return ResponseEntity.badRequest().body(new ApiException("The user does not exist"));
             }
 
-            OpenmeterTokenClientRequest body = OpenmeterTokenClientRequest.builder().subject(user.get().getUserId())
+            OpenmeterTokenClientRequest body = OpenmeterTokenClientRequest.builder().subject(user.get().getId())
                     .allowedMeterSlugs(utils.createList("api_requests_total")).build();
 
             HttpHeaders headers = utils.buildHeader();
@@ -74,7 +74,7 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
 
             OpenmeterSendEventClientRequest body = OpenmeterSendEventClientRequest.builder().specversion("1.0")
                     .type("request").id(utils.uuidRandom()).time(formatDate + "Z").source("api_requests_total")
-                    .subject(user.get().getUserId())
+                    .subject(user.get().getId())
                     .data(OpenmeterSendEventClientRequest.DataContent.builder().value("1").apiName("jsearch").build())
                     .build();
             HttpHeaders headers = utils.buildHeader();

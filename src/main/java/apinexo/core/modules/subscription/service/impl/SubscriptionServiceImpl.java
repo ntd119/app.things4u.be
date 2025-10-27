@@ -27,6 +27,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public Optional<SubscriptionEntity> findByUserIdAndApiId(String userId, String apiId) {
-        return subscriptionRepository.findByUser_userIdAndApi_Id(userId, apiId);
+        return subscriptionRepository.findByUser_IdAndApi_Id(userId, apiId);
     }
 }

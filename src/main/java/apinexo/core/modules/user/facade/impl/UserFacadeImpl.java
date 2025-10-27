@@ -27,7 +27,7 @@ public class UserFacadeImpl implements UserFacade {
             Optional<UserEntity> existing = service.findByAuth0UserId(sub);
             if (existing.isPresent()) {
                 UserEntity entity = existing.get();
-                UserGetUserResponse response = UserGetUserResponse.builder().userId(entity.getUserId())
+                UserGetUserResponse response = UserGetUserResponse.builder().userId(entity.getId())
                         .email(entity.getEmail()).emailVerified(entity.getEmailVerified())
                         .firstName(entity.getFirstName()).lastName(entity.getLastName()).company(entity.getCompany())
                         .picture(entity.getPicture()).auth0UserId(entity.getAuth0UserId())

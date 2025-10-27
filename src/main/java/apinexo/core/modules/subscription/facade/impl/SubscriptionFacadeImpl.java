@@ -82,7 +82,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 subscribe.setSubscribedAt(LocalDateTime.now());
                 // delete old subscribe
                 Optional<SubscriptionEntity> subscriptionOptional = subscriptionService
-                        .findByUserIdAndApiId(userEntity.getUserId(), apiEntity.getId());
+                        .findByUserIdAndApiId(userEntity.getId(), apiEntity.getId());
                 if (subscriptionOptional.isPresent()) {
                     subscriptionService.delete(subscriptionOptional.get());
                 }

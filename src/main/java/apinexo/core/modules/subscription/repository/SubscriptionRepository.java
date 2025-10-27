@@ -8,5 +8,5 @@ import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 
 public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, String> {
 
-    Optional<SubscriptionEntity> findByUser_userIdAndApi_Id(String userId, String apiId);
+    Optional<SubscriptionEntity> findByUser_IdAndApi_Id(String userId, String apiId);
 }
