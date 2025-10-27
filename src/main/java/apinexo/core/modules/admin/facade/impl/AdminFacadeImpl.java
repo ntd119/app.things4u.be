@@ -12,6 +12,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
@@ -51,6 +52,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             for (PlanDTO planDTO : planDTOs) {
                 String id = utils.generateRandomHexString(24);
                 JsonNode metadata = utils.convertDtoToJson(planDTO.getMetadata());
+                ((ObjectNode) metadata).put("key", planDTO.getKey());
+                ((ObjectNode) metadata).put("api_id", request.getId());
                 PlansEntity plansEntity = PlansEntity.builder().id(id).nickname(planDTO.getNickname())
                         .key(planDTO.getKey()).upTo(planDTO.getUpTo()).period(planDTO.getPeriod())
                         .currency(planDTO.getCurrency()).active(planDTO.getActive()).price(planDTO.getPrice())
