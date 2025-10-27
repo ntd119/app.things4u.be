@@ -1,7 +1,9 @@
 package apinexo.core.modules.subscription.facade.impl;
 
+import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -15,7 +17,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
-import apinexo.core.modules.plans.entity.ApiPlansEntity;
+import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.plans.service.ApiPlansService;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionResponse;
@@ -46,23 +48,14 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 return utils.badRequest("The user does not exist");
             }
 
-            Optional<ApiPlansEntity> plans = apiPlansService.findByid(body.getApiId());
-            if (!plans.isPresent()) {
+            List<PlansEntity> plansEntities = apiPlansService.findByApiId(body.getApiId());
+            if (CollectionUtils.isEmpty(plansEntities)) {
                 return utils.badRequest("The plans does not exist");
             }
-            String planKey = body.getPlanKey();
-            JsonNode plan = null;
-            if ("Basic".equalsIgnoreCase(planKey)) {
-                plan = utils.convertStrToJson(plans.get().getBasic());
-            } else if ("Pro".equalsIgnoreCase(planKey)) {
-                plan = utils.convertStrToJson(plans.get().getPro());
-            } else if ("Ultra".equalsIgnoreCase(planKey)) {
-                plan = utils.convertStrToJson(plans.get().getUltra());
-            } else if ("Mega".equalsIgnoreCase(planKey)) {
-                plan = utils.convertStrToJson(plans.get().getMega());
-            }
 
-            String priceId = utils.jsonNodeAt(plan, "/id", String.class);
+            String priceId = plansEntities.stream().filter(plan -> plan.getKey().equalsIgnoreCase(body.getPlanKey()))
+                    .map(PlansEntity::getId).findFirst().orElse(null);
+
             String userEmail = user.get().getEmail();
             HttpHeaders headers = utils.buildHeader();
             headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
