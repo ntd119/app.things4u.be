@@ -1,36 +1,76 @@
 {
-	"JSearch": {
-		"Basic": {
-			"price": 0,
+	"id": "jsearch",
+	"name": "JSearch",
+	"short_description": "short description",
+	"long_description": "long description",
+	"plans": [
+		{
+			"nickname": "Basic",
+			"key": "basic",
 			"up_to": 100,
-			"rate_limit": 1000,
-			"rate_limit_period": "hour",
+			"period": "month",
+			"currency":"usd",
+			"active": true,
+			"price": null,
 			"is_free": true,
-			"is_soft_limit": false
+			"overage_prices": [],
+			"metadata": {
+				"rate_limit": 1000,
+				"rate_limit_period": "hour",
+				"is_soft_limit": false,
+				"private": false
+			}
 		},
-		"Pro": {
-			"price": 1500,
+		{
+			"nickname": "Pro",
+			"key": "pro",
 			"up_to": 10000,
-			"rate_limit": 5,
-			"rate_limit_period": "second",
+			"period": "month",
+			"currency": "usd",
+			"active": true,
+			"price": 2500,
 			"is_free": false,
-			"is_soft_limit": false
+			"overage_prices": [],
+			"metadata": {
+				"is_soft_limit": "true",
+				"private": "false",
+				"rate_limit": "10",
+				"rate_limit_period": "second"
+			}
 		},
-		"Ultra": {
-			"price": 7500,
+		{
+			"nickname": "Ultra",
+			"key": "ultra",
 			"up_to": 50000,
-			"rate_limit": 10,
-			"rate_limit_period": "second",
+			"period": "month",
+			"currency": "usd",
+			"active": true,
+			"price": 7500,
 			"is_free": false,
-			"is_soft_limit": false
+			"overage_prices": [],
+			"metadata": {
+				"is_soft_limit": "true",
+				"private": "false",
+				"rate_limit": "20",
+				"rate_limit_period": "second"
+			}
 		},
-		"Mega": {
-			"price": 15000,
+		{
+			"nickname": "Mega",
+			"key": "mega",
 			"up_to": 200000,
-			"rate_limit": 20,
-			"rate_limit_period": "second",
+			"period": "month",
+			"currency": "usd",
+			"active": true,
+			"price": 15000,
 			"is_free": false,
-			"is_soft_limit": false
+			"overage_prices": [],
+			"metadata": {
+				"is_soft_limit": "true",
+				"private": "false",
+				"rate_limit": "30",
+				"rate_limit_period": "second"
+			}
 		}
-	}
+	]
 }
