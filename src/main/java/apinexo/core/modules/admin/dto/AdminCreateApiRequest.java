@@ -35,12 +35,12 @@ public class AdminCreateApiRequest {
         private String key;
 
         @JsonProperty("up_to")
-        private Integer upTo;
+        private Long upTo;
 
         private String period;
         private String currency;
         private Boolean active;
-        private Double price;
+        private Integer price;
 
         @JsonProperty("is_free")
         private Boolean isFree;

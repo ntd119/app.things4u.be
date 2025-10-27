@@ -26,9 +26,6 @@ public abstract class EntityCommon {
     @Column(name = "update_date", updatable = true)
     private Long updatedDate;
 
-    @Column(name = "active", length = 1)
-    private Boolean active;
-
     @PrePersist
     protected void onCreate() {
         LocalDateTime now = LocalDateTime.now(ZoneId.systemDefault());
@@ -38,9 +35,6 @@ public abstract class EntityCommon {
         }
         if (updatedDate == null) {
             updatedDate = milliseconds;
-        }
-        if (active == null) {
-            active = true;
         }
     }
 

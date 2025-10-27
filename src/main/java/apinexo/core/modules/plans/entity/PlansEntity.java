@@ -17,10 +17,14 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Setter
+@Getter
 @Builder
 @Entity
 @Table(name = "plans")
@@ -49,6 +53,9 @@ public class PlansEntity extends EntityCommon {
 
     @Column(name = "is_free")
     private Boolean isFree;
+
+    @Column(name = "active", length = 1)
+    private Boolean active;
 
     @Column(name = "overage_prices", columnDefinition = "jsonb")
     @ColumnTransformer(write = "?::jsonb")
