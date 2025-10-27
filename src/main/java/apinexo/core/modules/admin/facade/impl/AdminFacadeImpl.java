@@ -50,10 +50,11 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             List<PlansEntity> plans = new ArrayList<>();
             for (PlanDTO planDTO : planDTOs) {
                 String id = utils.generateRandomHexString(24);
+                JsonNode metadata = utils.convertDtoToJson(planDTO.getMetadata());
                 PlansEntity plansEntity = PlansEntity.builder().id(id).nickname(planDTO.getNickname())
                         .key(planDTO.getKey()).upTo(planDTO.getUpTo()).period(planDTO.getPeriod())
                         .currency(planDTO.getCurrency()).active(planDTO.getActive()).price(planDTO.getPrice())
-                        .isFree(planDTO.getIsFree()).api(apiEntity).build();
+                        .isFree(planDTO.getIsFree()).metadata(metadata.toPrettyString()).api(apiEntity).build();
                 plans.add(plansEntity);
             }
             apiEntity.setPlans(plans);

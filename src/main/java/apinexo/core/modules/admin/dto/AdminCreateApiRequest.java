@@ -64,12 +64,8 @@ public class AdminCreateApiRequest {
             @JsonProperty("is_soft_limit")
             private String isSoftLimit;
 
-            private String _private;
-
             @JsonProperty("private")
-            public void setPrivate(String value) {
-                this._private = value;
-            }
+            private String _private;
         }
     }
 }
