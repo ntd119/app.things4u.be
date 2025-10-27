@@ -8,4 +8,6 @@ import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionReque
 public interface SubscriptionFacade {
 
     public ResponseEntity<Object> changeSubscription(Jwt jwt, SubscriptionChangeSubscriptionRequest body);
+
+    public ResponseEntity<Object> getSubscriptions(Jwt jwt);
 }
