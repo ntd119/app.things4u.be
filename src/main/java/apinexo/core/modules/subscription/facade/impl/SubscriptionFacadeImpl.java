@@ -120,7 +120,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     @Override
     public ResponseEntity<Object> getSubscriptions(Jwt jwt) {
         try {
-            return ResponseEntity.ok("OK");
+            List<SubscriptionEntity> subscriptionEntities =  subscriptionService.findByUserId("e0e79009c76fcf9b13018dbc");
+            return ResponseEntity.ok(subscriptionEntities);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }

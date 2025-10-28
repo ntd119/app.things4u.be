@@ -1,5 +1,6 @@
 package apinexo.core.modules.subscription.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -11,4 +12,6 @@ public interface SubscriptionService {
     void delete(SubscriptionEntity entity);
 
     Optional<SubscriptionEntity> findByUserIdAndApiId(String userId, String apiId);
+
+    List<SubscriptionEntity> findByUserId(String userId);
 }
