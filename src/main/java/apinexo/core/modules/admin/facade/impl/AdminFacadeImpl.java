@@ -45,7 +45,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             if (CollectionUtils.isEmpty(plansEntities)) {
                 ApiEntity apiEntity = ApiEntity.builder().id(request.getId()).name(request.getName())
                         .shortDescription(request.getShortDescription()).longDescription(request.getLongDescription())
-                        .build();
+                        .image(request.getImage()).build();
                 List<PlanDTO> planDTOs = request.getPlans();
                 List<PlansEntity> plans = new ArrayList<>();
                 for (PlanDTO planDTO : planDTOs) {

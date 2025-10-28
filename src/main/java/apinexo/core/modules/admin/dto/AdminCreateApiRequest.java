@@ -24,6 +24,9 @@ public class AdminCreateApiRequest {
     @JsonProperty("long_description")
     private String longDescription;
 
+    @JsonProperty("image")
+    private String image;
+
     private List<PlanDTO> plans;
 
     @Data
