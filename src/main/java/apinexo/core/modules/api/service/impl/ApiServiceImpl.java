@@ -1,5 +1,6 @@
 package apinexo.core.modules.api.service.impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
@@ -23,5 +24,10 @@ public class ApiServiceImpl  implements ApiService {
     @Override
     public Optional<ApiEntity> findbyId(String id) {
         return apiRepository.findById(id);
+    }
+
+    @Override
+    public List<ApiEntity> findAll() {
+        return apiRepository.findAll();
     }
 }
