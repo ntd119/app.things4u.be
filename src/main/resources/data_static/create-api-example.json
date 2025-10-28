@@ -1,8 +1,9 @@
 {
 	"id": "jsearch",
 	"name": "JSearch",
-	"short_description": "short description",
-	"long_description": "long description",
+	"short_description": "Fast and Reliable Jobs API Providing Real-time Job Listings and Salary Data from Google for Jobs and the Public Web.",
+	"long_description": "",
+	"image": "jsearch_api.png",
 	"plans": [
 		{
 			"nickname": "Basic",
