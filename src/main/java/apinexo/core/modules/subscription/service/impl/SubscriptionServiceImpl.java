@@ -35,4 +35,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public List<SubscriptionEntity> findByUserId(String userId) {
         return subscriptionRepository.findByUser_Id(userId);
     }
+
+    @Override
+    public Optional<SubscriptionEntity> findById(String id) {
+        return subscriptionRepository.findById(id);
+    }
 }

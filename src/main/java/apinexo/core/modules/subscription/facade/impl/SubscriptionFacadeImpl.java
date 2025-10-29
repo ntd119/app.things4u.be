@@ -156,7 +156,15 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
 
     @Override
     public ResponseEntity<Object> cancelSubscription(Jwt jwt, String subscriptionId) {
-        // TODO Auto-generated method stub
-        return null;
+        Optional<SubscriptionEntity> subscriptionOptional = subscriptionService.findById(subscriptionId);
+        if (subscriptionOptional.isPresent()) {
+            SubscriptionEntity entity = subscriptionOptional.get();
+            subscriptionService.delete(entity);
+            ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
+            SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse.builder()
+                    .id(entity.getId()).plan(plans).build();
+            return ResponseEntity.ok(response);
+        }
+        return utils.badRequest("The subscription does not exist");
     }
 }

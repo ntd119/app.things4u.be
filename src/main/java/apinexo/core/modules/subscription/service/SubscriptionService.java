@@ -14,4 +14,6 @@ public interface SubscriptionService {
     Optional<SubscriptionEntity> findByUserIdAndApiId(String userId, String apiId);
 
     List<SubscriptionEntity> findByUserId(String userId);
+
+    Optional<SubscriptionEntity> findById(String id);
 }
