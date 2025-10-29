@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
-import apinexo.core.modules.api.dto.ApiResponse;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
 import apinexo.core.modules.plans.converter.PlansConverter;
@@ -29,6 +28,7 @@ import apinexo.core.modules.subscription.converter.SubscriptionConverter;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionFreeResponse;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionResponse;
+import apinexo.core.modules.subscription.dto.SubscriptionResponse;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.facade.SubscriptionFacade;
 import apinexo.core.modules.subscription.service.SubscriptionService;
@@ -142,7 +142,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             UserEntity userEntity = userOptional.get();
 
             List<SubscriptionEntity> subscriptionEntities = subscriptionService.findByUserId(userEntity.getId());
-            List<ApiResponse> apiPlansResponses = new ArrayList<>();
+            List<SubscriptionResponse> apiPlansResponses = new ArrayList<>();
             if (CollectionUtils.isNotEmpty(subscriptionEntities)) {
                 for (SubscriptionEntity subscriptionEntity : subscriptionEntities) {
                     apiPlansResponses.add(subscriptionConverter.entity2Resposne(subscriptionEntity));

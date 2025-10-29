@@ -1,4 +1,4 @@
-package apinexo.core.modules.api.dto;
+package apinexo.core.modules.subscription.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -10,10 +10,13 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 @Builder
-public class ApiResponse {
+public class SubscriptionResponse {
 
     @JsonProperty("api_id")
     private String apiId;
+
+    @JsonProperty("subscription_id")
+    private String subscriptionId;
 
     @JsonProperty("plan")
     private ApiPlansResponse plan;
