@@ -18,7 +18,7 @@ public class SubscriptionConverterImpl implements SubscriptionConverter {
 
     @Override
     public SubscriptionResponse entity2Resposne(ApiEntity entity) {
-        return SubscriptionResponse.builder().apiId(entity.getId()).build();
+        return SubscriptionResponse.builder().apiId(entity.getId()).apiName(entity.getName()).build();
     }
 
     @Override

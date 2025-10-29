@@ -15,6 +15,9 @@ public class SubscriptionResponse {
     @JsonProperty("api_id")
     private String apiId;
 
+    @JsonProperty("api_name")
+    private String apiName;
+
     @JsonProperty("subscription_id")
     private String subscriptionId;
 
