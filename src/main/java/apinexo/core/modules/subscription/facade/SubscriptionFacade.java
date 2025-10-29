@@ -10,4 +10,6 @@ public interface SubscriptionFacade {
     public ResponseEntity<Object> changeSubscription(Jwt jwt, SubscriptionChangeSubscriptionRequest body);
 
     public ResponseEntity<Object> getSubscriptions(Jwt jwt);
+
+    public ResponseEntity<Object> cancelSubscription(Jwt jwt, String subscriptionId);
 }

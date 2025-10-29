@@ -126,4 +126,10 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+
+    @Override
+    public ResponseEntity<Object> cancelSubscription(Jwt jwt, String subscriptionId) {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

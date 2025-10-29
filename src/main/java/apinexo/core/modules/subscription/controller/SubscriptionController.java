@@ -1,5 +1,7 @@
 package apinexo.core.modules.subscription.controller;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -27,5 +29,12 @@ public class SubscriptionController {
     @GetMapping("/get-subscriptions")
     public ResponseEntity<Object> getSubscriptions(@AuthenticationPrincipal Jwt jwt) {
         return subscriptionFacade.getSubscriptions(jwt);
+    }
+
+    @PostMapping("/cancel-subscription")
+    public ResponseEntity<Object> cancelSubscription(@AuthenticationPrincipal Jwt jwt,
+            @RequestBody Map<String, String> body) {
+        String subscriptionId = body.get("subscription_id");
+        return subscriptionFacade.cancelSubscription(jwt, subscriptionId);
     }
 }
