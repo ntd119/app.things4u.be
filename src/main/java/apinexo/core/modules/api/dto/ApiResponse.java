@@ -2,6 +2,7 @@ package apinexo.core.modules.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,19 +12,9 @@ import lombok.Data;
 @Builder
 public class ApiResponse {
 
-    @JsonProperty("id")
-    private String id;
+    @JsonProperty("api_id")
+    private String apiId;
 
-    @JsonProperty("name")
-    private String name;
-
-    @JsonProperty("short_description")
-    private String shortDescription;
-
-    @JsonProperty("long_description")
-    private String longDescription;
-
-    @JsonProperty("image")
-    private String image;
-
+    @JsonProperty("plan")
+    private ApiPlansResponse plan;
 }

@@ -10,9 +10,9 @@ import lombok.RequiredArgsConstructor;
 @Component
 @RequiredArgsConstructor
 public class ApiConverterImpl implements ApiConverter {
+    
     @Override
     public ApiResponse entity2Resposne(ApiEntity entity) {
-        return ApiResponse.builder().id(entity.getId()).build();
+        return ApiResponse.builder().apiId(entity.getId()).build();
     }
-
 }
