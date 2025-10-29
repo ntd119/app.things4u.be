@@ -23,8 +23,9 @@ public class SubscriptionConverterImpl implements SubscriptionConverter {
 
     @Override
     public SubscriptionResponse entity2Resposne(SubscriptionEntity entity) {
-        SubscriptionResponse apiResponse = this.entity2Resposne(entity.getApi());
-        apiResponse.setPlan(plansConverter.entity2Resposne(entity.getPlan()));
-        return apiResponse;
+        SubscriptionResponse subscriptionResponse = this.entity2Resposne(entity.getApi());
+        subscriptionResponse.setSubscriptionId(entity.getId());
+        subscriptionResponse.setPlan(plansConverter.entity2Resposne(entity.getPlan()));
+        return subscriptionResponse;
     }
 }
