@@ -1,6 +1,7 @@
 package apinexo.core.modules.subscription.facade.impl;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.core.modules.api.converter.ApiConverter;
+import apinexo.core.modules.api.dto.ApiResponse;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
 import apinexo.core.modules.plans.converter.PlansConverter;
@@ -50,6 +53,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     private final SubscriptionService subscriptionService;
 
     private final PlansConverter plansConverter;
+
+    private final ApiConverter apiConverter;
 
     @Override
     @Transactional
@@ -128,9 +133,22 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     @Override
     public ResponseEntity<Object> getSubscriptions(Jwt jwt) {
         try {
-            List<SubscriptionEntity> subscriptionEntities = subscriptionService
-                    .findByUserId("e0e79009c76fcf9b13018dbc");
-            return ResponseEntity.ok(subscriptionEntities);
+            String sub = jwt.getClaimAsString("sub");
+            Optional<UserEntity> userOptional = userService.findByAuth0UserId(sub);
+
+            if (!userOptional.isPresent()) {
+                return utils.badRequest("The user does not exist");
+            }
+            UserEntity userEntity = userOptional.get();
+
+            List<SubscriptionEntity> subscriptionEntities = subscriptionService.findByUserId(userEntity.getId());
+            List<ApiResponse> apiPlansResponses = new ArrayList<>();
+            if (CollectionUtils.isNotEmpty(subscriptionEntities)) {
+                for (SubscriptionEntity subscriptionEntity : subscriptionEntities) {
+                    apiPlansResponses.add(apiConverter.entity2Resposne(subscriptionEntity.getApi()));
+                }
+            }
+            return ResponseEntity.ok(apiPlansResponses);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
