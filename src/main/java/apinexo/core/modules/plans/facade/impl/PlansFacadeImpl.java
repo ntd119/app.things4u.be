@@ -10,6 +10,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.core.modules.plans.converter.PlansConverter;
 import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.plans.facade.PlansFacade;
@@ -24,6 +25,8 @@ public class PlansFacadeImpl extends AbstractService implements PlansFacade {
 
     private final PlansService apiPlansService;
 
+    private final PlansConverter plansConverter;
+
     @Override
     public ResponseEntity<Object> plans(String id) {
         try {
@@ -31,12 +34,7 @@ public class PlansFacadeImpl extends AbstractService implements PlansFacade {
             List<ApiPlansResponse> response = new ArrayList<>();
             if (CollectionUtils.isNotEmpty(plansEntities)) {
                 for (PlansEntity entity : plansEntities) {
-                    ApiPlansResponse plan = ApiPlansResponse.builder().id(entity.getId()).nickname(entity.getNickname())
-                            .key(entity.getKey()).upTo(entity.getUpTo()).period(entity.getPeriod())
-                            .currency(entity.getCurrency()).active(entity.getActive()).price(entity.getPrice())
-                            .isFree(entity.getIsFree()).overagePrices(utils.createList())
-                            .metadata(utils.convertStrToJson(entity.getMetadata())).build();
-                    response.add(plan);
+                    response.add(plansConverter.entity2Resposne(entity));
                 }
             }
             return ResponseEntity.ok(response);
