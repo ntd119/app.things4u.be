@@ -20,7 +20,10 @@ import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
+import apinexo.core.modules.plans.converter.PlansConverter;
+import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
+import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionFreeResponse;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionResponse;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -45,6 +48,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     private final ApiService apiService;
 
     private final SubscriptionService subscriptionService;
+
+    private final PlansConverter plansConverter;
 
     @Override
     @Transactional
@@ -86,8 +91,11 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 if (subscriptionOptional.isPresent()) {
                     subscriptionService.delete(subscriptionOptional.get());
                 }
-                subscriptionService.save(subscribe);
-                return ResponseEntity.ok("OK");
+                SubscriptionEntity entity = subscriptionService.save(subscribe);
+                ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
+                SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
+                        .builder().id(entity.getId()).plan(plans).build();
+                return ResponseEntity.ok(response);
             } else {
                 String priceId = plansEntities.stream()
                         .filter(plan -> plan.getKey().equalsIgnoreCase(body.getPlanKey())).map(PlansEntity::getId)
@@ -120,7 +128,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     @Override
     public ResponseEntity<Object> getSubscriptions(Jwt jwt) {
         try {
-            List<SubscriptionEntity> subscriptionEntities =  subscriptionService.findByUserId("e0e79009c76fcf9b13018dbc");
+            List<SubscriptionEntity> subscriptionEntities = subscriptionService
+                    .findByUserId("e0e79009c76fcf9b13018dbc");
             return ResponseEntity.ok(subscriptionEntities);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
