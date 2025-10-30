@@ -1,7 +1,7 @@
 package apinexo.core.modules.stripe.controller;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +16,7 @@ public class StripeController {
 
     private final StripeFacade stripeFacade;
 
-    @GetMapping("/webhook")
+    @PostMapping("/webhook")
     public ResponseEntity<Object> webhook(HttpServletRequest request) {
         return stripeFacade.webhook(request);
     }
