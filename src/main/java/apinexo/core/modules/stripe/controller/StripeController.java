@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import apinexo.core.modules.stripe.facade.StripeFacade;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -15,8 +16,8 @@ public class StripeController {
 
     private final StripeFacade stripeFacade;
 
-    @GetMapping("/generate-product")
-    public ResponseEntity<Object> generateProduct() {
-        return stripeFacade.generateProduct();
+    @GetMapping("/webhook")
+    public ResponseEntity<Object> webhook(HttpServletRequest request) {
+        return stripeFacade.webhook(request);
     }
 }
