@@ -21,6 +21,9 @@ public class SubscriptionResponse {
     @JsonProperty("subscription_id")
     private String subscriptionId;
 
+    @JsonProperty("image")
+    private String image;
+
     @JsonProperty("plan")
     private ApiPlansResponse plan;
 }
