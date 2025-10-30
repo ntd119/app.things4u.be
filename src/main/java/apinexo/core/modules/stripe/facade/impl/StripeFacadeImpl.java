@@ -36,8 +36,6 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
             case "payment_intent.succeeded":
                 PaymentIntent intent = (PaymentIntent) event.getDataObjectDeserializer().getObject().orElse(null);
                 break;
-            case "payment_intent.payment_failed":
-                break;
             }
             return ResponseEntity.ok("OK");
         } catch (HttpClientErrorException ex) {
