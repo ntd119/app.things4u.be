@@ -119,6 +119,12 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 bodyClient.add("line_items[0][quantity]", "1");
                 bodyClient.add("payment_method_types[0]", "card");
                 bodyClient.add("payment_method_types[1]", "link");
+
+                // Add metadata
+                bodyClient.add("metadata[sub]", sub);
+                bodyClient.add("metadata[apiId]", body.getApiId());
+                bodyClient.add("metadata[planKey]", body.getPlanKey());
+
                 String url = "https://api.stripe.com/v1/checkout/sessions";
                 JsonNode response = executePostRequest(JsonNode.class, url, bodyClient, headers);
                 SubscriptionChangeSubscriptionResponse subscriptionResponse = SubscriptionChangeSubscriptionResponse
