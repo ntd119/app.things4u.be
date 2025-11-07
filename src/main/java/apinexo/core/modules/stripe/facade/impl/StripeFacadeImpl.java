@@ -1,9 +1,9 @@
 package apinexo.core.modules.stripe.facade.impl;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
-import java.util.Scanner;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,7 +53,7 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
     @Override
     public ResponseEntity<Object> webhook(HttpServletRequest request) {
         try {
-            String payload = new Scanner(request.getInputStream(), "UTF-8").useDelimiter("\\A").next();
+            String payload = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
             String sigHeader = request.getHeader("Stripe-Signature");
             Event event = Webhook.constructEvent(payload, sigHeader, stripeSecretEndpoint);
             switch (event.getType()) {
@@ -114,7 +114,7 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                 }
                 break;
             }
-            return ResponseEntity.ok("ERROR");
+            return ResponseEntity.ok("OK");
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));
         } catch (Exception ex) {
