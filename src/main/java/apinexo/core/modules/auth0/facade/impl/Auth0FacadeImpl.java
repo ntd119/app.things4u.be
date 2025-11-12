@@ -21,7 +21,7 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
     @Override
     public ResponseEntity<Object> resendVerification(Auth0ResendVerificationRequest request) {
         try {
-            return ResponseEntity.ok(Map.of("message", "Verification email has been sent to " + request.getEmail()));
+            return ResponseEntity.ok(Map.of("message", "Verification email sent successfully"));
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));
         } catch (Exception ex) {
