@@ -1,5 +1,7 @@
 package apinexo.core.modules.auth0.facade.impl;
 
+import java.util.Map;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
@@ -19,7 +21,7 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
     @Override
     public ResponseEntity<Object> resendVerification(Auth0ResendVerificationRequest request) {
         try {
-            return ResponseEntity.ok("");
+            return ResponseEntity.ok(Map.of("message", "Verification email has been sent to " + request.getEmail()));
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));
         } catch (Exception ex) {
