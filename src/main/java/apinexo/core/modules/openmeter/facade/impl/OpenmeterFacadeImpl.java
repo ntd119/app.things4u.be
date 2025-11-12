@@ -52,8 +52,9 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
             String url = "https://openmeter.cloud/api/v1/portal/tokens";
-            OpenmeterOmTokenResponse response = executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
-            return ResponseEntity.ok(response);
+            ResponseEntity<OpenmeterOmTokenResponse> response = executePostRequest(OpenmeterOmTokenResponse.class, url,
+                    body, headers);
+            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));
         } catch (Exception ex) {
@@ -80,8 +81,9 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
             String url = "https://openmeter.cloud/api/v1/events";
-            OpenmeterOmTokenResponse response = executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
-            return ResponseEntity.ok(response);
+            ResponseEntity<OpenmeterOmTokenResponse> response = executePostRequest(OpenmeterOmTokenResponse.class, url,
+                    body, headers);
+            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));
         } catch (Exception ex) {

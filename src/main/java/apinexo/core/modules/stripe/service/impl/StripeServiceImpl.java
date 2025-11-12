@@ -48,7 +48,7 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("metadata[rate_limit]", "5");
         body.add("metadata[rate_limit_period]", "second");
         String url = "https://api.stripe.com/v1/prices";
-        return executePostRequest(JsonNode.class, url, body, headers);
+        return executePostRequest(JsonNode.class, url, body, headers).getBody();
     }
 
     @Override
@@ -70,6 +70,6 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("currency", "usd");
         body.add("recurring[interval]", "month");
         String url = "https://api.stripe.com/v1/prices";
-        return executePostRequest(JsonNode.class, url, body, headers);
+        return executePostRequest(JsonNode.class, url, body, headers).getBody();
     }
 }

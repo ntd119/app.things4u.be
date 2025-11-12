@@ -43,7 +43,7 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
                 entity = existing.get();
             } else {
                 String apikey = String.format("ak_%s", utils.generateRandomHexString(47));
-                JsonNode user = auth0Service.getUser(sub);
+                JsonNode user = auth0Service.getUser(sub).getBody();
                 if (Objects.isNull(user) || user.isEmpty()) {
                     return ResponseEntity.badRequest().body(new ApiException("The user does not exist"));
                 }

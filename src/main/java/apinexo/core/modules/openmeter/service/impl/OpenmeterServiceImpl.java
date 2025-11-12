@@ -50,7 +50,7 @@ public class OpenmeterServiceImpl extends AbstractService implements OpenmeterSe
         HttpHeaders headers = utils.buildHeader();
         headers.setBearerAuth(secretToken);
         String url = "https://openmeter.cloud/api/v1/stripe/checkout/sessions";
-        return executePostRequest(JsonNode.class, url, body, headers);
+        return executePostRequest(JsonNode.class, url, body, headers).getBody();
     }
 
 }

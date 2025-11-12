@@ -15,31 +15,32 @@ public abstract class AbstractService {
     @Autowired
     private RestTemplate restTemplate;
 
-    protected <T, R> T executeGetRequest(Class<T> clazz, final String endpoint, final HttpHeaders headers) {
+    protected <T, R> ResponseEntity<T> executeGetRequest(Class<T> clazz, final String endpoint,
+            final HttpHeaders headers) {
         return executeRequest(clazz, endpoint, null, HttpMethod.GET, headers, true);
     }
 
-    protected <T, R> T executeGetRequest(Class<T> clazz, final String endpoint, final R request,
+    protected <T, R> ResponseEntity<T> executeGetRequest(Class<T> clazz, final String endpoint, final R request,
             final HttpHeaders headers) {
         return executeRequest(clazz, endpoint, request, HttpMethod.GET, headers, true);
     }
 
-    protected <T, R> T executePostRequest(Class<T> clazz, final String endpoint, final R request,
+    protected <T, R> ResponseEntity<T> executePostRequest(Class<T> clazz, final String endpoint, final R request,
             final HttpHeaders headers) {
         return executeRequest(clazz, endpoint, request, HttpMethod.POST, headers, true);
     }
 
-    protected <T, R> T executePutRequest(Class<T> clazz, final String endpoint, final R request,
+    protected <T, R> ResponseEntity<T> executePutRequest(Class<T> clazz, final String endpoint, final R request,
             final HttpHeaders headers) {
         return executeRequest(clazz, endpoint, request, HttpMethod.PATCH, headers, true);
     }
 
-    protected <T, R> T executeDeleteRequest(Class<T> clazz, final String endpoint, final R request,
+    protected <T, R> ResponseEntity<T> executeDeleteRequest(Class<T> clazz, final String endpoint, final R request,
             final HttpHeaders headers) {
         return executeRequest(clazz, endpoint, request, HttpMethod.DELETE, headers, true);
     }
 
-    private <T, R> T executeRequest(Class<T> clazz, final String endpoint, final R requestBody,
+    private <T, R> ResponseEntity<T> executeRequest(Class<T> clazz, final String endpoint, final R requestBody,
             final HttpMethod httpMethod, final HttpHeaders headers, boolean recall) {
         ResponseEntity<T> response;
         HttpEntity<?> entity;
@@ -52,7 +53,6 @@ public abstract class AbstractService {
         stopWatch.start();
         response = restTemplate.exchange(endpoint, httpMethod, entity, clazz);
         stopWatch.stop();
-        return response.getBody();
+        return response;
     }
-
 }
