@@ -1,0 +1,2136 @@
+openapi: 3.0.0
+info:
+  title: "JSearch API Documentation"
+  description: "Complete reference documentation for the OpenWeb Ninja JSearch API. Includes code examples, data samples, and usage guides for delivering real-time job listings and salary data from public sources and Google for Jobs."
+  version: 1.0.0
+servers:
+  - url: https://api.openwebninja.com/jsearch
+paths:
+  /search:
+    get:
+      summary: Job Search
+      description: >-
+        Search for jobs posted on any public job site across the web on the largest job aggregate in the world (Google for Jobs).  
+          Extensive filtering support and most options available on Google for Jobs.
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 'developer jobs in chicago'
+          description: >-
+            Free-form jobs search query.  
+              It is highly recommended to include job title and location as part of the query, see query examples below.  
+              
+              **Examples:**  
+              `web development jobs in chicago`  
+              `marketing manager in new york via linkedin`  
+
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+            example: '1'
+          description: >-
+            Page to return (each page includes up to 10 results).  
+            
+              **Allowed values:** `1-100`
+
+        - name: num_pages
+          in: query
+          schema:
+            type: integer
+            default: 1
+            example: '1'
+          description: >-
+            Number of pages to return, starting from page.  
+            
+              **Allowed values:** `1-20`  
+              
+              **Note:** requests for more than one page and up to 10 pages are charged x2 and requests for more than 10 pages are charged 3x.
+
+        - name: country
+          in: query
+          schema:
+            type: string
+            default: us
+            example: 'us'
+          description: >-
+            Country code of the country from which to return job postings.  
+              Please note that this parameter must be set in order to get jobs in a specific country, for example, to query for software developer jobs in Berlin, 
+            one should add *country=de* to the request - *e.g. query=software+developers+in +berlin&country=de*.  
+              For the list of supported values see *https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2
+
+        - name: language
+          in: query
+          schema:
+            type: string
+            example: 'en'
+          description: >-
+            Language code in which to return job postings. Leave empty to use the primary language in the specified country (country parameter).
+              In case a language not supported by the specified country is used, it is likely that no results will be returned.  
+              For the list of supported values see https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes
+
+        - name: date_posted
+          in: query
+          description: >-
+            Find jobs posted within the time you specify.
+          schema:
+            type: string
+            enum: [all, today, 3days, week, month]
+            default: all
+            example: 'today'
+          
+
+        - name: work_from_home
+          in: query
+          schema:
+            type: boolean
+            default: false
+            example: 'false'
+          description: >-
+            Only return work from home / remote jobs.
+
+        - name: employment_types
+          in: query
+          description: >-
+            Find jobs of particular employment types, specified as a comma delimited list of the following values:
+          schema:
+            type: string
+            enum: [FULLTIME, CONTRACTOR, PARTTIME, INTERN]
+            example: 'FULLTIME'
+
+        - name: job_requirements
+          in: query
+          description: >-
+            Find jobs with specific requirements, specified as a comma delimited list of the following values:
+          schema:
+            type: string
+            enum: [under_3_years_experience, more_than_3_years_experience, no_experience, no_degree]
+            example: 'no_experience'
+
+        - name: radius
+          in: query
+          schema:
+            type: number
+            example: '1'
+          description: >-
+            Return jobs within a certain distance from location as specified as part of the query (in km).  
+              This internally sent as the Google "lrad" parameter and although it might affect the results, it is not strictly followed by Google for Jobs.
+
+        - name: exclude_job_publishers
+          in: query
+          schema:
+            type: string
+            example: 'BeeBe,Dice'
+          description: >-
+            Exclude jobs published by specific publishers, specified as a comma (,) separated list of publishers to exclude.  
+
+        - name: fields
+          in: query
+          schema:
+            type: string
+            example: 'employer_name,job_publisher,job_title,job_country'
+          description: >-
+            A comma separated list of job fields to include in the response (field projection).  
+              By default all fields are returned.
+
+      responses:
+        '200':
+          description: 'Successful Response'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: "The status of the API response."
+                    example: success
+                  request_id:
+                    type: string
+                    description: "Unique identifier for tracking the API request."
+                    example: abc123-request
+                  parameters:
+                    type: object
+                    properties:
+                      query:
+                        type: string
+                        description: "The search query string provided in the request."
+                        example: laptop deals
+                      page:
+                        type: integer
+                        description: "The current page number of the response."
+                        example: 1
+                      num_pages:
+                        type: integer
+                        description: "The total number of pages available."
+                        example: 5
+                      date_posted:
+                        type: string
+                        description: "The filter indicating the posting date of items."
+                        example: last_30_days
+                      country:
+                        type: string
+                        description: "The country code in which the query was executed."
+                        example: US
+                      language:
+                        type: string
+                        description: "The language preference used in the query."
+                        example: en
+                  data:
+                    type: array
+                    items:
+                      type: object
+
+              example:
+                'Example':
+                  value:
+                    status: OK
+                    request_id: 4f24fa29-a883-49f9-8dca-d0fede07203c
+                    parameters:
+                      query: developer jobs in chicago
+                      page: 1
+                      num_pages: 1
+                      date_posted: all
+                      country: us
+                      language: en
+                    data:
+                      - job_id: woj2gE2S_6LqvmLAAAAAAA==
+                        job_title: Senior Developer
+                        employer_name: United Airlines
+                        employer_logo: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6DMswunk7F25_BeXSf2w8JVHG65s4lc7v5wfG&s=0
+                        employer_website: https://www.united.com
+                        job_publisher: United Airlines Jobs
+                        job_employment_type: Full-time
+                        job_employment_types:
+                          - FULLTIME
+                        job_apply_link: https://careers.united.com/us/en/job/WHQ00024243/Senior-Developer?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: false
+                        apply_options:
+                          - publisher: United Airlines Jobs
+                            apply_link: https://careers.united.com/us/en/job/WHQ00024243/Senior-Developer?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Salesforce Careers
+                            apply_link: https://careers.salesforce.com/it/lavori/jr287763/senior-certification-developer/?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Lever
+                            apply_link: https://jobs.lever.co/mhnchicago/80e52262-843c-49b0-9105-6cf852144d9c?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Indeed
+                            apply_link: https://www.indeed.com/viewjob?jk=ce82d408b0d72e99&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: Dayforce
+                            apply_link: https://us242.dayforcehcm.com/CandidatePortal/en-US/achn/Posting/View/15759?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: ZipRecruiter
+                            apply_link: https://www.ziprecruiter.com/c/United-Airlines,-Inc/Job/Senior-Developer/-in-Chicago,IL?jid=c626340837166afb&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Built In
+                            apply_link: https://builtin.com/job/senior-android-developer/3519881?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Dice
+                            apply_link: https://www.dice.com/job-detail/43d66eb1-9a2d-4799-87fb-8febb5c4fed6?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                        job_description: |-
+                          Description
+                    
+                          Find your future at United! We’re reinventing what our industry looks like, and what an airline can be – from the planes we fly to the people who fly them. When you join us, you’re joining a global team of 100,000+ connected by a shared passion with a wide spectrum of experience and skills to lead the way forward.
+                    
+                          Achieving our ambitions starts with supporting yours. Evolve your career and find your next opportunity. Get the care you need with industry-leading health plans and best-in-class programs to support your emotional, physical, and financial wellness. Expand your horizons with travel across the world’s biggest route network. Connect outside your team through employee-led Business Resource Groups.
+                    
+                          Create what’s next with us. Let’s define tomorrow together.
+                    
+                          United's Digital Technology team is comprised of many talented individuals all working together with cutting-edge technology to build the best airline in the history of aviation. Our team designs, develops and maintains massively scaling technology solutions brought to life with innovative architectures, data analytics, and digital solutions.
+                    
+                          Job description and responsibilities
+                    
+                          The Senior Software Developer will be responsible for the development of critical applications, while working with a team of developers. This role will design, develop, document, test and debug new and existing applications. Additionally, this role will build these applications with a focus on delivering cloud-based solutions. The individual will use groundbreaking technologies and enterprise grade integration software daily and will be relied upon to help take the team to the next level from a technological standpoint.
+                          • Manages and participates in full development life cycle including requirements analysis and design using Agile methodologies
+                          • Hands-on development, and support of software systems as required, optimizing performance, resolving problems, and providing follow-up on all issues and solutions
+                          • Serve as technical guide on development projects
+                          • Write technical specifications based on conceptual design and stated business requirements
+                          • Support, maintain and document software functionality
+                          • Identify and evaluate new technologies for implementation
+                          • Analyze code to find causes of errors and revise programs as needed
+                          • Managers and participates in software design meetings and analyze user needs to resolve technical requirements
+                          • Collaborate & lead tech teams consisting of employees & vendor company contractors in planning and execution, serving as a technology leader
+                          • Collaborate with end user to prototype, refine, test and debug programs to meet needs
+                          • Leads the design, development, and planning for solutions and technology standards to solve complex business problems
+                          • Works with business, support, or development teams recommending system improvements
+                          • Consults across multiple United Information Technology projects and technology areas to perform fixing, problem management, root-cause analysis, and solution implementation
+                          • Serves as a resource for technology/project development review and technical assessments
+                          • Provide consultation and technical leadership in project life cycle planning
+                          • Ensures consistency and coherence to the enterprise standards and guiding principles throughout the application lifecycle
+                    
+                          Qualifications
+                    
+                          Required
+                          • Bachelor's degree
+                          • Computer Science, Computer Engineering, Electrical Engineering, Management Information Systems or related field
+                          • 5+ years of experience in design, development, documenting, testing, and debugging of new and existing software systems and/or applications for market sale or large-scale proprietary software for internal use in an agile environment
+                          • 5+ years’ experience implementing AWS technologies (Lambda, Step Functions, CloudWatch, CloudFront, Cognito, route53, Dynamo DB, ECS, EC2, S3, RDS, API Gateway)
+                          • Experience with Cloud Automation Development Tool such as Git, Python/Bash/PowerShell Scripting
+                          • Hands-on development and proficient excellence in backend API development using Node.js Java and Python (nice to have)
+                          • Must be legally authorized to work in the United States for any employer without sponsorship
+                          • Successful completion of interview required to meet job qualification
+                          • Reliable, punctual attendance is an essential function of the position
+                    
+                          Preferred
+                          • Airlines industry experience is a plus
+                          • AWS highly preferred
+                    
+                          The base pay range for this role is $109,820.00 to $149,600.00.
+                          The base salary range/hourly rate listed is dependent on job-related, non-discriminatory factors such as experience, education, and skills. This position is also eligible for bonus and/or long-term incentive compensation awards.
+                    
+                          You may be eligible for the following competitive benefits: medical, dental, vision, life, accident & disability, parental leave, employee assistance program, commuter, paid holidays, paid time off, 401(k) and flight privileges.
+                    
+                          United Airlines is an equal opportunity employer. United Airlines recruits, employs, trains, compensates and promotes regardless of race, religion, color, national origin, gender identity, sexual orientation, physical ability, age, veteran status and other protected status as required by applicable law. Equal Opportunity Employer - Minorities/Women/Veterans/Disabled/LGBT.
+                    
+                          We will ensure that individuals with disabilities are provided reasonable accommodation to participate in the job application or interview process, to perform crucial job functions. Please contact JobAccommodations@united.com to request accommodation.
+                        job_is_remote: false
+                        job_posted_at: 2 days ago
+                        job_posted_at_timestamp: 1743206400
+                        job_posted_at_datetime_utc: '2025-03-29T00:00:00.000Z'
+                        job_location: Chicago, IL
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits:
+                          - dental_coverage
+                          - paid_time_off
+                          - health_insurance
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3Dwoj2gE2S_6LqvmLAAAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_salary: null
+                        job_min_salary: null
+                        job_max_salary: null
+                        job_salary_period: null
+                        job_highlights:
+                          Qualifications:
+                            - Bachelor's degree
+                            - Computer Science, Computer Engineering, Electrical Engineering, Management Information Systems or related field
+                            - 5+ years of experience in design, development, documenting, testing, and debugging of new and existing software systems and/or applications for market sale or large-scale proprietary software for internal use in an agile environment
+                            - 5+ years’ experience implementing AWS technologies (Lambda, Step Functions, CloudWatch, CloudFront, Cognito, route53, Dynamo DB, ECS, EC2, S3, RDS, API Gateway)
+                            - Experience with Cloud Automation Development Tool such as Git, Python/Bash/PowerShell Scripting
+                            - Hands-on development and proficient excellence in backend API development using Node.js Java and Python (nice to have)
+                            - Must be legally authorized to work in the United States for any employer without sponsorship
+                            - Successful completion of interview required to meet job qualification
+                            - Reliable, punctual attendance is an essential function of the position
+                          Benefits:
+                            - Get the care you need with industry-leading health plans and best-in-class programs to support your emotional, physical, and financial wellness
+                            - The base pay range for this role is $109,820.00 to $149,600.00
+                            - The base salary range/hourly rate listed is dependent on job-related, non-discriminatory factors such as experience, education, and skills
+                            - This position is also eligible for bonus and/or long-term incentive compensation awards
+                            - 'You may be eligible for the following competitive benefits: medical, dental, vision, life, accident & disability, parental leave, employee assistance program, commuter, paid holidays, paid time off, 401(k) and flight privileges'
+                          Responsibilities:
+                            - Expand your horizons with travel across the world’s biggest route network
+                            - The Senior Software Developer will be responsible for the development of critical applications, while working with a team of developers
+                            - This role will design, develop, document, test and debug new and existing applications
+                            - Additionally, this role will build these applications with a focus on delivering cloud-based solutions
+                            - The individual will use groundbreaking technologies and enterprise grade integration software daily and will be relied upon to help take the team to the next level from a technological standpoint
+                            - Manages and participates in full development life cycle including requirements analysis and design using Agile methodologies
+                            - Hands-on development, and support of software systems as required, optimizing performance, resolving problems, and providing follow-up on all issues and solutions
+                            - Serve as technical guide on development projects
+                            - Write technical specifications based on conceptual design and stated business requirements
+                            - Support, maintain and document software functionality
+                            - Identify and evaluate new technologies for implementation
+                            - Analyze code to find causes of errors and revise programs as needed
+                            - Managers and participates in software design meetings and analyze user needs to resolve technical requirements
+                            - Collaborate & lead tech teams consisting of employees & vendor company contractors in planning and execution, serving as a technology leader
+                            - Collaborate with end user to prototype, refine, test and debug programs to meet needs
+                            - Leads the design, development, and planning for solutions and technology standards to solve complex business problems
+                            - Works with business, support, or development teams recommending system improvements
+                            - Consults across multiple United Information Technology projects and technology areas to perform fixing, problem management, root-cause analysis, and solution implementation
+                            - Serves as a resource for technology/project development review and technical assessments
+                            - Provide consultation and technical leadership in project life cycle planning
+                            - Ensures consistency and coherence to the enterprise standards and guiding principles throughout the application lifecycle
+                        job_onet_soc: '15113200'
+                        job_onet_job_zone: '4'
+                      - job_id: 07tNOHvsJ4GTPbf5AAAAAA==
+                        job_title: R&D Software Engineer (C++)
+                        employer_name: Engtal
+                        employer_logo: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQoVvdOY3EM5JlY9Fok4PiiwUaFiod2-C-pZFUV&s=0
+                        employer_website: https://engtal.com
+                        job_publisher: LinkedIn
+                        job_employment_type: Full-time
+                        job_employment_types:
+                          - FULLTIME
+                        job_apply_link: https://www.linkedin.com/jobs/view/r-d-software-engineer-c%2B%2B-at-engtal-4192955158?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: false
+                        apply_options:
+                          - publisher: LinkedIn
+                            apply_link: https://www.linkedin.com/jobs/view/r-d-software-engineer-c%2B%2B-at-engtal-4192955158?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Trabajo.org
+                            apply_link: https://us.trabajo.org/job-1898-260931e97ac00d33589e4605e4389c63?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                        job_description: |-
+                          We’re seeking a highly skilled R&D Software Engineer with deep expertise in modern C++ and a strong focus on low-latency system design. You’ll be part of a small, collaborative team developing performance-critical software for our ultra-low-latency trading infrastructure.
+                    
+                          Key Responsibilities:
+                          • Design and implement high-performance C++ applications used in our trading systems
+                          • Optimize for latency, throughput, and reliability at every layer of the stack
+                          • Collaborate closely with traders, researchers, and infrastructure engineers to iterate quickly on new strategies and ideas
+                          • Analyze performance bottlenecks and tune systems for nanosecond-level efficiency
+                          • Stay on top of the latest developments in hardware and software that could impact trading performance
+                    
+                          Requirements:
+                          • 3+ years experience coding in modern C++, with experience building ultra low-latency systems
+                          • A Bachelors degree in Computer Science (or similar) from a top rated engineering school
+                          • Experience with software development for hardware platforms
+                          • Solid understanding of systems programming: memory management, multi-threading, CPU architecture
+                          • Experience in a real-time or high-performance environment (preferably HFT, finance, or telecoms)
+                          • Familiarity with Linux, networking, and profiling tools
+                          • A passion for optimization and innovation at the lowest levels of software
+                    
+                          Nice to Have:
+                          • Experience with FPGA, kernel bypass networking (e.g., DPDK), or custom hardware integration
+                          • Background in financial markets or trading systems
+                        job_is_remote: false
+                        job_posted_at: 11 hours ago
+                        job_posted_at_timestamp: 1743368400
+                        job_posted_at_datetime_utc: '2025-03-30T21:00:00.000Z'
+                        job_location: Chicago, IL
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits: null
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3D07tNOHvsJ4GTPbf5AAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_min_salary: 300000
+                        job_max_salary: 450000
+                        job_salary_period: YEAR
+                        job_highlights:
+                          Qualifications:
+                            - 3+ years experience coding in modern C++, with experience building ultra low-latency systems
+                            - A Bachelors degree in Computer Science (or similar) from a top rated engineering school
+                            - Experience with software development for hardware platforms
+                            - 'Solid understanding of systems programming: memory management, multi-threading, CPU architecture'
+                            - Experience in a real-time or high-performance environment (preferably HFT, finance, or telecoms)
+                            - Familiarity with Linux, networking, and profiling tools
+                            - A passion for optimization and innovation at the lowest levels of software
+                            - Experience with FPGA, kernel bypass networking (e.g., DPDK), or custom hardware integration
+                            - Background in financial markets or trading systems
+                          Responsibilities:
+                            - Design and implement high-performance C++ applications used in our trading systems
+                            - Optimize for latency, throughput, and reliability at every layer of the stack
+                            - Collaborate closely with traders, researchers, and infrastructure engineers to iterate quickly on new strategies and ideas
+                            - Analyze performance bottlenecks and tune systems for nanosecond-level efficiency
+                            - Stay on top of the latest developments in hardware and software that could impact trading performance
+                        job_onet_soc: '15113200'
+                        job_onet_job_zone: '4'
+                      - job_id: e4ZYkxFHk1PgznhgAAAAAA==
+                        job_title: Developer - Information Technology
+                        employer_name: United Airlines
+                        employer_logo: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6DMswunk7F25_BeXSf2w8JVHG65s4lc7v5wfG&s=0
+                        employer_website: https://www.united.com
+                        job_publisher: United Airlines Jobs
+                        job_employment_type: Full-time
+                        job_employment_types:
+                          - FULLTIME
+                        job_apply_link: https://careers.united.com/us/en/job/WHQ00024903/Developer-Information-Technology?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: false
+                        apply_options:
+                          - publisher: United Airlines Jobs
+                            apply_link: https://careers.united.com/us/en/job/WHQ00024903/Developer-Information-Technology?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: ZipRecruiter
+                            apply_link: https://www.ziprecruiter.com/c/United-Airlines,-Inc/Job/Developer-Information-Technology/-in-Chicago,IL?jid=5f2de09c404e5f59&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Indeed
+                            apply_link: https://www.indeed.com/viewjob?jk=4cb705f9888543b8&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: JSfirm.com
+                            apply_link: https://www.jsfirm.com/Other/Developer+-+Information+Technology/Chicago-Illinois/jobID_1446507?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Glassdoor
+                            apply_link: https://www.glassdoor.com/job-listing/developer-information-technology-united-airlines-JV_IC1128808_KO0,32_KE33,48.htm?jl=1009665146861&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: LinkedIn
+                            apply_link: https://www.linkedin.com/jobs/view/developer-information-technology-at-united-airlines-4179146970?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Teal
+                            apply_link: https://www.tealhq.com/job/developer-information-technology_ad01c806-69f8-4910-8a5f-5e0f4991f119?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Hispanic Alliance For Career Enhancement
+                            apply_link: https://jobs.haceonline.org/job/developer-information-technology/77194341/?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                        job_description: |-
+                          Description
+                    
+                          Find your future at United! We’re reinventing what our industry looks like, and what an airline can be – from the planes we fly to the people who fly them. When you join us, you’re joining a global team of 100,000+ connected by a shared passion with a wide spectrum of experience and skills to lead the way forward.
+                    
+                          Achieving our ambitions starts with supporting yours. Evolve your career and find your next opportunity. Get the care you need with industry-leading health plans and best-in-class programs to support your emotional, physical, and financial wellness. Expand your horizons with travel across the world’s biggest route network. Connect outside your team through employee-led Business Resource Groups.
+                    
+                          Create what’s next with us. Let’s define tomorrow together.
+                    
+                          United's Digital Technology team is comprised of many talented individuals all working together with cutting-edge technology to build the best airline in the history of aviation. Our team designs, develops and maintains massively scaling technology solutions brought to life with innovative architectures, data analytics, and digital solutions.
+                    
+                          Job overview and responsibilities
+                    
+                          The Developer plays an important role in creating and maintaining the strategic partnership between business needs and technology delivery. The Developer's role is to plan, design, develop and launch efficient systems and solutions in support of core organizational functions. This individual will utilize effective communication, analytical, and problem-solving skills to help identify, communicate / resolve issues, opportunities, or problems to maximize the benefit of IT and Business investments. The Developer is experienced and self - sufficient in performing their responsibilities requiring little supervision, but general guidance and direction.
+                          • Assist in design, develop and modify software applications/systems
+                          • Collaborates with cross-functional teams to understand business requirements and deliver solutions
+                          • Provides support to the software development leads (Ex: Senior Developer)
+                          • Works on one or more moderate to complex projects
+                          • Applies security code best practices throughout development cycle
+                          • Contributes to software documentation and user manuals
+                          • Complete comprehensive unit testing on all developed/enhanced software and supports deployment of software applications
+                          • Participates in code reviews to ensure code adheres to standards
+                          • Support and troubleshoot software systems as required, optimizing performance, resolving problems, and providing follow-up on all issues and solutions
+                          • Stays up to date on the latest industry trends and technology
+                    
+                          Qualifications
+                    
+                          What’s needed to succeed (Minimum Qualifications):
+                          • Bachelor's degree in Computer Science, Computer Engineering, Electrical Engineering, Management Information Systems or related field
+                          • 3-5 years of experience in design, development, documenting, testing, and debugging of new and existing software systems and/or applications for market sale or large-scale proprietary software for internal use in an agile environment
+                          • Strong knowledge of Microsoft .NET Framework, Microsoft .NET Core, SQL, T-SQL, NoSQL and Design Patterns
+                          • Experience implementing AWS technologies (Lambda, Step Functions, CloudWatch, CloudFront, Cognito, route53, Dynamo DB, ECS, EC2, S3, RDS, API Gateway)
+                          • Previous history working in an enterprise environment with experience in DevOps and CI/CD principles
+                          • Experience with Cloud Automation Development Tool such as Git, Python/Bash/PowerShell Scripting
+                          • Hands-on development and proficient excellence in backend API development
+                          • Excellent knowledge of Object-Oriented systems design and Application Development
+                          • Must be legally authorized to work in the United States for any employer without sponsorship
+                          • Successful completion of interview required to meet job qualification
+                          • Reliable, punctual attendance is an essential function of the position
+                    
+                          What will help you propel from the pack (Preferred Qualifications):
+                          • Airlines industry experience is a plus
+                          • AWS highly preferred
+                          • Experience with modern day Javascript, React.js is highly preferred
+                    
+                          The base pay range for this role is $87,780.00 to $119,680.00.
+                          The base salary range/hourly rate listed is dependent on job-related, non-discriminatory factors such as experience, education, and skills. This position is also eligible for bonus and/or long-term incentive compensation awards.
+                    
+                          You may be eligible for the following competitive benefits: medical, dental, vision, life, accident & disability, parental leave, employee assistance program, commuter, paid holidays, paid time off, 401(k) and flight privileges.
+                    
+                          United Airlines is an equal opportunity employer. United Airlines recruits, employs, trains, compensates and promotes regardless of race, religion, color, national origin, gender identity, sexual orientation, physical ability, age, veteran status and other protected status as required by applicable law. Equal Opportunity Employer - Minorities/Women/Veterans/Disabled/LGBT.
+                    
+                          We will ensure that individuals with disabilities are provided reasonable accommodation to participate in the job application or interview process, to perform crucial job functions. Please contact JobAccommodations@united.com to request accommodation.
+                        job_is_remote: false
+                        job_posted_at: 1 day ago
+                        job_posted_at_timestamp: 1743292800
+                        job_posted_at_datetime_utc: '2025-03-30T00:00:00.000Z'
+                        job_location: Chicago, IL
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits:
+                          - dental_coverage
+                          - paid_time_off
+                          - health_insurance
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3De4ZYkxFHk1PgznhgAAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_salary: null
+                        job_min_salary: null
+                        job_max_salary: null
+                        job_salary_period: null
+                        job_highlights:
+                          Qualifications:
+                            - Bachelor's degree in Computer Science, Computer Engineering, Electrical Engineering, Management Information Systems or related field
+                            - 3-5 years of experience in design, development, documenting, testing, and debugging of new and existing software systems and/or applications for market sale or large-scale proprietary software for internal use in an agile environment
+                            - Strong knowledge of Microsoft .NET Framework, Microsoft .NET Core, SQL, T-SQL, NoSQL and Design Patterns
+                            - Experience implementing AWS technologies (Lambda, Step Functions, CloudWatch, CloudFront, Cognito, route53, Dynamo DB, ECS, EC2, S3, RDS, API Gateway)
+                            - Previous history working in an enterprise environment with experience in DevOps and CI/CD principles
+                            - Experience with Cloud Automation Development Tool such as Git, Python/Bash/PowerShell Scripting
+                            - Hands-on development and proficient excellence in backend API development
+                            - Excellent knowledge of Object-Oriented systems design and Application Development
+                            - Must be legally authorized to work in the United States for any employer without sponsorship
+                            - Successful completion of interview required to meet job qualification
+                            - Reliable, punctual attendance is an essential function of the position
+                          Benefits:
+                            - Get the care you need with industry-leading health plans and best-in-class programs to support your emotional, physical, and financial wellness
+                            - The base pay range for this role is $87,780.00 to $119,680.00
+                            - The base salary range/hourly rate listed is dependent on job-related, non-discriminatory factors such as experience, education, and skills
+                            - This position is also eligible for bonus and/or long-term incentive compensation awards
+                            - 'You may be eligible for the following competitive benefits: medical, dental, vision, life, accident & disability, parental leave, employee assistance program, commuter, paid holidays, paid time off, 401(k) and flight privileges'
+                          Responsibilities:
+                            - Expand your horizons with travel across the world’s biggest route network
+                            - The Developer plays an important role in creating and maintaining the strategic partnership between business needs and technology delivery
+                            - The Developer's role is to plan, design, develop and launch efficient systems and solutions in support of core organizational functions
+                            - This individual will utilize effective communication, analytical, and problem-solving skills to help identify, communicate / resolve issues, opportunities, or problems to maximize the benefit of IT and Business investments
+                            - The Developer is experienced and self - sufficient in performing their responsibilities requiring little supervision, but general guidance and direction
+                            - Assist in design, develop and modify software applications/systems
+                            - Collaborates with cross-functional teams to understand business requirements and deliver solutions
+                            - 'Provides support to the software development leads (Ex: Senior Developer)'
+                            - Works on one or more moderate to complex projects
+                            - Applies security code best practices throughout development cycle
+                            - Contributes to software documentation and user manuals
+                            - Complete comprehensive unit testing on all developed/enhanced software and supports deployment of software applications
+                            - Participates in code reviews to ensure code adheres to standards
+                            - Support and troubleshoot software systems as required, optimizing performance, resolving problems, and providing follow-up on all issues and solutions
+                            - Stays up to date on the latest industry trends and technology
+                        job_onet_soc: '15113200'
+                        job_onet_job_zone: '4'
+                      - job_id: ZHPVIkejDKFdC1JyAAAAAA==
+                        job_title: Software Developer - Java/J2EE
+                        employer_name: Diversified Services Network
+                        employer_logo: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZq7ljfXUlUegaJGcg66KO2nIF67u1r8sHvKBd&s=0
+                        employer_website: null
+                        job_publisher: Indeed
+                        job_employment_type: Full-time and Contractor
+                        job_employment_types:
+                          - FULLTIME
+                          - CONTRACTOR
+                          - CONTRACTOR
+                        job_apply_link: https://www.indeed.com/viewjob?jk=eb0258c782ce9224&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: true
+                        apply_options:
+                          - publisher: Indeed
+                            apply_link: https://www.indeed.com/viewjob?jk=eb0258c782ce9224&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: Glassdoor
+                            apply_link: https://www.glassdoor.com/job-listing/software-developer-java-j2ee-diversified-services-network-JV_IC1128808_KO0,28_KE29,57.htm?jl=1009687826272&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: LinkedIn
+                            apply_link: https://www.linkedin.com/jobs/view/software-developer-buildings-at-siemens-4193446231?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Oracle
+                            apply_link: https://jpmc-dev6.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_2001/job/210484806/?utm_medium=search+engine&utm_source=google&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: SimplyHired
+                            apply_link: https://www.simplyhired.com/job/Gh9A38KMuM_OKejHxS2MmsgQAx6yha_3HDFYB-CT4iAamlISrjY6_Q?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Snagajob
+                            apply_link: https://www.snagajob.com/jobs/1073043630?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Media Bistro
+                            apply_link: https://www.mediabistro.com/jobs/669503203-architecture-design-development-application-developer-iii?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: JobzMall
+                            apply_link: https://www.jobzmall.com/costco-wholesale/job/software-developer-costco-logistics?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                        job_description: |-
+                          DSN is seeking a highly skilled Senior Java Developer to join our team in Chicago, IL on a hybrid basis (3 days onsite per week). The ideal candidate will bring extensive experience in Java development, enterprise-level web applications, and high-volume transactional systems. This role requires expertise in night batch processing, designing and implementing complex, scalable, and secure web-based Java applications, and applying best practices in software design, architecture, and database management.
+                    
+                          Key Responsibilities:
+                          • Develop, implement, and maintain high-volume, transactional web-based applications using Java EE.
+                          • Must handle night batch processing, ensuring smooth execution of scheduled jobs and resolving failures as needed.
+                          • Design and develop business logic, Java Server Pages (JSP), and Data Access Objects (DAO) using SQL.
+                          • Utilize design and architectural patterns to create scalable and maintainable solutions.
+                          • Develop and execute unit tests using JUnit, ensuring high-quality code.
+                          • Create technical documentation, including diagrams, system flowcharts, test plans, and conversion plans.
+                          • Analyze and implement benefit system change requests within the Struts or Spring Framework.
+                          • Conduct investigative studies to improve system efficiency and resolve complex technical challenges.
+                          • Support law change impact analysis and enhance enterprise IT systems accordingly.
+                          • Participate in release implementations and provide off-hours, on-call support, including night batch job monitoring and resolution.
+                          • Collaborate with cross-functional teams to design and implement IT security layers for applications.
+                    
+                          Must Have Qualifications & Experience:
+                          • Master’s Degree preferred (or equivalent to 6 years of college) in Computer Science or a related technical field.
+                          • Minimum 6 years of professional experience in Java development for large, web-based applications.
+                          • Expertise in Java EE framework technologies and enterprise-level system development.
+                          • Strong experience with Struts Framework, Spring IOC, Spring Batch, and Spring MVC.
+                          • Proficiency in SQL databases including DB2 z/OS and MS SQL Server.
+                          • Hands-on experience with design patterns (Gang of Four), including Factory, Command, and Strategy patterns.
+                          • Front-end expertise in JQuery, JavaScript, CSS, HTML, and AJAX.
+                          • Proficiency in ANT and MAVEN build scripts.
+                          • Experience in developing middleware components using IBM MQ and Web Services.
+                          • Strong knowledge of XML, XML Schema Definitions, and Java binding (XML marshalling/unmarshalling).
+                          • Experience with night batch processing, batch scheduling, monitoring, and troubleshooting.
+                          • Proficiency in WebSphere, WebSphere Rational Toolset (Clear Case/Clear Quest).
+                          • Experience in Robotic Process Automation (RPA) and IBM’s Business Automation Workflow (BAW).
+                          • Experience with Rules Engines is a plus.
+                    
+                          Job Types: Full-time, Contract
+                    
+                          Pay: $103,622.00 - $112,513.00 per year
+                    
+                          Benefits:
+                          • Dental insurance
+                          • Health insurance
+                    
+                          Schedule:
+                          • 8 hour shift
+                          • Monday to Friday
+                    
+                          Ability to Commute:
+                          • Chicago, IL 60603 (Preferred)
+                    
+                          Ability to Relocate:
+                          • Chicago, IL 60603: Relocate before starting work (Preferred)
+                    
+                          Work Location: Hybrid remote in Chicago, IL 60603
+                        job_is_remote: false
+                        job_posted_at: 4 days ago
+                        job_posted_at_timestamp: 1743033600
+                        job_posted_at_datetime_utc: '2025-03-27T00:00:00.000Z'
+                        job_location: Chicago, IL
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits:
+                          - health_insurance
+                          - dental_coverage
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3DZHPVIkejDKFdC1JyAAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_min_salary: 103622
+                        job_max_salary: 112513
+                        job_salary_period: YEAR
+                        job_highlights:
+                          Qualifications:
+                            - The ideal candidate will bring extensive experience in Java development, enterprise-level web applications, and high-volume transactional systems
+                            - This role requires expertise in night batch processing, designing and implementing complex, scalable, and secure web-based Java applications, and applying best practices in software design, architecture, and database management
+                            - Minimum 6 years of professional experience in Java development for large, web-based applications
+                            - Expertise in Java EE framework technologies and enterprise-level system development
+                            - Strong experience with Struts Framework, Spring IOC, Spring Batch, and Spring MVC
+                            - Proficiency in SQL databases including DB2 z/OS and MS SQL Server
+                            - Hands-on experience with design patterns (Gang of Four), including Factory, Command, and Strategy patterns
+                            - Front-end expertise in JQuery, JavaScript, CSS, HTML, and AJAX
+                            - Proficiency in ANT and MAVEN build scripts
+                            - Experience in developing middleware components using IBM MQ and Web Services
+                            - Strong knowledge of XML, XML Schema Definitions, and Java binding (XML marshalling/unmarshalling)
+                            - Experience with night batch processing, batch scheduling, monitoring, and troubleshooting
+                            - Proficiency in WebSphere, WebSphere Rational Toolset (Clear Case/Clear Quest)
+                            - Experience in Robotic Process Automation (RPA) and IBM’s Business Automation Workflow (BAW)
+                          Benefits:
+                            - 'Pay: $103,622.00 - $112,513.00 per year'
+                            - Dental insurance
+                            - Health insurance
+                            - 8 hour shift
+                            - Monday to Friday
+                          Responsibilities:
+                            - Develop, implement, and maintain high-volume, transactional web-based applications using Java EE
+                            - Must handle night batch processing, ensuring smooth execution of scheduled jobs and resolving failures as needed
+                            - Design and develop business logic, Java Server Pages (JSP), and Data Access Objects (DAO) using SQL
+                            - Utilize design and architectural patterns to create scalable and maintainable solutions
+                            - Develop and execute unit tests using JUnit, ensuring high-quality code
+                            - Create technical documentation, including diagrams, system flowcharts, test plans, and conversion plans
+                            - Analyze and implement benefit system change requests within the Struts or Spring Framework
+                            - Conduct investigative studies to improve system efficiency and resolve complex technical challenges
+                            - Support law change impact analysis and enhance enterprise IT systems accordingly
+                            - Participate in release implementations and provide off-hours, on-call support, including night batch job monitoring and resolution
+                            - Collaborate with cross-functional teams to design and implement IT security layers for applications
+                        job_onet_soc: '15113200'
+                        job_onet_job_zone: '4'
+                      - job_id: A4uSsm5PP34vuA1oAAAAAA==
+                        job_title: Analytics Developer
+                        employer_name: Adtalem
+                        employer_logo: null
+                        employer_website: https://www.adtalem.com
+                        job_publisher: Adtalem Careers - Adtalem Global Education
+                        job_employment_type: Full-time
+                        job_employment_types:
+                          - FULLTIME
+                        job_apply_link: https://careers.adtalem.com/job/analytics-developer-in-chicago-il-jid-5498?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: false
+                        apply_options:
+                          - publisher: Adtalem Careers - Adtalem Global Education
+                            apply_link: https://careers.adtalem.com/job/analytics-developer-in-chicago-il-jid-5498?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Indeed
+                            apply_link: https://www.indeed.com/viewjob?jk=d899c1520a5b377d&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: Edtech.com
+                            apply_link: https://www.edtech.com/jobs/analytics-developer-7100?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: ZipRecruiter
+                            apply_link: https://www.ziprecruiter.com/c/Adtalem-Global-Education/Job/Analytics-Developer/-in-Chicago,IL?jid=d95f955c0750f55d&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: Smart Recruiters Jobs
+                            apply_link: https://jobs.smartrecruiters.com/AdtalemGlobalEducation/744000049645286-analytics-developer-?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Glassdoor
+                            apply_link: https://www.glassdoor.com/job-listing/analytics-developer-adtalem-global-education-JV_IC1128808_KO0,19_KE20,44.htm?jl=1009683918166&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: SimplyHired
+                            apply_link: https://www.simplyhired.com/job/kuZwur2pV2-wzzHg2WhWlD-NZOIkFr2XOJQfCW9ZM18zOkt6W_M7AA?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Teal
+                            apply_link: https://www.tealhq.com/job/analytics-developer_3a64db85-4626-4cad-8b9c-1438dadb8c7b?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                        job_description: |-
+                          Company Description
+                    
+                          Adtalem Global Education is a national leader in post-secondary education and leading provider of professional talent to the healthcare industry. Adtalem educates and empowers students with the knowledge and skills to become leaders in their communities and make a lasting impact on public health, well-being and beyond. Through equitable access to education, environments that nurture student success, and a focus on expanding and diversifying the talent pipeline in healthcare, Adtalem is building a brighter future for communities and the world.
+                    
+                          Adtalem is the parent organization of American University of the Caribbean School of Medicine, Chamberlain University, Ross University School of Medicine, Ross University School of Veterinary Medicine and Walden University.
+                    
+                          In our U.S. locations, we operate on a hybrid work model with three in-office days and two remote days per week. Starting Q1 2025, we will transition to a four-day in-office schedule, Monday–Thursday. This in-office time fosters creativity, innovation, communication, and stronger team relationships, supporting both individual and organizational success.
+                    
+                          Visit Adtalem.com for more information, and follow on Twitter and LinkedIn.
+                    
+                          Job Description
+                    
+                          The Analytics Developer is responsible for coding and designing analytical solutions that turn data into knowledge. This position will work closely with business and system/technology subject matter experts to understand the enterprise objectives and build our capabilities in BI, Reporting & Analytical applications to support various areas of the organization. This role is crucial in helping enhance our business intelligence footprint within the organization.
+                          • Translate business needs into technical specification
+                          • Develop, design and maintain efficient enterprise-grade Power BI dashboards, reports and datasets adhering to industry best practices.
+                          • Review, interpret, troubleshoot and optimize SQL queries. Develop maintainable code via proper structures, comments, and design using best practices.
+                          • Thoroughly validate the reports’ data being presented to build trust in the BI solutions provided to end users. Provide feedback as needed to internal and external resources that provide source data.
+                          • Demonstrate proficiency in the use of business intelligence technologies.
+                          • Perform source data analysis – data profiling, validation, conceptual and logical data modeling, etc. – to determine the suitability of the source data for meeting the reporting requirements.
+                          • Meet with subject matter experts in different areas of the business, be able to learn the concepts and business language relevant to their line of business and develop an understanding of how their data supports their business processes.
+                          • Collaborate with partners to develop business requirements leading to successful project outcomes. Inform and drive innovative approaches for assigned solutions.
+                          • Adheres to project methodology, change management, and departmental procedures.
+                          • Good ability to interact in a team environment with peers and members of other teams that might even be located remotely.
+                          • Completes other duties as assigned.
+                          • Performs other duties as assigned.
+                          • Complies with all policies and standards.
+                    
+                          Qualifications
+                          • Bachelor's Degree in Computer Science, Engineering or Information Systems.
+                          • 2 years Proficient BI developer with developing BI reports and Dashboards in Power BI.
+                          • 5 years overall in BI-related experience.
+                          • 3 years SQL experience with Relational Database Management Systems (RDBMS).
+                          • Experience with the Agile Methodology
+                          • Experience in data modeling and entity relationship diagram conventions and various data modeling patterns.
+                          • Experience using cloud technologies such as Snowflake and AWS.
+                          • Knowledge in performing data manipulation using Dataflows, Power Query and DAX calculations using Power BI.
+                          • Understanding and application of BI technologies, including security, portal settings, data connection settings, refresh frequencies, interaction with data sources, etc.
+                          • Strong visualization skills with proven ability to utilize the full functionality of Power BI or similar BI tools.
+                          • Excellent listening, verbal and written communication skills; ability to communicate effectively at all levels of the organization.
+                          • Strong collaboration and interpersonal skills.
+                          • Demonstrated ability to perform duties and responsibilities on time with moderate supervision.
+                          • Power BI Certified.
+                    
+                          Additional Information
+                    
+                          In support of the pay transparency laws enacted across the country, the expected salary range for this position is between $61,720.78 and $108,334.92. Actual pay will be adjusted based on job-related factors permitted by law, such as experience and training; geographic location; licensure and certifications; market factors; departmental budgets; and responsibility. Our Talent Acquisition Team will be happy to answer any questions you may have, and we look forward to learning more about your salary requirements. The position qualifies for the below benefits.
+                    
+                          Adtalem offers a robust suite of benefits including:
+                          • Health, dental, vision, life and disability insurance
+                          • 401k Retirement Program + 6% employer match
+                          • Participation in Adtalem’s Flexible Time Off (FTO) Policy
+                          • 12 Paid Holidays
+                    
+                          For more information related to our benefits please visit: https://careers.adtalem.com/benefits.
+                    
+                          You are also eligible to participate in an annual incentive program, subject to the rules governing the program, whereby an award, if any, depends on various factors, including, without limitation, individual and organizational performance.
+                    
+                          Equal Opportunity – Minority / Female / Disability / V / Gender Identity / Sexual Orientation
+                        job_is_remote: false
+                        job_posted_at: 7 days ago
+                        job_posted_at_timestamp: 1742774400
+                        job_posted_at_datetime_utc: '2025-03-24T00:00:00.000Z'
+                        job_location: Chicago, IL
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits:
+                          - dental_coverage
+                          - health_insurance
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3DA4uSsm5PP34vuA1oAAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_salary: null
+                        job_min_salary: null
+                        job_max_salary: null
+                        job_salary_period: null
+                        job_highlights:
+                          Qualifications:
+                            - Bachelor's Degree in Computer Science, Engineering or Information Systems
+                            - 2 years Proficient BI developer with developing BI reports and Dashboards in Power BI
+                            - 5 years overall in BI-related experience
+                            - 3 years SQL experience with Relational Database Management Systems (RDBMS)
+                            - Experience with the Agile Methodology
+                            - Experience in data modeling and entity relationship diagram conventions and various data modeling patterns
+                            - Experience using cloud technologies such as Snowflake and AWS
+                            - Knowledge in performing data manipulation using Dataflows, Power Query and DAX calculations using Power BI
+                            - Understanding and application of BI technologies, including security, portal settings, data connection settings, refresh frequencies, interaction with data sources, etc
+                            - Strong visualization skills with proven ability to utilize the full functionality of Power BI or similar BI tools
+                            - Excellent listening, verbal and written communication skills; ability to communicate effectively at all levels of the organization
+                            - Strong collaboration and interpersonal skills
+                            - Demonstrated ability to perform duties and responsibilities on time with moderate supervision
+                            - Power BI Certified
+                          Benefits:
+                            - In support of the pay transparency laws enacted across the country, the expected salary range for this position is between $61,720.78 and $108,334.92
+                            - Actual pay will be adjusted based on job-related factors permitted by law, such as experience and training; geographic location; licensure and certifications; market factors; departmental budgets; and responsibility
+                            - 'Adtalem offers a robust suite of benefits including:'
+                            - Health, dental, vision, life and disability insurance
+                            - 401k Retirement Program + 6% employer match
+                            - Participation in Adtalem’s Flexible Time Off (FTO) Policy
+                            - 12 Paid Holidays
+                            - 'For more information related to our benefits please visit: https://careers.adtalem.com/benefits'
+                            - You are also eligible to participate in an annual incentive program, subject to the rules governing the program, whereby an award, if any, depends on various factors, including, without limitation, individual and organizational performance
+                          Responsibilities:
+                            - The Analytics Developer is responsible for coding and designing analytical solutions that turn data into knowledge
+                            - This position will work closely with business and system/technology subject matter experts to understand the enterprise objectives and build our capabilities in BI, Reporting & Analytical applications to support various areas of the organization
+                            - This role is crucial in helping enhance our business intelligence footprint within the organization
+                            - Translate business needs into technical specification
+                            - Develop, design and maintain efficient enterprise-grade Power BI dashboards, reports and datasets adhering to industry best practices
+                            - Review, interpret, troubleshoot and optimize SQL queries
+                            - Develop maintainable code via proper structures, comments, and design using best practices
+                            - Thoroughly validate the reports’ data being presented to build trust in the BI solutions provided to end users
+                            - Provide feedback as needed to internal and external resources that provide source data
+                            - Demonstrate proficiency in the use of business intelligence technologies
+                            - Perform source data analysis – data profiling, validation, conceptual and logical data modeling, etc. – to determine the suitability of the source data for meeting the reporting requirements
+                            - Meet with subject matter experts in different areas of the business, be able to learn the concepts and business language relevant to their line of business and develop an understanding of how their data supports their business processes
+                            - Collaborate with partners to develop business requirements leading to successful project outcomes
+                            - Inform and drive innovative approaches for assigned solutions
+                            - Adheres to project methodology, change management, and departmental procedures
+                            - Good ability to interact in a team environment with peers and members of other teams that might even be located remotely
+                            - Completes other duties as assigned
+                            - Performs other duties as assigned
+                            - Complies with all policies and standards
+                        job_onet_soc: '15113200'
+                        job_onet_job_zone: '4'
+                      - job_id: Iiz-HDVOJbX6k5HfAAAAAA==
+                        job_title: Software Developer - C++ Unix Linux
+                        employer_name: United Airlines
+                        employer_logo: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6DMswunk7F25_BeXSf2w8JVHG65s4lc7v5wfG&s=0
+                        employer_website: https://www.united.com
+                        job_publisher: United Airlines Jobs
+                        job_employment_type: Full-time
+                        job_employment_types:
+                          - FULLTIME
+                        job_apply_link: https://careers.united.com/us/en/job/WHQ00024868/Software-Developer-C-Unix-Linux?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: false
+                        apply_options:
+                          - publisher: United Airlines Jobs
+                            apply_link: https://careers.united.com/us/en/job/WHQ00024868/Software-Developer-C-Unix-Linux?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Chartered Alternative Investment Analyst Association (CAIA), CAIA Career Center
+                            apply_link: https://careers.caia.org/jobs/20215129/ld-software-engineer-low-latency?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Indeed
+                            apply_link: https://www.indeed.com/viewjob?jk=8ef23b974aad4f12&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Dice
+                            apply_link: https://www.dice.com/job-detail/d63d8549-4b40-4e12-bd9e-e481fe08a791?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: Glassdoor
+                            apply_link: https://www.glassdoor.com/job-listing/software-developer-c-unix-linux-united-airlines-JV_IC1128808_KO0,31_KE32,47.htm?jl=1009665399684&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: LinkedIn
+                            apply_link: https://www.linkedin.com/jobs/view/software-developer-c%2B%2B-unix-linux-at-united-airlines-4179556975?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Roy Talman & Associates - ICIMS
+                            apply_link: https://careers-roytalman.icims.com/jobs/15435/low-latency-c%2B%2B-developer/job?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: IT Recruiting Firms
+                            apply_link: https://www.nextstepsystems.com/job/c-trading-systems-software-developer/?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                        job_description: |-
+                          Description
+                    
+                          Find your future at United! We’re reinventing what our industry looks like, and what an airline can be – from the planes we fly to the people who fly them. When you join us, you’re joining a global team of 100,000+ connected by a shared passion with a wide spectrum of experience and skills to lead the way forward.
+                    
+                          Achieving our ambitions starts with supporting yours. Evolve your career and find your next opportunity. Get the care you need with industry-leading health plans and best-in-class programs to support your emotional, physical, and financial wellness. Expand your horizons with travel across the world’s biggest route network. Connect outside your team through employee-led Business Resource Groups.
+                    
+                          Create what’s next with us. Let’s define tomorrow together.
+                    
+                          We believe that inclusion propels innovation and is the foundation of all that we do. United's Digital Technology team spans the globe and is made up of diverse individuals all working together with cutting-edge technology to build the best airline in the history of aviation. Our team designs, develops and maintains massively scaling technology solutions brought to life with innovative architectures, data analytics, and digital solutions.
+                    
+                          Key Responsibilities:
+                    
+                          United's Revenue Management team is growing and we are seeking a Software Developer to come join us! The Software Developer plays an important role in creating and maintaining the strategic partnership between business needs and technology delivery. The Developer's role is to plan, design, develop and launch efficient systems and solutions in support of core organizational functions.
+                    
+                          This individual will utilize effective communication, analytical, and problem-solving skills to help identify, communicate / resolve issues, opportunities, or problems to maximize the benefit of IT and Business investments. The Developer is experienced and self - sufficient in performing their responsibilities requiring little supervision, but general guidance and direction.
+                    
+                          This is a hybrid role at United’s headquarters based in Chicago Office, Willis Tower.
+                          • Assist in design, develop and modify software applications/systems
+                          • Collaborates with cross-functional teams to understand business requirements and deliver solutions
+                          • Provides support to the software development leads (Ex: Senior Developer)
+                          • Works on one or more moderate to complex projects
+                          • Applies security code best practices throughout development cycle
+                          • Contributes to software documentation and user manuals
+                          • Complete comprehensive unit testing on all developed/enhanced software and supports deployment of software application
+                          • Participates in code reviews to ensure code adheres to standards
+                          • Support and troubleshoot software systems as required, optimizing performance, resolving problems, and providing follow-up on all issues and solutions
+                          • Stays up to date on the latest industry trends and technology
+                    
+                          Qualifications
+                    
+                          What’s needed to succeed (Minimum Qualifications):
+                          • Bachelor's degree in Computer science, software engineering, or related field
+                          • 3+ years of related experience or successful completion of United DT Early Career Digital Leadership Program
+                          • Proficient in C++, UNIX/Linux, Python and building back-end components
+                          • Experience with AWS Cloud Services (S3, EC2, Glue, Lambda, EKS, ELK, Redshift, etc)
+                          • Problem solving
+                          • Attention to detail
+                          • Effective Communication (verbal + written)
+                          • Demonstrates and eagerness to learn
+                          • Demonstrate advanced knowledge of SDLC processes, inputs/outputs, standards and best practices
+                          • Demonstrate advance knowledge of development methodologies, software design and design patterns
+                          • Demonstrate advance knowledge of the application of development domain areas and specific technologies and tool set
+                          • Must be legally authorized to work in the United States for any employer without sponsorship
+                          • Successful completion of interview required to meet job qualification
+                          • Reliable, punctual attendance is an essential function of the position
+                    
+                          What will help you propel from the pack (Preferred Qualifications):
+                          • SQL, Relational DB Experience
+                          • Code Repositories like Git
+                          • Dev Ops Experience
+                          • Infrastructure knowledge
+                          • Continuous Integration & Continuous Deployment
+                          • Data Warehousing Experience / Knowledge
+                          • ETL Knowledge
+                          • Distributed Programming Experience / Knowledge
+                          • Exposure to monitoring tools like Cloud Watch / Dynatrace
+                          • Microsoft Office tools, PowerPoint, Excel
+                    
+                          The base pay range for this role is $87,780.00 to $119,680.00.
+                          The base salary range/hourly rate listed is dependent on job-related, non-discriminatory factors such as experience, education, and skills. This position is also eligible for bonus and/or long-term incentive compensation awards.
+                    
+                          You may be eligible for the following competitive benefits: medical, dental, vision, life, accident & disability, parental leave, employee assistance program, commuter, paid holidays, paid time off, 401(k) and flight privileges.
+                    
+                          United Airlines is an equal opportunity employer. United Airlines recruits, employs, trains, compensates and promotes regardless of race, religion, color, national origin, gender identity, sexual orientation, physical ability, age, veteran status and other protected status as required by applicable law. Equal Opportunity Employer - Minorities/Women/Veterans/Disabled/LGBT.
+                    
+                          We will ensure that individuals with disabilities are provided reasonable accommodation to participate in the job application or interview process, to perform crucial job functions. Please contact JobAccommodations@united.com to request accommodation.
+                        job_is_remote: false
+                        job_posted_at: 1 day ago
+                        job_posted_at_timestamp: 1743292800
+                        job_posted_at_datetime_utc: '2025-03-30T00:00:00.000Z'
+                        job_location: Chicago, IL
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits:
+                          - health_insurance
+                          - dental_coverage
+                          - paid_time_off
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3DIiz-HDVOJbX6k5HfAAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_salary: null
+                        job_min_salary: null
+                        job_max_salary: null
+                        job_salary_period: null
+                        job_highlights:
+                          Qualifications:
+                            - Bachelor's degree in Computer science, software engineering, or related field
+                            - 3+ years of related experience or successful completion of United DT Early Career Digital Leadership Program
+                            - Proficient in C++, UNIX/Linux, Python and building back-end components
+                            - Experience with AWS Cloud Services (S3, EC2, Glue, Lambda, EKS, ELK, Redshift, etc)
+                            - Problem solving
+                            - Attention to detail
+                            - Effective Communication (verbal + written)
+                            - Demonstrates and eagerness to learn
+                            - Demonstrate advanced knowledge of SDLC processes, inputs/outputs, standards and best practices
+                            - Demonstrate advance knowledge of development methodologies, software design and design patterns
+                            - Demonstrate advance knowledge of the application of development domain areas and specific technologies and tool set
+                            - Must be legally authorized to work in the United States for any employer without sponsorship
+                            - Successful completion of interview required to meet job qualification
+                            - Reliable, punctual attendance is an essential function of the position
+                          Benefits:
+                            - Get the care you need with industry-leading health plans and best-in-class programs to support your emotional, physical, and financial wellness
+                            - The base pay range for this role is $87,780.00 to $119,680.00
+                            - The base salary range/hourly rate listed is dependent on job-related, non-discriminatory factors such as experience, education, and skills
+                            - This position is also eligible for bonus and/or long-term incentive compensation awards
+                            - 'You may be eligible for the following competitive benefits: medical, dental, vision, life, accident & disability, parental leave, employee assistance program, commuter, paid holidays, paid time off, 401(k) and flight privileges'
+                          Responsibilities:
+                            - Expand your horizons with travel across the world’s biggest route network
+                            - The Software Developer plays an important role in creating and maintaining the strategic partnership between business needs and technology delivery
+                            - The Developer's role is to plan, design, develop and launch efficient systems and solutions in support of core organizational functions
+                            - This individual will utilize effective communication, analytical, and problem-solving skills to help identify, communicate / resolve issues, opportunities, or problems to maximize the benefit of IT and Business investments
+                            - The Developer is experienced and self - sufficient in performing their responsibilities requiring little supervision, but general guidance and direction
+                            - This is a hybrid role at United’s headquarters based in Chicago Office, Willis Tower
+                            - Assist in design, develop and modify software applications/systems
+                            - Collaborates with cross-functional teams to understand business requirements and deliver solutions
+                            - 'Provides support to the software development leads (Ex: Senior Developer)'
+                            - Works on one or more moderate to complex projects
+                            - Applies security code best practices throughout development cycle
+                            - Contributes to software documentation and user manuals
+                            - Complete comprehensive unit testing on all developed/enhanced software and supports deployment of software application
+                            - Participates in code reviews to ensure code adheres to standards
+                            - Support and troubleshoot software systems as required, optimizing performance, resolving problems, and providing follow-up on all issues and solutions
+                            - Stays up to date on the latest industry trends and technology
+                        job_onet_soc: '15113300'
+                        job_onet_job_zone: '4'
+                      - job_id: U9FeCBlyUUb-I5tZAAAAAA==
+                        job_title: FULLY REMOTE Fullstack Sr Software Engineer
+                        employer_name: CyberCoders
+                        employer_logo: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ7EfkXlgVv-zgqK75MkcGNvtZ5rIOcjLC1AH-2&s=0
+                        employer_website: null
+                        job_publisher: LinkedIn
+                        job_employment_type: Full-time
+                        job_employment_types:
+                          - FULLTIME
+                        job_apply_link: https://www.linkedin.com/jobs/view/fully-remote-fullstack-sr-software-engineer-at-cybercoders-4196156902?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: false
+                        apply_options:
+                          - publisher: LinkedIn
+                            apply_link: https://www.linkedin.com/jobs/view/fully-remote-fullstack-sr-software-engineer-at-cybercoders-4196156902?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: CPS, Inc.
+                            apply_link: https://jobs.cps4jobs.com/Sr-Fullstack-Software-Engineer-React-Python-Jobs-in-Chicago-IL/12190201?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: Expoint
+                            apply_link: https://expoint.co/job/986297144?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Truemote
+                            apply_link: https://truemote.com/remote-job/fully-remote-fullstack-sr-software-engineer-39362e9d?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Career.com Career.com
+                            apply_link: https://www.career.com/job/cybercoders/fully-remote-fullstack-sr-software-engineer/j202503292050525394811?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Recruiter Jobs
+                            apply_link: https://jobs.recruiter.com/jobs/17894124407-sr-fullstack-software-engineer-react-python?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Jobilize
+                            apply_link: https://www.jobilize.com/job/us-sr-fullstack-software-engineer-novul-solutions-hiring-now-job-immediately?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                        job_description: |-
+                          Fullstack Senior Software Engineer
+                    
+                          Must Have
+                          • Fullstack experience with React on Frontend and Ruby, Python, or Java on the Backend
+                          • Computer Science Degree is a must
+                    
+                          Location: FULLY REMOTE
+                    
+                          Pay: 135k-165k
+                    
+                          Position Overview
+                    
+                          We are a large tech company (~700 employees) seeking 2 Full stack Senior Software Engineers to join our dynamic team. In this role, you will be responsible for developing and maintaining web applications, working on both the front-end and back-end systems. You will collaborate with cross-functional teams to deliver high-quality software solutions that meet our business objectives.
+                    
+                          Key Responsibilities
+                          • Design, develop, and maintain scalable web applications using Ruby on Rails and React.
+                          • Collaborate with product managers and designers to define user requirements and translate them into technical specifications.
+                          • Implement and maintain relational databases to support application functionality.
+                          • Develop and integrate APIs for seamless data exchange between front-end and back-end systems.
+                          • Participate in code reviews, ensuring best practices and high code quality are maintained.
+                          • Troubleshoot and debug applications to optimize performance and user experience.
+                          • Stay current with emerging technologies and industry trends to enhance our product offerings.
+                    
+                          Qualifications
+                          • Bachelor's degree in Computer Science or a related field.
+                          • Proven experience as a Fullstack Software Engineer or similar role.
+                          • Strong proficiency in Ruby on Rails and React frameworks.
+                          • Experience with relational databases such as PostgreSQL or MySQL.
+                          • Familiarity with SaaS application development and deployment.
+                          • Previous experience working in a startup environment is preferred.
+                          • Excellent problem-solving skills and attention to detail.
+                    
+                          Benefits
+                    
+                          Vacation/PTO
+                    
+                          Medical
+                    
+                          Dental
+                    
+                          Vision
+                    
+                          401k
+                    
+                          Bonus
+                    
+                          Relocation
+                    
+                          Telecommute
+                    
+                          Email Your Resume In Word To
+                    
+                          Looking forward to receiving your resume through our website and going over the position with you. Clicking apply is the best way to apply, but you may also:
+                    
+                          kris.riegle@cybercoders.com
+                          • Please do NOT change the email subject line in any way. You must keep the JobID: linkedin : KR6-1846733 -- in the email subject line for your application to be considered.***
+                    
+                          Kris Riegle - Executive Recruiter
+                    
+                          For this position, you must be currently authorized to work in the United States without the need for sponsorship for a non-immigrant visa.
+                    
+                          This job was first posted by CyberCoders on 03/28/2025 and applications will be accepted on an ongoing basis until the position is filled or closed.
+                    
+                          CyberCoders is proud to be an Equal Opportunity Employer
+                    
+                          All qualified applicants will receive consideration for employment without regard to race, color, religion, sex, age, sexual orientation, gender identity or expression, national origin, ancestry, citizenship, genetic information, registered domestic partner status, marital status, status as a crime victim, disability, protected veteran status, or any other characteristic protected by law. CyberCoders will consider qualified applicants with criminal histories in a manner consistent with the requirements of applicable state and local law, including but not limited to the Los Angeles County Fair Chance Ordinance, the San Francisco Fair Chance Ordinance, and the California Fair Chance Act. CyberCoders is committed to working with and providing reasonable accommodation to individuals with physical and mental disabilities. If you need special assistance or an accommodation while seeking employment, please contact a member of our Human Resources team to make arrangements.
+                        job_is_remote: true
+                        job_posted_at: 2 days ago
+                        job_posted_at_timestamp: 1743206400
+                        job_posted_at_datetime_utc: '2025-03-29T00:00:00.000Z'
+                        job_location: Chicago, IL
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits:
+                          - paid_time_off
+                          - dental_coverage
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3DU9FeCBlyUUb-I5tZAAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_min_salary: 135000
+                        job_max_salary: 165000
+                        job_salary_period: YEAR
+                        job_highlights:
+                          Qualifications:
+                            - Fullstack experience with React on Frontend and Ruby, Python, or Java on the Backend
+                            - Computer Science Degree is a must
+                            - Bachelor's degree in Computer Science or a related field
+                            - Proven experience as a Fullstack Software Engineer or similar role
+                            - Strong proficiency in Ruby on Rails and React frameworks
+                            - Experience with relational databases such as PostgreSQL or MySQL
+                            - Familiarity with SaaS application development and deployment
+                            - Excellent problem-solving skills and attention to detail
+                            - For this position, you must be currently authorized to work in the United States without the need for sponsorship for a non-immigrant visa
+                            - CyberCoders will consider qualified applicants with criminal histories in a manner consistent with the requirements of applicable state and local law, including but not limited to the Los Angeles County Fair Chance Ordinance, the San Francisco Fair Chance Ordinance, and the California Fair Chance Act
+                          Benefits:
+                            - 'Pay: 135k-165k'
+                            - Vision
+                            - 401k
+                            - Bonus
+                          Responsibilities:
+                            - In this role, you will be responsible for developing and maintaining web applications, working on both the front-end and back-end systems
+                            - You will collaborate with cross-functional teams to deliver high-quality software solutions that meet our business objectives
+                            - Design, develop, and maintain scalable web applications using Ruby on Rails and React
+                            - Collaborate with product managers and designers to define user requirements and translate them into technical specifications
+                            - Implement and maintain relational databases to support application functionality
+                            - Develop and integrate APIs for seamless data exchange between front-end and back-end systems
+                            - Participate in code reviews, ensuring best practices and high code quality are maintained
+                            - Troubleshoot and debug applications to optimize performance and user experience
+                            - Stay current with emerging technologies and industry trends to enhance our product offerings
+                        job_onet_soc: '15113300'
+                        job_onet_job_zone: '4'
+                      - job_id: QuuVtiA7yQnBOqUTAAAAAA==
+                        job_title: Software Developer (Java)
+                        employer_name: Apollo Technology Solutions LLC
+                        employer_logo: null
+                        employer_website: null
+                        job_publisher: Indeed
+                        job_employment_type: Full-time
+                        job_employment_types:
+                          - FULLTIME
+                        job_apply_link: https://www.indeed.com/viewjob?jk=6cd14c358e269a1f&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: true
+                        apply_options:
+                          - publisher: Indeed
+                            apply_link: https://www.indeed.com/viewjob?jk=6cd14c358e269a1f&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: ZipRecruiter
+                            apply_link: https://www.ziprecruiter.com/c/Apollo-Technology-Solutions-LLC/Job/Software-Developer-(Java)/-in-Chicago,IL?jid=4aa0fff3aa59a8aa&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: Ladders
+                            apply_link: https://www.theladders.com/job/software-developer-java-apollo-its-chicago-il_80649975?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Monster
+                            apply_link: https://www.monster.com/job-openings/software-developer-java-chicago-il--8470f85e-40af-4e76-a229-4ecb5c75a952?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: true
+                          - publisher: SimplyHired
+                            apply_link: https://www.simplyhired.com/job/ZuUv8hLYf-64xWrCqyta_qYCLYZpeLVZhZE_gRJqDvFKWw06nbdCFA?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: LazyApply
+                            apply_link: https://lazyapply.com/jobpreview/software-developer-java-apollo-its-chicago-il_80649975?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Recruiter Jobs
+                            apply_link: https://jobs.recruiter.com/jobs/18799021370-software-developer-java?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Recruit.net
+                            apply_link: https://www.recruit.net/job/software-developer-java--jobs/42357D5BE3781117?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                        job_description: |-
+                          Job Title: Software Developer (Java)
+                          Duration: 11+ Months
+                          Location: Chicago, IL
+                          Employment Type: Full time
+                          Worksite Flexibility: Hybrid
+                          Note:
+                          • Remote, with potential on-site requirements as needed.
+                          • Seeking local candidates to Chicago or willing to go on-site for final interview.
+                          • Seeking candidates with POS experience.
+                    
+                          Job Description:
+                          We are looking for a Java Developer to work on web and API-based software solutions for CAI's clients. This position will be full-time and hybrid.
+                          What you'll do:
+                          • Collaborating with a team of application specialists in supporting our client's enterprise applications
+                          • Developing and unit testing REST web services and solutions using https-based web applications. Knowledge of tools like SOAP UI and Postman is a must
+                          • Translating business requirements into code in compliance with defined development standards, including all code documentation and design documentation
+                          • Writing backend as well as frontend code for web-based applications
+                          • Resolving defects in a timely and thorough manner
+                          • Actively participating in performance tuning across both application and network tiers
+                          • Assessing and triage issues at various levels based on priority and urgency
+                          • Escalating issues to management, as appropriate
+                          • Simultaneously managing multiple priorities to ensure timelines are met
+                          • Participating in cross training and knowledge sharing of best practices, both within and outside of the team.
+                          • Rapidly learning new applications and technologies as new systems are added to CAI's client programs
+                          • Promoting teamwork and effective communication. Fostering mutually beneficial working relationships with all CAI and client team members.
+                          • Delivering defect-free solutions that are compliant with industry and application best practices.
+                          • Analyzing periodic, vendor-released application upgrades
+                    
+                          What You'll Need
+                          Required:
+                          • Bachelor's degree or foreign equivalent in Computer Science, Computer Applications, Engineering, or related field
+                          • Minimum of 7 years of experience as a Programmer/Analyst, Software Developer, IT Consultant, or similar occupation.
+                    
+                          Skills Required: Deep technical knowledge of recent versions of the following tools and technologies:
+                          • Java
+                          • Angular 13
+                          • Spring Boot
+                          • Spring Data JPA
+                          • Spring Framework
+                          • Spring Security
+                          • Hibernate
+                          • Maven
+                          • Bootstrap
+                          • Oracle
+                          • JBoss
+                          • GitLab
+                          • SQL Developer/Toad
+                          • JIRA
+                          • JBoss Cruise Control
+                          • Eclipse
+                          • Analytical and problem-solving skills
+                          • Excellent verbal and written communication skills
+                          • Excellent client focus
+                          • The ability to work well under pressure and to perform to deadlines
+                          • Team player who is self-aware
+                          • Sound decision making ability with the ability to consult where needed
+                          • High level of attention to detail and a desire to drive quality
+                          • The ability to work unsupervised
+                          • Physical Demands
+                          • Ability to safely and successfully perform the essential job functions consistent with the ADA and other federal, state and local standards
+                          • Sedentary work that involves sitting or remaining stationary most of the time with occasional need to move around the office to attend meetings, etc.
+                          • Ability to conduct repetitive tasks on a computer, utilizing a mouse, keyboard, and monitor
+                        job_is_remote: false
+                        job_posted_at: 7 days ago
+                        job_posted_at_timestamp: 1742774400
+                        job_posted_at_datetime_utc: '2025-03-24T00:00:00.000Z'
+                        job_location: Chicago, IL
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits: null
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3DQuuVtiA7yQnBOqUTAAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_salary: null
+                        job_min_salary: null
+                        job_max_salary: null
+                        job_salary_period: null
+                        job_highlights:
+                          Qualifications:
+                            - Remote, with potential on-site requirements as needed
+                            - Seeking local candidates to Chicago or willing to go on-site for final interview
+                            - Seeking candidates with POS experience
+                            - Knowledge of tools like SOAP UI and Postman is a must
+                            - Translating business requirements into code in compliance with defined development standards, including all code documentation and design documentation
+                            - Writing backend as well as frontend code for web-based applications
+                            - Assessing and triage issues at various levels based on priority and urgency
+                            - Simultaneously managing multiple priorities to ensure timelines are met
+                            - Participating in cross training and knowledge sharing of best practices, both within and outside of the team
+                            - Rapidly learning new applications and technologies as new systems are added to CAI's client programs
+                            - Promoting teamwork and effective communication
+                            - Bachelor's degree or foreign equivalent in Computer Science, Computer Applications, Engineering, or related field
+                            - Minimum of 7 years of experience as a Programmer/Analyst, Software Developer, IT Consultant, or similar occupation
+                            - 'Skills Required: Deep technical knowledge of recent versions of the following tools and technologies:'
+                            - Java
+                            - Angular 13
+                            - Spring Boot
+                            - Spring Data JPA
+                            - Spring Framework
+                            - Spring Security
+                            - Hibernate
+                            - Maven
+                            - Bootstrap
+                            - JBoss
+                            - GitLab
+                            - SQL Developer/Toad
+                            - JIRA
+                            - JBoss Cruise Control
+                            - Eclipse
+                            - Analytical and problem-solving skills
+                            - Excellent verbal and written communication skills
+                            - Excellent client focus
+                            - The ability to work well under pressure and to perform to deadlines
+                            - Team player who is self-aware
+                            - Sound decision making ability with the ability to consult where needed
+                            - High level of attention to detail and a desire to drive quality
+                            - The ability to work unsupervised
+                            - Physical Demands
+                            - Ability to safely and successfully perform the essential job functions consistent with the ADA and other federal, state and local standards
+                            - Sedentary work that involves sitting or remaining stationary most of the time with occasional need to move around the office to attend meetings, etc
+                            - Ability to conduct repetitive tasks on a computer, utilizing a mouse, keyboard, and monitor
+                          Responsibilities:
+                            - We are looking for a Java Developer to work on web and API-based software solutions for CAI's clients
+                            - This position will be full-time and hybrid
+                            - Collaborating with a team of application specialists in supporting our client's enterprise applications
+                            - Developing and unit testing REST web services and solutions using https-based web applications
+                            - Resolving defects in a timely and thorough manner
+                            - Actively participating in performance tuning across both application and network tiers
+                            - Escalating issues to management, as appropriate
+                            - Fostering mutually beneficial working relationships with all CAI and client team members
+                            - Delivering defect-free solutions that are compliant with industry and application best practices
+                            - Analyzing periodic, vendor-released application upgrades
+                        job_onet_soc: '15113200'
+                        job_onet_job_zone: '4'
+                      - job_id: hicM2JieJWLn4UUmAAAAAA==
+                        job_title: UI Developer Job at Power Nest in Chicago
+                        employer_name: Power Nest
+                        employer_logo: null
+                        employer_website: null
+                        job_publisher: Media Bistro
+                        job_employment_type: Full-time
+                        job_employment_types:
+                          - FULLTIME
+                        job_apply_link: https://www.mediabistro.com/jobs/723141258-ui-developer-job-at-power-nest-in-chicago?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: false
+                        apply_options:
+                          - publisher: Media Bistro
+                            apply_link: https://www.mediabistro.com/jobs/723141258-ui-developer-job-at-power-nest-in-chicago?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Adzuna
+                            apply_link: https://www.adzuna.com/details/5026855513?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                        job_description: |-
+                          Position: UI Developer (Junior Level)Location: United States (Remote/On-site)Job Type: Full-Time (Unpaid Role Until Fundraise)About Us:Power Nest Talent is at the forefront of transforming talent management and business advisory through innovative solutions powered by psychological expertise. We are seeking a passionate UI Developer for our client to join our team and contribute to building engaging and intuitive user interfaces for our digital platforms. This is an unpaid role until our next round of fundraising, offering a unique opportunity to grow with a dynamic startup and gain invaluable experience.Key Responsibilities:Collaborate with cross-functional teams to design and implement user-friendly web interfaces.Develop responsive UI components using modern web technologies (HTML, CSS, JavaScript, and frameworks like React or Angular).Optimize web applications for maximum speed and scalability.Translate design mockups into interactive and functional user interfaces.Ensure the technical feasibility of UI/UX designs and propose solutions to improve user experience.Debug and troubleshoot UI issues to enhance overall performance.Maintain up-to-date knowledge of UI development trends and best practices.Qualifications:Education: Bachelor’s degree in Computer Science, Information Technology, or a related field (preferred but not mandatory). Relevant certifications in web development or UI/UX design are a plus.Experience: 0-2 years of experience in UI development or a related field. Proficiency in front-end technologies such as HTML, CSS, JavaScript, and experience with frameworks like React, Angular, or Vue.js.Skills: Strong understanding of web standards, accessibility, and responsive design. Ability to work in a collaborative team environment. Excellent problem-solving and debugging skills. Eagerness to learn and adapt to new technologies and challenges. Strong attention to detail and a passion for creating excellent user experiences.Salary Range:This is an unpaid role until our next round of fundraising. Upon successful fundraising, compensation will be aligned with market standards for junior-level UI developers in the US.Power Nest Talent is an equal opportunity employer. We celebrate diversity and are committed to creating an inclusive environment for all team members.
+                          #J-18808-Ljbffr
+                        job_is_remote: false
+                        job_posted_at: 5 days ago
+                        job_posted_at_timestamp: 1742947200
+                        job_posted_at_datetime_utc: '2025-03-26T00:00:00.000Z'
+                        job_location: Chicago, IL
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits: null
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3DhicM2JieJWLn4UUmAAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_salary: null
+                        job_min_salary: null
+                        job_max_salary: null
+                        job_salary_period: null
+                        job_highlights:
+                          Qualifications:
+                            - Develop responsive UI components using modern web technologies (HTML, CSS, JavaScript, and frameworks like React or Angular)
+                            - 'Proficiency in front-end technologies such as HTML, CSS, JavaScript, and experience with frameworks like React, Angular, or Vue.js.Skills: Strong understanding of web standards, accessibility, and responsive design'
+                            - Ability to work in a collaborative team environment
+                            - Excellent problem-solving and debugging skills
+                            - Eagerness to learn and adapt to new technologies and challenges
+                            - Strong attention to detail and a passion for creating excellent user experiences
+                          Responsibilities:
+                            - Key Responsibilities:Collaborate with cross-functional teams to design and implement user-friendly web interfaces
+                            - Optimize web applications for maximum speed and scalability
+                            - Translate design mockups into interactive and functional user interfaces
+                            - Ensure the technical feasibility of UI/UX designs and propose solutions to improve user experience
+                            - Debug and troubleshoot UI issues to enhance overall performance
+                        job_onet_soc: '15113400'
+                        job_onet_job_zone: '3'
+                      - job_id: XXx9miqpBQMWHOMGAAAAAA==
+                        job_title: Software Engineer | High-Frequency Trading
+                        employer_name: Evolve Group
+                        employer_logo: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRv4Lr42UXcO4AvMUi8tXXEtP9K0qO1y-XgVeDj&s=0
+                        employer_website: https://www.evolvegrp.io
+                        job_publisher: LinkedIn
+                        job_employment_type: Full-time
+                        job_employment_types:
+                          - FULLTIME
+                        job_apply_link: https://www.linkedin.com/jobs/view/software-engineer-high-frequency-trading-at-evolve-group-4190590606?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: false
+                        apply_options:
+                          - publisher: LinkedIn
+                            apply_link: https://www.linkedin.com/jobs/view/software-engineer-high-frequency-trading-at-evolve-group-4190590606?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Taro
+                            apply_link: https://www.jointaro.com/jobs/tastytrade/mid-level-software-engineer-frontend/?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Career Page
+                            apply_link: https://www.careers-page.com/altela/job/L69476W5?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Monster
+                            apply_link: https://www.monster.com/job-openings/mid-level-software-engineer-chicago-il--83b0fe7a-e811-4516-9a11-3fe461904068?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Teal
+                            apply_link: https://www.tealhq.com/job/mid-level-software-engineer-frontend_1ef47f9e-d7ae-4ec5-b2f6-1e784361d5d0?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: ZipRecruiter
+                            apply_link: https://www.ziprecruiter.com/c/Evolve-Group/Job/Software-Engineer-%7C-High-Frequency-Trading/-in-Chicago,IL?jid=2e4f9cc4c09ba11b&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Rise - Rise - Jobs
+                            apply_link: https://app.joinrise.co/jobs/tastytrade-mid-level-software-engineer-frontend-aslf?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: SaluteMyJob
+                            apply_link: https://salutemyjob.com/jobs/software-engineer-high-frequency-trading-chicago-illinois/1611070423-2/?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                        job_description: |-
+                          C++ Engineer (HFT - Low Latency)
+                    
+                          World Leading High-Frequency Trading Firm
+                    
+                          Chicago
+                    
+                          $350,000 - $750,000 total comp
+                    
+                          We're working on behalf of one of the world's leading high frequency trading firms with some of the most sophisticated technical teams and systems in industry who are looking for highly talented C++ Software Engineers in Chicago.
+                    
+                          Within their centralized engineering team, you will work to design, build, implement and optimize highly complex solutions to improve the trading platform performance.
+                    
+                          Whether you're currently working in tech, investment banking, or trading this is an opportunity to build on your C++ skills with some of the brightest minds in industry within an environment which encourages autonomy, ownership, and impact.
+                    
+                          Required experience
+                          • Bachelor's degree or higher in Computer Science, Mathematics or a related field with strong academic performance
+                          • 2 - 6 years commercial experience working as a C++ developer with a focus on latency and performance
+                          • Excellent communication skills and the ability to work with cross functional teams
+                          • Commercial experience working with Linux systems
+                          • Strong problem-solving skills and the ability to work autonomously in a fast-paced environment
+                        job_is_remote: false
+                        job_posted_at: 6 days ago
+                        job_posted_at_timestamp: 1742860800
+                        job_posted_at_datetime_utc: '2025-03-25T00:00:00.000Z'
+                        job_location: Chicago, IL
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits: null
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3DXXx9miqpBQMWHOMGAAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_min_salary: 200000
+                        job_max_salary: 400000
+                        job_salary_period: YEAR
+                        job_highlights:
+                          Qualifications:
+                            - Bachelor's degree or higher in Computer Science, Mathematics or a related field with strong academic performance
+                            - 2 - 6 years commercial experience working as a C++ developer with a focus on latency and performance
+                            - Excellent communication skills and the ability to work with cross functional teams
+                            - Commercial experience working with Linux systems
+                            - Strong problem-solving skills and the ability to work autonomously in a fast-paced environment
+                          Benefits:
+                            - $350,000 - $750,000 total comp
+                        job_onet_soc: '15113200'
+                        job_onet_job_zone: '4'
+
+  /job-details:
+    get:
+      summary: Job Details
+      description: >-
+        Get all job details, including additional information such as: application options / links, employer reviews and estimated salaries for similar jobs.
+      parameters:
+        - name: job_id
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 'n20AgUu1KG0BGjzoAAAAAA=='
+          description: >-
+            Job Id of the job for which to get details.  
+              Batching of up to 20 Job Ids is supported by separating multiple Job Ids by comma (,).  
+              Note that each Job Id in a batch request is counted as a request for quota calculation.
+
+        - name: country
+          in: query
+          schema:
+            type: string
+            default: us
+            example: 'us'
+          description: >-
+            Country code of the country from which to return job posting.  
+            
+              **Allowed values:** See *https://en.wikipedia.org/wiki/ISO_3166-1_alpha-2*
+
+        - name: language
+          in: query
+          schema:
+            type: string
+            example: 'en'
+          description: >-
+            Language code in which to return job postings.  
+              Leave empty to use the primary language in the specified country (country parameter).  
+              
+              **Allowed values:** See *https://en.wikipedia.org/wiki/List_of_ISO_639_language_codes*
+
+        - name: fields
+          in: query
+          schema:
+            type: string
+            example: 'employer_name,job_publisher,job_title,job_country'
+          description: >-
+            A comma separated list of job fields to include in the response (field projection).  
+              By default all fields are returned.  
+
+      responses:
+        '200':
+          description: 'Successful Response'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: "The status of the API response."
+                    example: success
+                  request_id:
+                    type: string
+                    description: "A unique ID to trace the API request."
+                    example: 87324a9d-cedf-41ac-82bd-3a1c30949c0a
+                  parameters:
+                    type: object
+                    properties:
+                      job_id:
+                        type: string
+                        description: "The job identifier provided in the request."
+                        example: abc123
+                      country:
+                        type: string
+                        description: "The country code the job search was scoped to."
+                        example: US
+                      language:
+                        type: string
+                        description: "The language preference for the search results."
+                        example: en
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        job_id:
+                          type: string
+                          description: "The unique identifier of the job listing."
+                          example: job12345
+                        job_title:
+                          type: string
+                          description: "The title or position name of the job."
+                          example: Software Engineer
+                        employer_name:
+                          type: string
+                          description: "The name of the company posting the job."
+                          example: Google
+                        employer_logo:
+                          type: string
+                          description: "The URL of the employer's logo image."
+                          example: https://example.com/logo.png
+                        employer_website:
+                          type: string
+                          description: "The official website of the employer."
+                          example: https://example.com
+                        job_publisher:
+                          type: string
+                          description: "The platform or site that published the job."
+                          example: LinkedIn
+                        job_employment_type:
+                          type: string
+                          description: "The employment type (e.g. full-time, part-time)."
+                          example: Full-time
+                        job_apply_link:
+                          type: string
+                          description: "The link to apply for the job."
+                          example: https://example.com/apply
+                        job_apply_is_direct:
+                          type: boolean
+                          description: "Indicates if the application is submitted directly to the employer."
+                          example: true
+                        job_description:
+                          type: string
+                          description: "A detailed description of the job posting."
+                          example: We are looking for...
+                        job_is_remote:
+                          type: string
+                          description: "Indicates if the job is remote."
+                          example: yes
+                        job_posted_at:
+                          type: string
+                          description: "The relative posting time (e.g. 3 days ago)."
+                          example: 3 days ago
+                        job_posted_at_timestamp:
+                          type: integer
+                          description: "Unix timestamp of when the job was posted."
+                          example: 1680105600
+                        job_posted_at_datetime_utc:
+                          type: string
+                          description: "UTC datetime of when the job was posted."
+                          example: 2024-04-01T12:00:00Z
+                        job_location:
+                          type: string
+                          description: "Full location string of the job."
+                          example: San Francisco, CA
+                        job_city:
+                          type: string
+                          description: "City where the job is located."
+                          example: San Francisco
+                        job_state:
+                          type: string
+                          description: "State or province of the job location."
+                          example: CA
+                        job_country:
+                          type: string
+                          description: "Country of the job location."
+                          example: US
+                        job_latitude:
+                          type: number
+                          description: "Latitude of the job location."
+                          example: 37.7749
+                        job_longitude:
+                          type: number
+                          description: "Longitude of the job location."
+                          example: -122.4194
+                        job_benefits:
+                          type: string
+                          description: "Summary of the benefits offered by the job."
+                          example: Health insurance, 401k
+                        job_google_link:
+                          type: string
+                          description: "A link to the job on Google Jobs."
+                          example: https://google.com/jobs/xyz
+                        job_salary:
+                          type: string
+                          description: "Full salary description string."
+                          example: $90,000 - $110,000 per year
+                        job_min_salary:
+                          type: string
+                          description: "Minimum salary offered for the position."
+                          example: $90000
+                        job_max_salary:
+                          type: string
+                          description: "Maximum salary offered for the position."
+                          example: $110000
+                        job_salary_period:
+                          type: string
+                          description: "Salary period (e.g. per year, per hour)."
+                          example: per year
+                        job_onet_soc:
+                          type: string
+                          description: "The O*NET SOC code for the job occupation."
+                          example: 15-1252.00
+                        job_onet_job_zone:
+                          type: string
+                          description: "The O*NET job zone classification."
+                          example: 4 – Considerable Preparation Needed
+
+              example:
+                'Example':
+                  value:
+                    status: OK
+                    request_id: 05cd8311-fdd1-4822-831b-fa13eb05f01f
+                    parameters:
+                      job_id: 20N57zBfi3eT9BdpAAAAAA==
+                      country: us
+                      language: en
+                    data:
+                      - job_id: 20N57zBfi3eT9BdpAAAAAA==
+                        job_title: JavaScript Backend Developer
+                        employer_name: IT Engagements, Inc.
+                        employer_logo: https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdiK9i1psQm2cIFbZe06v_LCI_-5c5GR4UXsGu&s=0
+                        employer_website: null
+                        job_publisher: LinkedIn
+                        job_employment_type: Contractor
+                        job_employment_types:
+                          - CONTRACTOR
+                          - CONTRACTOR
+                        job_apply_link: https://www.linkedin.com/jobs/view/javascript-backend-developer-at-it-engagements-inc-4148684949?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                        job_apply_is_direct: false
+                        apply_options:
+                          - publisher: LinkedIn
+                            apply_link: https://www.linkedin.com/jobs/view/javascript-backend-developer-at-it-engagements-inc-4148684949?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: JobLeads
+                            apply_link: https://www.jobleads.com/us/job/javascript-backend-developer--chicago--e3e359ff9336688178f270a184e5cb51a?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Learn4Good
+                            apply_link: https://www.learn4good.com/jobs/chicago/illinois/info_technology/3957218611/e/?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                          - publisher: Jobilize
+                            apply_link: https://www.jobilize.com/job/us-il-chicago-javascript-backend-developer-compunnel-hiring-now-job?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+                            is_direct: false
+                        job_description: |-
+                          Greetings from IT Engagements…!
+                    
+                          IT Engagements is a global staff augmentation firm providing a wide-range of talent on-demand and total workforce solutions. We have an immediate opening for the below position with one of our premium clients.
+                    
+                          Job Title:- JavaScript Backend Developer
+                    
+                          Duration:- 12+ Months Contract (Possibility of further extension)
+                    
+                          Location:- Hybrid (3day/Week Onsite) at Chicago, IL.
+                    
+                          Visa:- USC, GC, GC-EAD, H4-EAD (No Third-Party Candidates)
+                    
+                          Job Description:-
+                          • Communication skills are the KEY! We need a Solution type person. This person is going to have to have a great personality and awesome communication skills
+                          • JavaScript Backend Developer (NO Front-end work) – ALL JavaScript backend Development.
+                          • Must have 10 years of JavaScript backend Development experience.
+                          • Must have SDK Experience.
+                    
+                          Regards,
+                    
+                          Shashank Jaitly
+                    
+                          Shashank@itengagements.com
+                        job_is_remote: null
+                        job_posted_at: null
+                        job_posted_at_timestamp: null
+                        job_posted_at_datetime_utc: null
+                        job_location: Chicago, IL, United States
+                        job_city: Chicago
+                        job_state: Illinois
+                        job_country: US
+                        job_latitude: 41.8781136
+                        job_longitude: -87.6297982
+                        job_benefits: null
+                        job_google_link: https://www.google.com/search?q=jobs&gl=us&hl=en&udm=8#vhid=vt%3D20/docid%3D20N57zBfi3eT9BdpAAAAAA%3D%3D&vssid=jobs-detail-viewer
+                        job_salary: null
+                        job_min_salary: null
+                        job_max_salary: null
+                        job_salary_period: null
+                        job_highlights:
+                          Qualifications:
+                            - Communication skills are the KEY!
+                            - This person is going to have to have a great personality and awesome communication skills
+                            - JavaScript Backend Developer (NO Front-end work) – ALL JavaScript backend Development
+                            - Must have 10 years of JavaScript backend Development experience
+                            - Must have SDK Experience
+                          Benefits:
+                            - Duration:- 12+ Months Contract (Possibility of further extension)
+                        job_onet_soc: '15113400'
+                        job_onet_job_zone: '3'
+
+  /estimated-salary:
+    get:
+      summary: Job Salary
+      description: >-
+        Get estimated salaries / pay for a jobs around a location by job title and location.  
+          The salary estimation is returned for several periods, depending on data availability / relevance, and includes:  hourly, daily, weekly, monthly, or yearly.
+      parameters:
+        - name: job_title
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 'nodejs developer'
+          description: 'Job title for which to get salary estimation.'
+
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 'new york'
+          description: 'Location in which to get salary estimation.'
+
+        - name: location_type
+          in: query
+          description: >-
+            Specify the type of the location you are looking to get salary estimation for additional accuracy.
+          schema:
+            type: string
+            enum: [ANY, CITY, STATE, COUNTRY]
+            default: ANY
+            example: 'CITY'
+
+        - name: years_of_experience
+          in: query
+          description: >-
+            Get job estimation for a specific experience level range (years).
+          schema:
+            type: string
+            enum: [ALL, LESS_THAN_ONE, ONE_TO_THREE, FOUR_TO_SIX, SEVEN_TO_NINE, TEN_TO_FOURTEEN, ABOVE_FIFTEEN]
+            default: ALL
+            example: 'LESS_THAN_ONE'
+
+        - name: fields
+          in: query
+          schema:
+            type: string
+            example: 'job_title,median_salary,location'
+          description: >-
+            A comma separated list of job salary fields to include in the response (field projection).  
+              By default all fields are returned.
+
+      responses:
+        '200':
+          description: 'Successful Response'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: "The status of the API response."
+                    example: success
+                  request_id:
+                    type: string
+                    description: "A unique identifier for tracking the API request."
+                    example: 123e4567-e89b-12d3-a456-426614174000
+                  parameters:
+                    type: object
+                    properties:
+                      job_title:
+                        type: string
+                        description: "The job title for which salary data was requested."
+                        example: Software Engineer
+                      location:
+                        type: string
+                        description: "The geographical location of the job."
+                        example: San Francisco, CA
+                      location_type:
+                        type: string
+                        description: "The type of location, such as city or region."
+                        example: city
+                      years_of_experience:
+                        type: string
+                        description: "The years of experience used to filter salary data."
+                        example: 5-7
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        location:
+                          type: string
+                          description: "The location associated with the salary data."
+                          example: San Francisco, CA
+                        job_title:
+                          type: string
+                          description: "The job title related to the salary entry."
+                          example: Software Engineer
+                        min_salary:
+                          type: number
+                          description: "The minimum total salary reported."
+                          example: 90000
+                        max_salary:
+                          type: number
+                          description: "The maximum total salary reported."
+                          example: 160000
+                        median_salary:
+                          type: number
+                          description: "The median total salary reported."
+                          example: 125000
+                        min_base_salary:
+                          type: number
+                          description: "The minimum base salary reported."
+                          example: 80000
+                        max_base_salary:
+                          type: number
+                          description: "The maximum base salary reported."
+                          example: 150000
+                        median_base_salary:
+                          type: number
+                          description: "The median base salary reported."
+                          example: 115000
+                        min_additional_pay:
+                          type: number
+                          description: "The minimum additional compensation reported."
+                          example: 5000
+                        max_additional_pay:
+                          type: number
+                          description: "The maximum additional compensation reported."
+                          example: 20000
+                        median_additional_pay:
+                          type: number
+                          description: "The median additional compensation reported."
+                          example: 10000
+                        salary_period:
+                          type: string
+                          description: "The frequency of the salary (e.g., per year, per hour)."
+                          example: per year
+                        salary_currency:
+                          type: string
+                          description: "The currency used for the salary data."
+                          example: USD
+                        salary_count:
+                          type: integer
+                          description: "The number of salaries used to generate the data."
+                          example: 250
+                        salaries_updated_at:
+                          type: string
+                          description: "The last update timestamp of the salary data."
+                          example: 2024-03-31
+                        publisher_name:
+                          type: string
+                          description: "The name of the data publisher."
+                          example: Glassdoor
+                        publisher_link:
+                          type: string
+                          description: "The URL to the salary data publisher."
+                          example: https://www.glassdoor.com
+                        confidence:
+                          type: string
+                          description: "A textual indicator of how reliable the data is."
+                          example: high
+
+              example:
+                'Example':
+                  value:
+                    status: OK
+                    request_id: 2ff43de9-cf32-41b1-ad5b-847189f9129e
+                    parameters:
+                      job_title: nodejs developer
+                      location: new york
+                      location_type: ANY
+                      years_of_experience: null
+                    data:
+                      - location: New York City, NY
+                        job_title: Nodejs Developer
+                        min_salary: 111845.69
+                        max_salary: 185866.24
+                        median_salary: 143099.6
+                        min_base_salary: 81915.06
+                        max_base_salary: 129995.73
+                        median_base_salary: 103192.09
+                        min_additional_pay: 29930.63
+                        max_additional_pay: 55870.51
+                        median_additional_pay: 39907.51
+                        salary_period: YEAR
+                        salary_currency: USD
+                        salary_count: 60
+                        salaries_updated_at: '2024-06-06T23:59:59.000Z'
+                        publisher_name: Glassdoor
+                        publisher_link: https://www.glassdoor.com/Salaries/company-salaries.htm?suggestCount=0&suggestChosen=false&sc.keyword=Nodejs%20Developer&locT=C&locId=1132348
+                        confidence: CONFIDENT
+
+  /company-job-salary:
+    get:
+      summary: Company Job Salary
+      description: 'Get estimated job salaries/pay in a specific company by job title and optionally a location and experience level in years.'
+      parameters:
+        - name: company
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 'Amazon'
+          description: 'The company name for which to get salary information (e.g. Amazon).'
+
+        - name: job_title
+          in: query
+          required: true
+          schema:
+            type: string
+            example: 'software developer'
+          description: 'Job title for which to get salary estimation.'
+
+        - name: location
+          in: query
+          schema:
+            type: string
+            example: "NY"
+          description: 'Free-text location/area in which to get salary estimation.'
+
+        - name: location_type
+          in: query
+          description: >-
+            Specify the type of the location you are looking to get salary estimation for additional accuracy.
+          schema:
+            type: string
+            enum: [ANY, CITY, STATE, COUNTRY]
+            default: ANY
+            example: 'CITY'
+
+        - name: years_of_experience
+          in: query
+          description: >-
+            Get job estimation for a specific experience level range (years).
+          schema:
+            type: string
+            enum: [ALL, LESS_THAN_ONE, ONE_TO_THREE, FOUR_TO_SIX, SEVEN_TO_NINE, TEN_TO_FOURTEEN, ABOVE_FIFTEEN]
+            default: ALL
+            example: 'LESS_THAN_ONE'
+
+      responses:
+        '200':
+          description: 'Successful Response'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: "The status of the API response."
+                    example: success
+                  request_id:
+                    type: string
+                    description: "A unique identifier for the request."
+                    example: d6e2f0be-9a60-4b7e-bbc3-e438c3c7c2af
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        location:
+                          type: string
+                          description: "The location associated with the salary data."
+                          example: San Francisco, CA
+                        job_title:
+                          type: string
+                          description: "The job title for which the salary data is provided."
+                          example: Software Engineer
+                        company:
+                          type: string
+                          description: "The company name where the job is offered."
+                          example: Google
+                        min_salary:
+                          type: number
+                          description: "The minimum total salary reported for this job."
+                          example: 90000
+                        max_salary:
+                          type: number
+                          description: "The maximum total salary reported for this job."
+                          example: 180000
+                        median_salary:
+                          type: number
+                          description: "The median total salary for the job title."
+                          example: 135000
+                        min_base_salary:
+                          type: number
+                          description: "The minimum base salary portion of the total compensation."
+                          example: 80000
+                        max_base_salary:
+                          type: number
+                          description: "The maximum base salary portion of the total compensation."
+                          example: 160000
+                        median_base_salary:
+                          type: number
+                          description: "The median base salary for the job title."
+                          example: 120000
+                        min_additional_pay:
+                          type: number
+                          description: "The minimum additional pay (e.g., bonuses, stock) reported."
+                          example: 5000
+                        max_additional_pay:
+                          type: number
+                          description: "The maximum additional pay (e.g., bonuses, stock) reported."
+                          example: 25000
+                        median_additional_pay:
+                          type: number
+                          description: "The median additional pay for the job title."
+                          example: 15000
+                        salary_period:
+                          type: string
+                          description: "The period over which the salary is paid (e.g., per year)."
+                          example: per year
+                        salary_currency:
+                          type: string
+                          description: "The currency in which the salary is paid."
+                          example: USD
+                        confidence:
+                          type: string
+                          description: "A measure of the reliability or accuracy of the salary data."
+                          example: high
+                        salary_count:
+                          type: integer
+                          description: "The number of reported salaries used to calculate the statistics."
+                          example: 245
+
+              example:
+                'Example':
+                  value:
+                    status: OK
+                    request_id: 4be77792-6727-49f4-a2d9-9040b146d8f5
+                    data:
+                      - location: United States
+                        job_title: Software Developer
+                        company: Amazon
+                        min_salary: 140594.13
+                        max_salary: 209058.84
+                        median_salary: 170162.89
+                        min_base_salary: 111791.03
+                        max_base_salary: 155293.04
+                        median_base_salary: 131758.75
+                        min_additional_pay: 28803.1
+                        max_additional_pay: 53765.8
+                        median_additional_pay: 38404.14
+                        salary_period: YEAR
+                        salary_currency: USD
+                        confidence: CONFIDENT
+                        salary_count: 1009
+
+components:
+  securitySchemes:
+    X-API-Key:
+      type: apiKey
+      in: header
+      name: x-api-key
+      description: API Key
+security:
+  - X-API-Key: []
