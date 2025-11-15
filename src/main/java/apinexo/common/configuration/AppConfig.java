@@ -76,11 +76,13 @@ public class AppConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable()).authorizeHttpRequests(
-                auth -> auth.requestMatchers("/public/**","/apis/**", "/stripe/webhook", "/resend-verification").permitAll().anyRequest().authenticated())
+        http.cors(Customizer.withDefaults()).csrf(csrf -> csrf.disable()).authorizeHttpRequests(auth -> auth
+                .requestMatchers("/public/**", "/apis/**", "/portal/**", "/stripe/webhook", "/resend-verification")
+                .permitAll().anyRequest().authenticated())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()));
         return http.build();
     }
+
 //    @Bean
 //    SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 //        http
