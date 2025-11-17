@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/stripe")
+@RequestMapping("/dev/stripe")
 public class StripeController {
 
     private final StripeFacade stripeFacade;

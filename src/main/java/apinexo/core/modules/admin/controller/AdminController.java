@@ -12,7 +12,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/admin")
+@RequestMapping("/dev/admin")
 public class AdminController {
 
     private final AdminFacade adminFacade;

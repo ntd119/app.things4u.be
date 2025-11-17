@@ -11,7 +11,7 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/plans")
+@RequestMapping("/dev/plans")
 public class PlansController {
 
     private final PlansFacade plansFacade;
