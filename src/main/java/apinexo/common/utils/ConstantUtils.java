@@ -7,6 +7,7 @@ public class ConstantUtils {
     public static final String TIME_ZONE_DEFAULT = "America/New_York";
     public static final String TIME_ZONE_UCT = "UCT";
     public static final String SERVER_FE = "http://localhost:3000";
+    public static final String SERVER_BE = "http://localhost:8080";
 
     public static class Pattern {
         public static final String PAGE_URL = "/(\\d+_p)/";

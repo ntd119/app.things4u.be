@@ -4,7 +4,7 @@ info:
   description: "Complete reference documentation for the OpenWeb Ninja JSearch API. Includes code examples, data samples, and usage guides for delivering real-time job listings and salary data from public sources and Google for Jobs."
   version: 1.0.0
 servers:
-  - url: https://api.openwebninja.com/jsearch
+  - url: http://localhost:8080/jsearch
 paths:
   /search:
     get:

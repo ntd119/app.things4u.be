@@ -36,7 +36,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        if (path.startsWith("/dev/")) {
+        if (path.startsWith("/dev/") || path.startsWith("/portal/")) {
             filterChain.doFilter(request, response);
             return;
         }
