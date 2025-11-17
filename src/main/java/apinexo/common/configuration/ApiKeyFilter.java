@@ -16,6 +16,7 @@ import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
 
 import java.io.IOException;
+import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -35,7 +36,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
 
         String path = request.getRequestURI();
-        if (!path.startsWith("/apis/")) {
+        if (path.startsWith("/dev/")) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -65,15 +66,18 @@ public class ApiKeyFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
-    private String resolveApiName(String path) {
-        if (path.startsWith("/jsearch"))
-            return "jsearch";
-        if (path.startsWith("/local-business-data"))
-            return "local-business-data";
-        if (path.startsWith("/reverse-image-search"))
-            return "reverse-image-search";
-
-        return "jsearch";
+    private String resolveApiName(String url) {
+        try {
+            URI uri = new URI(url);
+            String path = uri.getPath();
+            String[] parts = path.split("/");
+            if (parts.length > 1) {
+                return parts[1];
+            }
+            return null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     private void unauthorized(HttpServletResponse response) throws IOException {

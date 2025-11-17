@@ -3,6 +3,7 @@ package apinexo.core.modules.subscription.service.impl;
 import java.util.List;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -28,7 +29,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public Optional<SubscriptionEntity> findByUserIdAndApiId(String userId, String apiId) {
-        return subscriptionRepository.findByUser_IdAndApi_Id(userId, apiId);
+        if (StringUtils.isBlank(userId) || StringUtils.isBlank(apiId)) {
+            return Optional.empty();
+        }
+        return subscriptionRepository.findByUser_IdAndApi_Id(userId, apiId.toLowerCase());
     }
 
     @Override
