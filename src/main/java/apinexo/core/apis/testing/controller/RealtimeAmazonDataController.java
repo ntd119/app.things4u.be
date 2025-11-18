@@ -1,4 +1,4 @@
-package apinexo.core.apis.jsearch.controller;
+package apinexo.core.apis.testing.controller;
 
 import java.util.Map;
 
@@ -8,11 +8,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/jsearch")
-public class JsearchController {
+@RequestMapping("/realtime-amazon-data")
+public class RealtimeAmazonDataController {
 
     @GetMapping("/search")
     public ResponseEntity<Object> search() {
-        return ResponseEntity.ok(Map.of("message", "OK"));
+        return ResponseEntity.ok(Map.of("message", "Real-Time Amazon Data"));
     }
 }
