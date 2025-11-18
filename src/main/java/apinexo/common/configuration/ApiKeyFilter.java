@@ -1,9 +1,8 @@
 package apinexo.common.configuration;
 
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URI;
+import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,11 +13,10 @@ import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.service.SubscriptionService;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
-
-import java.io.IOException;
-import java.net.URI;
-import java.util.Optional;
-import java.util.UUID;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @Component
 public class ApiKeyFilter extends OncePerRequestFilter {
@@ -83,22 +81,12 @@ public class ApiKeyFilter extends OncePerRequestFilter {
     private void unauthorized(HttpServletResponse response) throws IOException {
         response.setStatus(401);
         response.setContentType("application/json");
-        response.getWriter().write("{\"message\": \"Unauthorized\"}");
+        response.getWriter().write("{\"message\": \"Invalid API key.\"}");
     }
 
     private void authenticationError(HttpServletResponse response) throws IOException {
-        response.setStatus(401);
+        response.setStatus(403);
         response.setContentType("application/json");
-        String json = String.format("""
-                {
-                  "status": "ERROR",
-                  "request_id": "%s",
-                  "error": {
-                    "message": "Authentication error",
-                    "code": 401
-                  }
-                }
-                """, UUID.randomUUID().toString());
-        response.getWriter().write(json);
+        response.getWriter().write("{\"message\": \"You are not subscribed to this API.\"}");
     }
 }
