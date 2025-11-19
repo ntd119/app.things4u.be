@@ -21,6 +21,7 @@ import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
+import apinexo.core.modules.openmeter.service.OpenmeterService;
 import apinexo.core.modules.plans.converter.PlansConverter;
 import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
@@ -55,6 +56,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     private final PlansConverter plansConverter;
 
     private final SubscriptionConverter subscriptionConverter;
+
+    private final OpenmeterService openmeterService;
 
     @Override
     @Transactional
@@ -98,6 +101,11 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 }
                 SubscriptionEntity entity = subscriptionService.save(subscribe);
                 ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
+
+                // openmeter: Creates customer
+                String key = String.format("%s_%s", userEntity.getAuth0UserId(), plansEntity.getId());
+                openmeterService.createCustomer(entity.getId(), userEntity.getEmail(), "Basic plan",
+                        userEntity.getEmail(), key);
                 SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
                         .builder().id(entity.getId()).plan(plans).build();
                 return ResponseEntity.ok(response);
@@ -167,6 +175,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             SubscriptionEntity entity = subscriptionOptional.get();
             subscriptionService.delete(entity);
             ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
+            openmeterService.deleteCustomer​(entity.getId());
             SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse.builder()
                     .id(entity.getId()).plan(plans).build();
             return ResponseEntity.ok(response);

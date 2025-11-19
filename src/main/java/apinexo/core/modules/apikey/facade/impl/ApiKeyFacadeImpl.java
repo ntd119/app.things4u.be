@@ -14,7 +14,6 @@ import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.apikey.dto.ApikeyResponse;
 import apinexo.core.modules.apikey.facade.ApiKeyFacade;
 import apinexo.core.modules.auth0.service.Auth0Service;
-import apinexo.core.modules.openmeter.service.OpenmeterService;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
 import jakarta.transaction.Transactional;
@@ -29,8 +28,6 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
     private final UserService userService;
 
     private final Auth0Service auth0Service;
-
-    private final OpenmeterService openmeterService;
 
     @Override
     @Transactional
@@ -76,9 +73,6 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
                 entity = UserEntity.builder().id(userId).apiKey(apikey).email(email).emailVerified(emailVerified)
                         .firstName(firstName).lastName(lastName).picture(picture).auth0UserId(auth0UserId).build();
                 entity = userService.save(entity);
-
-                // openmeter: Creates or updates subject
-                openmeterService.upsertSubject(auth0UserId, email);
 
             }
             ApikeyResponse apikeyResponse = ApikeyResponse.builder().apiKey(entity.getApiKey()).build();

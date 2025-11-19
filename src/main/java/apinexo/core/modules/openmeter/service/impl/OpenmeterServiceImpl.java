@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.core.modules.openmeter.request.client.OpenmeterCreateCustomerClientRequest;
 import apinexo.core.modules.openmeter.request.client.OpenmeterStripeCheckoutSessionsClientRequest;
 import apinexo.core.modules.openmeter.request.client.OpenmeterUpsertSubjectClientRequest;
 import apinexo.core.modules.openmeter.service.OpenmeterService;
@@ -33,6 +35,40 @@ public class OpenmeterServiceImpl extends AbstractService implements OpenmeterSe
         String url = "https://openmeter.cloud/api/v1/subjects";
         List<OpenmeterUpsertSubjectClientRequest> body = utils.createList(clientRequest);
         executePostRequest(JsonNode.class, url, body, headers);
+    }
+
+    @Override
+    public JsonNode createCustomer(String id, String name, String description, String email, String subjectKeys) {
+        OpenmeterCreateCustomerClientRequest body = OpenmeterCreateCustomerClientRequest.builder().name(name)
+                .description(description).key(id)
+                .usageAttribution(OpenmeterCreateCustomerClientRequest.UsageAttribution.builder()
+                        .subjectKeys(utils.createList(subjectKeys)).build())
+                .primaryEmail(email).currency("USD")
+                .billingAddress(OpenmeterCreateCustomerClientRequest.BillingAddress.builder().country("US")
+                        .postalCode("").state("").city("").line1("").line2("").phoneNumber("").build())
+                .build();
+
+        HttpHeaders headers = utils.buildHeader();
+        headers.setBearerAuth(secretToken);
+        String url = "https://openmeter.cloud/api/v1/customers";
+        ResponseEntity<JsonNode> response = executePostRequest(JsonNode.class, url, body, headers);
+        return response.getBody();
+    }
+
+    @Override
+    public void deleteCustomer​(String customerIdOrKey) {
+        HttpHeaders headers = utils.buildHeader();
+        headers.setBearerAuth(secretToken);
+        String url = "https://openmeter.cloud/api/v1/customers/" + customerIdOrKey;
+        executeDeleteRequest(JsonNode.class, url, null, headers);
+    }
+
+    @Override
+    public void deleteSubject​(String id) {
+        HttpHeaders headers = utils.buildHeader();
+        headers.setBearerAuth(secretToken);
+        String url = "https://openmeter.cloud/api/v1/subjects/" + id;
+        executeDeleteRequest(JsonNode.class, url, null, headers);
     }
 
     @Override
