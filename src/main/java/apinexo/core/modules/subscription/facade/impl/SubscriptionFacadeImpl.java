@@ -103,9 +103,9 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
 
                 // openmeter: Creates customer
-                String key = String.format("%s_%s", userEntity.getAuth0UserId(), plansEntity.getId());
-                openmeterService.createCustomer(entity.getId(), userEntity.getEmail(), "Basic plan",
-                        userEntity.getEmail(), key);
+                openmeterService.createCustomer(entity.getId(),
+                        String.format("%s_%s", userEntity.getEmail(), plansEntity.getKey()), plansEntity.getNickname(),
+                        userEntity.getEmail(), entity.getId());
                 SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
                         .builder().id(entity.getId()).plan(plans).build();
                 return ResponseEntity.ok(response);
