@@ -79,7 +79,7 @@ public class OpenmeterServiceImpl extends AbstractService implements OpenmeterSe
         LocalDateTime currentDate = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
         String formatDate = utils.formatDateTime(currentDate, ConstantUtils.DateFormat.YYYYMMDDTHHMMssSSS);
         OpenmeterSendEventClientRequest body = OpenmeterSendEventClientRequest.builder().specversion("1.0")
-                .type("request").id(utils.uuidRandom()).time(formatDate + "Z").source("api_requests_total")
+                .type("request").id(utils.uuidRandom()).time(formatDate + "Z").source("api_requests_per_month")
                 .subject(subjectKeys)
                 .data(OpenmeterSendEventClientRequest.DataContent.builder().value("1").apiName(apiId).build()).build();
         HttpHeaders headers = utils.buildHeader();
