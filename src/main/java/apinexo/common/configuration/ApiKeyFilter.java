@@ -64,8 +64,7 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             authenticationError(response);
             return;
         }
-        SubscriptionEntity subscriptionEntity = optionalSubscription.get();
-        openmeterService.events(apiId, subscriptionEntity.getId());
+        openmeterService.events(apiId, userEntity.getId());
         filterChain.doFilter(request, response);
     }
 
