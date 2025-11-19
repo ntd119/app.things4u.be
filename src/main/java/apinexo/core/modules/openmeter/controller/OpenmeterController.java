@@ -22,11 +22,6 @@ public class OpenmeterController {
         return openmeterFacade.omToken(jwt);
     }
 
-    @GetMapping("/send-event")
-    public ResponseEntity<Object> sendEvent(@AuthenticationPrincipal Jwt jwt) {
-        return openmeterFacade.sendEvent(jwt);
-    }
-
     @GetMapping("/generate")
     public ResponseEntity<Object> generate() {
         return openmeterFacade.generate();

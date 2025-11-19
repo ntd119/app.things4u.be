@@ -12,5 +12,5 @@ public interface OpenmeterService {
 
     void deleteSubject​(String id);
 
-    JsonNode stripeCheckoutSessions();
+    void events(String apiId, String subjectKeys);
 }

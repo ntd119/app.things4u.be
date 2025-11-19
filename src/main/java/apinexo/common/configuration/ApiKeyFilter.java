@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import apinexo.core.modules.openmeter.service.OpenmeterService;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.service.SubscriptionService;
 import apinexo.core.modules.user.entity.UserEntity;
@@ -28,6 +29,9 @@ public class ApiKeyFilter extends OncePerRequestFilter {
 
     @Autowired
     private SubscriptionService subscriptionService;
+
+    @Autowired
+    private OpenmeterService openmeterService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -60,7 +64,8 @@ public class ApiKeyFilter extends OncePerRequestFilter {
             authenticationError(response);
             return;
         }
-
+        SubscriptionEntity subscriptionEntity = optionalSubscription.get();
+        openmeterService.events(apiId, subscriptionEntity.getId());
         filterChain.doFilter(request, response);
     }
 

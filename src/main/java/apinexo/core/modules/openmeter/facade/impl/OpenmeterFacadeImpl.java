@@ -1,6 +1,5 @@
 package apinexo.core.modules.openmeter.facade.impl;
 
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,10 +14,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import apinexo.client.exception.ApiException;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
-import apinexo.common.utils.ConstantUtils;
 import apinexo.core.modules.openmeter.dto.OpenmeterOmTokenResponse;
 import apinexo.core.modules.openmeter.facade.OpenmeterFacade;
-import apinexo.core.modules.openmeter.request.client.OpenmeterSendEventClientRequest;
 import apinexo.core.modules.openmeter.request.client.OpenmeterTokenClientRequest;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
@@ -52,35 +49,6 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
             String url = "https://openmeter.cloud/api/v1/portal/tokens";
-            ResponseEntity<OpenmeterOmTokenResponse> response = executePostRequest(OpenmeterOmTokenResponse.class, url,
-                    body, headers);
-            return ResponseEntity.status(response.getStatusCode()).body(response.getBody());
-        } catch (HttpClientErrorException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
-        }
-    }
-
-    @Override
-    public ResponseEntity<Object> sendEvent(Jwt jwt) {
-        try {
-            String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> user = userService.findByAuth0UserId(sub);
-            if (!user.isPresent()) {
-                return ResponseEntity.badRequest().body(new ApiException("The user does not exist"));
-            }
-            LocalDateTime currentDate = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
-            String formatDate = utils.formatDateTime(currentDate, ConstantUtils.DateFormat.YYYYMMDDTHHMMssSSS);
-
-            OpenmeterSendEventClientRequest body = OpenmeterSendEventClientRequest.builder().specversion("1.0")
-                    .type("request").id(utils.uuidRandom()).time(formatDate + "Z").source("api_requests_total")
-                    .subject(user.get().getId())
-                    .data(OpenmeterSendEventClientRequest.DataContent.builder().value("1").apiName("jsearch").build())
-                    .build();
-            HttpHeaders headers = utils.buildHeader();
-            headers.setBearerAuth(secretToken);
-            String url = "https://openmeter.cloud/api/v1/events";
             ResponseEntity<OpenmeterOmTokenResponse> response = executePostRequest(OpenmeterOmTokenResponse.class, url,
                     body, headers);
             return ResponseEntity.status(response.getStatusCode()).body(response.getBody());

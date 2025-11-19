@@ -1,5 +1,6 @@
 package apinexo.core.modules.openmeter.service.impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -11,8 +12,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.common.utils.ConstantUtils;
+import apinexo.core.modules.openmeter.dto.OpenmeterOmTokenResponse;
 import apinexo.core.modules.openmeter.request.client.OpenmeterCreateCustomerClientRequest;
-import apinexo.core.modules.openmeter.request.client.OpenmeterStripeCheckoutSessionsClientRequest;
+import apinexo.core.modules.openmeter.request.client.OpenmeterSendEventClientRequest;
 import apinexo.core.modules.openmeter.request.client.OpenmeterUpsertSubjectClientRequest;
 import apinexo.core.modules.openmeter.service.OpenmeterService;
 import lombok.RequiredArgsConstructor;
@@ -72,21 +75,16 @@ public class OpenmeterServiceImpl extends AbstractService implements OpenmeterSe
     }
 
     @Override
-    public JsonNode stripeCheckoutSessions() {
-        OpenmeterStripeCheckoutSessionsClientRequest body = OpenmeterStripeCheckoutSessionsClientRequest.builder()
-                .customer(OpenmeterStripeCheckoutSessionsClientRequest.Customer.builder()
-                        .key("google-oauth2|118088024087048155774")
-                        .usageAttribution(OpenmeterStripeCheckoutSessionsClientRequest.Customer.UsageAttribution
-                                .builder().subjectKeys(List.of("google-oauth2|118088024087048155774")).build())
-                        .build())
-                .plan(OpenmeterStripeCheckoutSessionsClientRequest.Plan.builder().key("pro").build())
-                .options(OpenmeterStripeCheckoutSessionsClientRequest.Options.builder()
-                        .successUrl("http://localhost:3000").currency("USD").build())
-                .build();
+    public void events(String apiId, String subjectKeys) {
+        LocalDateTime currentDate = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
+        String formatDate = utils.formatDateTime(currentDate, ConstantUtils.DateFormat.YYYYMMDDTHHMMssSSS);
+        OpenmeterSendEventClientRequest body = OpenmeterSendEventClientRequest.builder().specversion("1.0")
+                .type("request").id(utils.uuidRandom()).time(formatDate + "Z").source("api_requests_total")
+                .subject(subjectKeys)
+                .data(OpenmeterSendEventClientRequest.DataContent.builder().value("1").apiName(apiId).build()).build();
         HttpHeaders headers = utils.buildHeader();
         headers.setBearerAuth(secretToken);
-        String url = "https://openmeter.cloud/api/v1/stripe/checkout/sessions";
-        return executePostRequest(JsonNode.class, url, body, headers).getBody();
+        String url = "https://openmeter.cloud/api/v1/events";
+        executePostRequest(OpenmeterOmTokenResponse.class, url, body, headers);
     }
-
 }
