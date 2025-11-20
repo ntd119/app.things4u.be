@@ -25,6 +25,8 @@ public class SubscriptionConverterImpl implements SubscriptionConverter {
     public SubscriptionResponse entity2Resposne(SubscriptionEntity entity) {
         SubscriptionResponse subscriptionResponse = this.entity2Resposne(entity.getApi());
         subscriptionResponse.setSubscriptionId(entity.getId());
+        subscriptionResponse.setBillingPeriodFrom(entity.getBillingPeriodFrom());
+        subscriptionResponse.setBillingPeriodTo(entity.getBillingPeriodTo());
         subscriptionResponse.setPlan(plansConverter.entity2Resposne(entity.getPlan()));
         return subscriptionResponse;
     }

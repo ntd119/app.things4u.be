@@ -24,6 +24,12 @@ public class SubscriptionResponse {
     @JsonProperty("image")
     private String image;
 
+    @JsonProperty("billing_period_from")
+    private Long billingPeriodFrom;
+
+    @JsonProperty("billing_period_to")
+    private Long billingPeriodTo;
+
     @JsonProperty("plan")
     private ApiPlansResponse plan;
 }
