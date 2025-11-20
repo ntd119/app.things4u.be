@@ -44,7 +44,7 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
             }
 
             OpenmeterTokenClientRequest body = OpenmeterTokenClientRequest.builder().subject(user.get().getId())
-                    .allowedMeterSlugs(utils.createList("api_requests_per_month")).build();
+                    .allowedMeterSlugs(utils.createList("api_requests_per_month", "api_requests_weight")).build();
 
             HttpHeaders headers = utils.buildHeader();
             headers.setBearerAuth(secretToken);
