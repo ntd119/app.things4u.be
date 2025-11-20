@@ -1,6 +1,7 @@
 package apinexo.core.modules.subscription.facade.impl;
 
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +20,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.common.utils.ConstantUtils;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
 import apinexo.core.modules.openmeter.service.OpenmeterService;
@@ -90,8 +92,12 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             PlansEntity plansEntity = plansOptional.get();
             if (plansEntity.getIsFree()) {
                 String subscriptionId = utils.generateRandomHexString(24);
+                LocalDateTime fromDate = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
+                LocalDateTime toDate = fromDate.plusMonths(1);
                 SubscriptionEntity subscribe = SubscriptionEntity.builder().id(subscriptionId).user(userEntity)
-                        .api(apiEntity).plan(plansEntity).subscribedAt(LocalDateTime.now()).build();
+                        .api(apiEntity).plan(plansEntity).subscribedAt(LocalDateTime.now())
+                        .billingPeriodFrom(fromDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli())
+                        .billingPeriodTo(toDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()).build();
                 subscribe.setSubscribedAt(LocalDateTime.now());
                 // delete old subscribe
                 Optional<SubscriptionEntity> subscriptionOptional = subscriptionService
@@ -103,8 +109,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
 
                 // openmeter: Creates customer
-                String name = String.format("%s_%s_%s", userEntity.getEmail(), apiEntity.getId(),
-                        plansEntity.getKey());
+                String name = String.format("%s_%s_%s", userEntity.getEmail(), apiEntity.getId(), plansEntity.getKey());
                 openmeterService.createCustomer(entity.getId(), name, plansEntity.getNickname(), userEntity.getEmail(),
                         entity.getId());
                 SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse

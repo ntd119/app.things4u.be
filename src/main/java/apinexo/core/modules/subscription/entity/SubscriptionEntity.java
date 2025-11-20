@@ -45,4 +45,13 @@ public class SubscriptionEntity {
 
     @Column(name = "subscribed_at")
     private LocalDateTime subscribedAt;
+
+    @Column(name = "billing_period_from")
+    private Long billingPeriodFrom;
+
+    @Column(name = "billing_period_to")
+    private Long billingPeriodTo;
+
+    @Column(nullable = false, name = "active")
+    private boolean active;
 }
