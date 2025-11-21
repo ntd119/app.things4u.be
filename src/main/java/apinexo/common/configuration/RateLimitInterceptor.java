@@ -9,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
-import apinexo.core.modules.openmeter.service.OpenmeterService;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.service.SubscriptionService;
 import apinexo.core.modules.user.entity.UserEntity;
@@ -27,9 +26,6 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
     @Autowired
     private SubscriptionService subscriptionService;
-
-    @Autowired
-    private OpenmeterService openmeterService;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -55,9 +51,13 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             authenticationError(response);
             return false;
         }
-
-        openmeterService.events(apiId, userEntity.getId());
         return true;
+    }
+
+    @Override
+    public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+            throws Exception {
+        HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 
     private void unauthorized(HttpServletResponse response) throws IOException {
