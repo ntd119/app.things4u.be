@@ -1,8 +1,9 @@
 package apinexo.core.modules.logs.facade.impl;
 
+import java.time.Instant;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,7 @@ public class LogFacadeImpl implements LogFacade {
     public ResponseEntity<Object> getChart(Jwt jwt, String subscriptionId, Long from, Long to) {
         try {
             List<Object[]> rows = logService.getDailyLogs(subscriptionId, from, to);
+
             Map<LocalDate, Long> totalMap = new HashMap<>();
             Map<LocalDate, Long> errorMap = new HashMap<>();
 
@@ -38,20 +40,20 @@ public class LogFacadeImpl implements LogFacade {
                 errorMap.put(date, errors);
             }
 
-            if (totalMap.isEmpty()) {
-                return ResponseEntity.ok(new DayLogResponse(List.of(), List.of(), List.of()));
-            }
+            // convert from/to epoch ms -> LocalDate
+            LocalDate fromDate = Instant.ofEpochMilli(from)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
 
-            // Find min - max date
-            LocalDate start = Collections.min(totalMap.keySet());
-            LocalDate end = Collections.max(totalMap.keySet());
+            LocalDate toDate = Instant.ofEpochMilli(to)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate();
 
             List<String> days = new ArrayList<>();
             List<Long> values = new ArrayList<>();
             List<Long> errors = new ArrayList<>();
 
-            // Fill date range
-            for (LocalDate d = start; !d.isAfter(end); d = d.plusDays(1)) {
+            for (LocalDate d = fromDate; !d.isAfter(toDate); d = d.plusDays(1)) {
                 days.add(d.toString());
                 values.add(totalMap.getOrDefault(d, 0L));
                 errors.add(errorMap.getOrDefault(d, 0L));
