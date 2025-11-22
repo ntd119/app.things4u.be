@@ -9,6 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
+import apinexo.common.utils.ApinexoUtils;
+import apinexo.core.modules.logs.entity.LogEntity;
+import apinexo.core.modules.logs.service.LogService;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.service.SubscriptionService;
 import apinexo.core.modules.user.entity.UserEntity;
@@ -25,7 +28,13 @@ public class RateLimitInterceptor implements HandlerInterceptor {
     private UserService userService;
 
     @Autowired
+    private LogService logService;
+
+    @Autowired
     private SubscriptionService subscriptionService;
+
+    @Autowired
+    private ApinexoUtils utils;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
@@ -57,6 +66,63 @@ public class RateLimitInterceptor implements HandlerInterceptor {
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
             throws Exception {
+        // id
+        String id = utils.uuidRandom();
+
+        // subscription_id
+        String subscriptionId = "";
+
+        // time
+        Long time = utils.milliseconds();
+
+        // user_name
+        String username = "";
+
+        // email
+        String email = "";
+
+        // first_name
+        String firstName = "";
+
+        // last_name
+        String lastName = "";
+
+        // endpoint
+        String endpoint = "";
+
+        // method
+        String method = "";
+
+        // location
+        String location = "";
+
+        // response_status
+        Integer responseStatus = response.getStatus();
+
+        // latency
+        String latency = "";
+
+        // request_headers
+        String requestHeaders = "";
+
+        // request_query_parameters
+        String requestQueryParameters = "";
+
+        // request_body
+        String requestBody = "";
+
+        // response_headers
+        String responseHeaders = "";
+
+        // response_body
+        String responseBody = "";
+
+        LogEntity entity = LogEntity.builder().id(id).subscriptionId(subscriptionId).time(time).username(username)
+                .email(email).firstName(firstName).lastName(lastName).endpoint(endpoint).method(method)
+                .location(location).responseStatus(responseStatus).latency(latency).requestHeaders(requestHeaders)
+                .requestQueryParameters(requestQueryParameters).requestBody(requestBody)
+                .responseHeaders(responseHeaders).responseBody(responseBody).build();
+        logService.save(entity);
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
     }
 

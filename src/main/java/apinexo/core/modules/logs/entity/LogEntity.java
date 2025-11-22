@@ -30,7 +30,7 @@ public class LogEntity {
     @Column(name = "time")
     private Long time;
 
-    @Column(name = "username")
+    @Column(name = "user_name")
     private String username;
 
     @Column(name = "email")
@@ -51,24 +51,24 @@ public class LogEntity {
     @Column(name = "location")
     private String location;
 
-    @Column(name = "responseStatus")
+    @Column(name = "response_status")
     private Integer responseStatus;
 
     @Column(name = "latency")
     private String latency;
 
-    @Column(name = "requestHeaders")
+    @Column(name = "request_headers")
     private String requestHeaders;
 
-    @Column(name = "requestQueryParameters")
+    @Column(name = "request_query_parameters")
     private String requestQueryParameters;
 
-    @Column(name = "requestBody")
+    @Column(name = "request_body")
     private String requestBody;
 
-    @Column(name = "responseHeaders")
+    @Column(name = "response_headers")
     private String responseHeaders;
 
-    @Column(name = "responseBody", columnDefinition = "TEXT")
+    @Column(name = "response_body", columnDefinition = "TEXT")
     private String responseBody;
 }

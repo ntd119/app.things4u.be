@@ -942,6 +942,11 @@ public class ApinexoUtils {
         return result;
     }
 
+    public long milliseconds() {
+        LocalDateTime currentDate = getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
+        return currentDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+    }
+
     public Random getRandom() {
         return random;
     }
