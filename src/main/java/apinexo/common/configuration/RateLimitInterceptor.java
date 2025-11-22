@@ -133,6 +133,9 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         if (response instanceof ContentCachingResponseWrapper w) {
             byte[] arr = w.getContentAsByteArray();
             responseBody = new String(arr, response.getCharacterEncoding());
+            if (StringUtils.isNotBlank(responseBody) && responseBody.length() > 1000) {
+                responseBody = responseBody.substring(0, 1000);
+            }
         }
 
         LogEntity entity = LogEntity.builder().id(id).subscriptionId(subscriptionId).time(time).username(username)
