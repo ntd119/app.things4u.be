@@ -13,12 +13,12 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SubscriptionConverterImpl implements SubscriptionConverter {
 
-
     private final PlansConverter plansConverter;
 
     @Override
     public SubscriptionResponse entity2Resposne(ApiEntity entity) {
-        return SubscriptionResponse.builder().apiId(entity.getId()).apiName(entity.getName()).image(entity.getImage()).build();
+        return SubscriptionResponse.builder().apiId(entity.getId()).apiName(entity.getName()).image(entity.getImage())
+                .build();
     }
 
     @Override
@@ -28,6 +28,14 @@ public class SubscriptionConverterImpl implements SubscriptionConverter {
         subscriptionResponse.setBillingPeriodFrom(entity.getBillingPeriodFrom());
         subscriptionResponse.setBillingPeriodTo(entity.getBillingPeriodTo());
         subscriptionResponse.setPlan(plansConverter.entity2Resposne(entity.getPlan()));
+        subscriptionResponse.setCurrentPlan(entity.getCurrentPlan());
+        subscriptionResponse.setQuota(entity.getQuota());
+        subscriptionResponse.setPeriod(entity.getPeriod());
+        subscriptionResponse.setQuotaUsed(entity.getQuotaUsed());
+        subscriptionResponse.setRateLimit(entity.getRateLimit());
+        subscriptionResponse.setRateLimitPeriod(entity.getRateLimitPeriod());
+        subscriptionResponse.setIsSoftLimit(entity.getIsSoftLimit());
+        subscriptionResponse.setOveragePrices(entity.getOveragePrices());
         return subscriptionResponse;
     }
 }

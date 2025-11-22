@@ -30,6 +30,30 @@ public class SubscriptionResponse {
     @JsonProperty("billing_period_to")
     private Long billingPeriodTo;
 
+    @JsonProperty("current_plan")
+    private String currentPlan;
+
+    @JsonProperty("quota")
+    private Long quota;
+
+    @JsonProperty("period")
+    private String period;
+
+    @JsonProperty("quota_used")
+    private Long quotaUsed;
+
+    @JsonProperty("rate_limit")
+    private Long rateLimit;
+
+    @JsonProperty("rate_limit_period")
+    private String rateLimitPeriod;
+
+    @JsonProperty("is_soft_limit")
+    private Boolean isSoftLimit;
+
+    @JsonProperty("overage_prices")
+    private Double overagePrices;
+
     @JsonProperty("plan")
     private ApiPlansResponse plan;
 }
