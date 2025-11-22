@@ -56,6 +56,24 @@ public class SubscriptionEntity {
     @Column(nullable = false, name = "active")
     private boolean active;
 
+    @Column(name = "current_plan")
+    private String currentPlan;
+
+    @Column(name = "quota")
+    private Long quota;
+
+    @Column(name = "period")
+    private String period;
+
+    @Column(name = "quota_used")
+    private Long quotaUsed;
+
+    @Column(name = "rate_limit")
+    private Long rateLimit;
+
+    @Column(name = "rate_limit_period")
+    private String rateLimitPeriod;
+
     @PrePersist
     public void prePersist() {
         active = true;

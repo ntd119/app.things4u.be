@@ -96,10 +96,15 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 String subscriptionId = utils.generateRandomHexString(24);
                 LocalDateTime fromDate = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
                 LocalDateTime toDate = fromDate.plusMonths(1);
+                JsonNode metadata = utils.convertStrToJson(plansEntity.getMetadata());
                 SubscriptionEntity subscribe = SubscriptionEntity.builder().id(subscriptionId).user(userEntity)
                         .api(apiEntity).plan(plansEntity).subscribedAt(LocalDateTime.now())
                         .billingPeriodFrom(fromDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli())
-                        .billingPeriodTo(toDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()).build();
+                        .billingPeriodTo(toDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli())
+                        .currentPlan(plansEntity.getNickname()).quota(plansEntity.getUpTo())
+                        .period(plansEntity.getPeriod())
+                        .rateLimit(utils.jsonNodeAt(metadata, "/rate_limit", Long.class))
+                        .rateLimitPeriod(utils.jsonNodeAt(metadata, "/rate_limit_period", String.class)).build();
                 subscribe.setSubscribedAt(LocalDateTime.now());
                 // delete old subscribe
                 Optional<SubscriptionEntity> subscriptionOptional = subscriptionService
