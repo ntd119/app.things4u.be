@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -23,6 +24,7 @@ import apinexo.common.utils.ApinexoUtils;
 import apinexo.common.utils.ConstantUtils;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
+import apinexo.core.modules.logs.service.LogService;
 import apinexo.core.modules.openmeter.service.OpenmeterService;
 import apinexo.core.modules.plans.converter.PlansConverter;
 import apinexo.core.modules.plans.dto.ApiPlansResponse;
@@ -59,7 +61,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
 
     private final SubscriptionConverter subscriptionConverter;
 
-    private final OpenmeterService openmeterService;
+    @Autowired
+    private LogService logService;
 
     @Override
     @Transactional
@@ -108,10 +111,10 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 SubscriptionEntity entity = subscriptionService.save(subscribe);
                 ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
 
-                // openmeter: Creates customer
-                String name = String.format("%s_%s_%s", userEntity.getEmail(), apiEntity.getId(), plansEntity.getKey());
-                openmeterService.createCustomer(entity.getId(), name, plansEntity.getNickname(), userEntity.getEmail(),
-                        entity.getId());
+//                // openmeter: Creates customer
+//                String name = String.format("%s_%s_%s", userEntity.getEmail(), apiEntity.getId(), plansEntity.getKey());
+//                openmeterService.createCustomer(entity.getId(), name, plansEntity.getNickname(), userEntity.getEmail(),
+//                        entity.getId());
                 SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
                         .builder().id(entity.getId()).plan(plans).build();
                 return ResponseEntity.ok(response);
@@ -174,14 +177,15 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
         }
     }
 
+    @Transactional
     @Override
     public ResponseEntity<Object> cancelSubscription(Jwt jwt, String subscriptionId) {
         Optional<SubscriptionEntity> subscriptionOptional = subscriptionService.findById(subscriptionId);
         if (subscriptionOptional.isPresent()) {
             SubscriptionEntity entity = subscriptionOptional.get();
             subscriptionService.delete(entity);
+            logService.deleteBySubscriptionId(entity.getId());
             ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
-            openmeterService.deleteCustomer​(entity.getId());
             SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse.builder()
                     .id(entity.getId()).plan(plans).build();
             return ResponseEntity.ok(response);

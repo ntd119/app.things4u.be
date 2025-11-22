@@ -17,4 +17,9 @@ public class LogServiceImpl implements LogService {
     public LogEntity save(LogEntity entity) {
         return logRepository.save(entity);
     }
+
+    @Override
+    public void deleteBySubscriptionId(String subscriptionId) {
+        logRepository.deleteBySubscriptionId(subscriptionId);
+    }
 }

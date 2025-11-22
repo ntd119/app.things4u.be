@@ -6,4 +6,6 @@ import apinexo.core.modules.logs.entity.LogEntity;
 
 public interface LogRepository extends JpaRepository<LogEntity, String> {
 
+    void deleteBySubscriptionId(String subscriptionId);
+
 }
