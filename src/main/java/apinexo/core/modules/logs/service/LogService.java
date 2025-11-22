@@ -11,4 +11,6 @@ public interface LogService {
     void deleteBySubscriptionId(String subscriptionId);
 
     List<LogEntity> findBySubscriptionId(String subscriptionId);
+
+    public List<Object[]> getDailyLogs(String subscriptionId);
 }

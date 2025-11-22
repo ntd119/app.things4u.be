@@ -29,4 +29,9 @@ public class LogServiceImpl implements LogService {
     public List<LogEntity> findBySubscriptionId(String subscriptionId) {
         return logRepository.findBySubscriptionId(subscriptionId);
     }
+
+    @Override
+    public List<Object[]> getDailyLogs(String subscriptionId) {
+        return logRepository.countLogsGroupByDay(subscriptionId);
+    }
 }
