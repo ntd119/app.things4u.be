@@ -15,14 +15,16 @@ public interface LogRepository extends JpaRepository<LogEntity, String> {
     List<LogEntity> findBySubscriptionId(String subscriptionId);
 
     @Query(value = """
-                SELECT
-                    to_timestamp(time / 1000)::date AS date,
-                    COUNT(*) AS total,
-                    COUNT(*) FILTER (WHERE response_status != 200) AS errors
-                FROM log
-                WHERE subscription_id = :subscriptionId
-                GROUP BY to_timestamp(time / 1000)::date
-                ORDER BY date
+            SELECT
+                to_timestamp(time / 1000)::date AS date,
+                COUNT(*) AS total,
+                COUNT(*) FILTER (WHERE response_status != 200) AS errors
+            FROM log
+            WHERE subscription_id = :subscriptionId
+              AND time BETWEEN :from AND :to
+            GROUP BY to_timestamp(time / 1000)::date
+            ORDER BY date
             """, nativeQuery = true)
-    List<Object[]> countLogsGroupByDay(@Param("subscriptionId") String subscriptionId);
+    List<Object[]> countLogsGroupByDay(@Param("subscriptionId") String subscriptionId, @Param("from") Long from,
+            @Param("to") Long to);
 }

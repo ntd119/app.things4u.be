@@ -5,6 +5,5 @@ import org.springframework.security.oauth2.jwt.Jwt;
 
 public interface LogFacade {
 
-    public ResponseEntity<Object> getChart(Jwt jwt, String subscriptionId);
-
+    public ResponseEntity<Object> getChart(Jwt jwt, String subscriptionId, Long from, Long to);
 }

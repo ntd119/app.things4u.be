@@ -31,7 +31,7 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public List<Object[]> getDailyLogs(String subscriptionId) {
-        return logRepository.countLogsGroupByDay(subscriptionId);
+    public List<Object[]> getDailyLogs(String subscriptionId, Long from, Long to) {
+        return logRepository.countLogsGroupByDay(subscriptionId, from, to);
     }
 }

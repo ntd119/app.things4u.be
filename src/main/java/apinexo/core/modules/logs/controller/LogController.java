@@ -18,7 +18,8 @@ public class LogController {
     private final LogFacade logFacade;
 
     @GetMapping("/get-chart")
-    public ResponseEntity<Object> getChart(@AuthenticationPrincipal Jwt jwt, String subscriptionId) {
-        return logFacade.getChart(jwt, subscriptionId);
+    public ResponseEntity<Object> getChart(@AuthenticationPrincipal Jwt jwt, String subscriptionId, Long from,
+            Long to) {
+        return logFacade.getChart(jwt, subscriptionId, from, to);
     }
 }

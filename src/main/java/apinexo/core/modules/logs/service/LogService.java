@@ -12,5 +12,5 @@ public interface LogService {
 
     List<LogEntity> findBySubscriptionId(String subscriptionId);
 
-    public List<Object[]> getDailyLogs(String subscriptionId);
+    public List<Object[]> getDailyLogs(String subscriptionId, Long from, Long to);
 }

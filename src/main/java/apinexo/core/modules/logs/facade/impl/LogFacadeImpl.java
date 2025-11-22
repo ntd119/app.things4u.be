@@ -23,9 +23,9 @@ public class LogFacadeImpl implements LogFacade {
     private final LogService logService;
 
     @Override
-    public ResponseEntity<Object> getChart(Jwt jwt, String subscriptionId) {
+    public ResponseEntity<Object> getChart(Jwt jwt, String subscriptionId, Long from, Long to) {
         try {
-            List<Object[]> rows = logService.getDailyLogs(subscriptionId);
+            List<Object[]> rows = logService.getDailyLogs(subscriptionId, from, to);
             Map<LocalDate, Long> totalMap = new HashMap<>();
             Map<LocalDate, Long> errorMap = new HashMap<>();
 
