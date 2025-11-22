@@ -59,9 +59,8 @@ public class PlansEntity extends EntityCommon {
     @Column(name = "active", length = 1)
     private Boolean active;
 
-    @Column(name = "overage_prices", columnDefinition = "jsonb")
-    @ColumnTransformer(write = "?::jsonb")
-    private String overagePrices;
+    @Column(name = "overage_prices")
+    private Double overagePrices;
 
     @Column(name = "metadata", columnDefinition = "jsonb")
     @ColumnTransformer(write = "?::jsonb")

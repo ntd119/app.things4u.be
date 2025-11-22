@@ -104,7 +104,9 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                         .currentPlan(plansEntity.getNickname()).quota(plansEntity.getUpTo())
                         .period(plansEntity.getPeriod())
                         .rateLimit(utils.jsonNodeAt(metadata, "/rate_limit", Long.class))
-                        .rateLimitPeriod(utils.jsonNodeAt(metadata, "/rate_limit_period", String.class)).build();
+                        .rateLimitPeriod(utils.jsonNodeAt(metadata, "/rate_limit_period", String.class))
+                        .isSoftLimit(utils.jsonNodeAt(metadata, "/is_soft_limit", Boolean.class))
+                        .overagePrices(plansEntity.getOveragePrices()).build();
                 subscribe.setSubscribedAt(LocalDateTime.now());
                 // delete old subscribe
                 Optional<SubscriptionEntity> subscriptionOptional = subscriptionService

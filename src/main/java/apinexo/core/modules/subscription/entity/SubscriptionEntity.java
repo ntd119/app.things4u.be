@@ -74,6 +74,12 @@ public class SubscriptionEntity {
     @Column(name = "rate_limit_period")
     private String rateLimitPeriod;
 
+    @Column(name = "is_soft_limit")
+    private Boolean isSoftLimit;
+
+    @Column(name = "overage_prices")
+    private Double overagePrices;
+
     @PrePersist
     public void prePersist() {
         active = true;
