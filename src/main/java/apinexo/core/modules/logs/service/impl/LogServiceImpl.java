@@ -1,5 +1,7 @@
 package apinexo.core.modules.logs.service.impl;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import apinexo.core.modules.logs.entity.LogEntity;
@@ -21,5 +23,10 @@ public class LogServiceImpl implements LogService {
     @Override
     public void deleteBySubscriptionId(String subscriptionId) {
         logRepository.deleteBySubscriptionId(subscriptionId);
+    }
+
+    @Override
+    public List<LogEntity> findBySubscriptionId(String subscriptionId) {
+        return logRepository.findBySubscriptionId(subscriptionId);
     }
 }
