@@ -27,12 +27,48 @@ public class LogEntity {
     @Column(name = "subscription_id")
     private String subscriptionId;
 
-    @Column(name = "create_at")
-    private Long createAt;
+    @Column(name = "time")
+    private Long time;
 
-    @Column(name = "statusCode")
-    private Integer statusCode;
+    @Column(name = "username")
+    private String username;
 
-    @Column(name = "responseBody")
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "first_name")
+    private String firstName;
+
+    @Column(name = "last_name")
+    private String lastName;
+
+    @Column(name = "endpoint")
+    private String endpoint;
+
+    @Column(name = "method")
+    private String method;
+
+    @Column(name = "location")
+    private String location;
+
+    @Column(name = "responseStatus")
+    private Integer responseStatus;
+
+    @Column(name = "latency")
+    private String latency;
+
+    @Column(name = "requestHeaders")
+    private String requestHeaders;
+
+    @Column(name = "requestQueryParameters")
+    private String requestQueryParameters;
+
+    @Column(name = "requestBody")
+    private String requestBody;
+
+    @Column(name = "responseHeaders")
+    private String responseHeaders;
+
+    @Column(name = "responseBody", columnDefinition = "TEXT")
     private String responseBody;
 }
