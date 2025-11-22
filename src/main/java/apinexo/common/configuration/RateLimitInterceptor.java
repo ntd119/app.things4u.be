@@ -107,7 +107,8 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         Integer responseStatus = response.getStatus();
 
         // latency
-        String latency = "";
+        long start = (long) request.getAttribute("startTime");
+        String latency = String.format("%,dms", (System.currentTimeMillis() - start));
 
         // request_headers
         Map<String, String> headers = Collections.list(request.getHeaderNames()).stream()
@@ -119,12 +120,18 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
         // request_body
         String requestBody = "";
+        if (request instanceof CachedBodyHttpServletRequest w) {
+            requestBody = new String(w.getCachedBody(), request.getCharacterEncoding());
+        }
 
         // response_headers
         String responseHeaders = "";
 
         // response_body
         String responseBody = "";
+        if (response instanceof CachedBodyHttpServletResponse w) {
+            responseBody = new String(w.getCachedBody(), response.getCharacterEncoding());
+        }
 
         LogEntity entity = LogEntity.builder().id(id).subscriptionId(subscriptionId).time(time).username(username)
                 .email(email).firstName(firstName).lastName(lastName).endpoint(endpoint).method(method)
