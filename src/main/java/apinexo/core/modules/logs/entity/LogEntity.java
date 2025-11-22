@@ -57,16 +57,16 @@ public class LogEntity {
     @Column(name = "latency")
     private String latency;
 
-    @Column(name = "request_headers")
+    @Column(name = "request_headers", columnDefinition = "TEXT")
     private String requestHeaders;
 
-    @Column(name = "request_query_parameters")
+    @Column(name = "request_query_parameters", columnDefinition = "TEXT")
     private String requestQueryParameters;
 
-    @Column(name = "request_body")
+    @Column(name = "request_body", columnDefinition = "TEXT")
     private String requestBody;
 
-    @Column(name = "response_headers")
+    @Column(name = "response_headers", columnDefinition = "TEXT")
     private String responseHeaders;
 
     @Column(name = "response_body", columnDefinition = "TEXT")

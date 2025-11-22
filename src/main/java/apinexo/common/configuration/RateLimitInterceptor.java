@@ -2,7 +2,10 @@ package apinexo.common.configuration;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +63,10 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             authenticationError(response);
             return false;
         }
+
+        // subscriptionId
+        request.setAttribute("subscriptionId", optionalSubscription.get().getId());
+
         return true;
     }
 
@@ -70,7 +77,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         String id = utils.uuidRandom();
 
         // subscription_id
-        String subscriptionId = "";
+        String subscriptionId = (String) request.getAttribute("subscriptionId");
 
         // time
         Long time = utils.milliseconds();
@@ -88,10 +95,10 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         String lastName = "";
 
         // endpoint
-        String endpoint = "";
+        String endpoint = request.getRequestURI();
 
         // method
-        String method = "";
+        String method = request.getMethod();
 
         // location
         String location = "";
@@ -103,10 +110,12 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         String latency = "";
 
         // request_headers
-        String requestHeaders = "";
+        Map<String, String> headers = Collections.list(request.getHeaderNames()).stream()
+                .collect(Collectors.toMap(h -> h, request::getHeader));
+        String requestHeaders = utils.convertDtoToJson(headers).toString();
 
         // request_query_parameters
-        String requestQueryParameters = "";
+        String requestQueryParameters = request.getQueryString() != null ? request.getQueryString() : "";
 
         // request_body
         String requestBody = "";
