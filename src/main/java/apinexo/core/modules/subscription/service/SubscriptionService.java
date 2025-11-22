@@ -3,11 +3,17 @@ package apinexo.core.modules.subscription.service;
 import java.util.List;
 import java.util.Optional;
 
+import apinexo.core.modules.api.entity.ApiEntity;
+import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
+import apinexo.core.modules.user.entity.UserEntity;
 
 public interface SubscriptionService {
 
     SubscriptionEntity save(SubscriptionEntity entity);
+
+    SubscriptionEntity save(String subscriptionId, UserEntity userEntity, ApiEntity apiEntity,
+            PlansEntity plansEntity);
 
     void delete(SubscriptionEntity entity);
 

@@ -1,7 +1,5 @@
 package apinexo.core.modules.subscription.facade.impl;
 
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -21,7 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
-import apinexo.common.utils.ConstantUtils;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
 import apinexo.core.modules.logs.service.LogService;
@@ -94,27 +91,13 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             PlansEntity plansEntity = plansOptional.get();
             if (plansEntity.getIsFree()) {
                 String subscriptionId = utils.generateRandomHexString(24);
-                LocalDateTime fromDate = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
-                LocalDateTime toDate = fromDate.plusMonths(1);
-                JsonNode metadata = utils.convertStrToJson(plansEntity.getMetadata());
-                SubscriptionEntity subscribe = SubscriptionEntity.builder().id(subscriptionId).user(userEntity)
-                        .api(apiEntity).plan(plansEntity).subscribedAt(LocalDateTime.now())
-                        .billingPeriodFrom(fromDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli())
-                        .billingPeriodTo(toDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli())
-                        .currentPlan(plansEntity.getNickname()).quota(plansEntity.getUpTo())
-                        .period(plansEntity.getPeriod())
-                        .rateLimit(utils.jsonNodeAt(metadata, "/rate_limit", Long.class))
-                        .rateLimitPeriod(utils.jsonNodeAt(metadata, "/rate_limit_period", String.class))
-                        .isSoftLimit(utils.jsonNodeAt(metadata, "/is_soft_limit", Boolean.class))
-                        .overagePrices(plansEntity.getOveragePrices()).build();
-                subscribe.setSubscribedAt(LocalDateTime.now());
                 // delete old subscribe
                 Optional<SubscriptionEntity> subscriptionOptional = subscriptionService
                         .findByUserIdAndApiId(userEntity.getId(), apiEntity.getId());
                 if (subscriptionOptional.isPresent()) {
                     subscriptionService.delete(subscriptionOptional.get());
                 }
-                SubscriptionEntity entity = subscriptionService.save(subscribe);
+                SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity);
                 ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
 
 //                // openmeter: Creates customer

@@ -1,8 +1,6 @@
 package apinexo.core.modules.stripe.facade.impl;
 
 import java.nio.charset.StandardCharsets;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,7 +18,6 @@ import com.stripe.net.Webhook;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
-import apinexo.common.utils.ConstantUtils;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
 import apinexo.core.modules.plans.converter.PlansConverter;
@@ -99,20 +96,13 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                     PlansEntity plansEntity = plansOptional.get();
 
                     String subscriptionId = utils.generateRandomHexString(24);
-                    LocalDateTime fromDate = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
-                    LocalDateTime toDate = fromDate.plusMonths(1);
-                    SubscriptionEntity subscribe = SubscriptionEntity.builder().id(subscriptionId).user(userEntity)
-                            .api(apiEntity).plan(plansEntity).subscribedAt(LocalDateTime.now())
-                            .billingPeriodFrom(fromDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli())
-                            .billingPeriodTo(toDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli()).build();
-                    subscribe.setSubscribedAt(LocalDateTime.now());
                     // delete old subscribe
                     Optional<SubscriptionEntity> subscriptionOptional = subscriptionService
                             .findByUserIdAndApiId(userEntity.getId(), apiEntity.getId());
                     if (subscriptionOptional.isPresent()) {
                         subscriptionService.delete(subscriptionOptional.get());
                     }
-                    SubscriptionEntity entity = subscriptionService.save(subscribe);
+                    SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity);
                     ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
                     SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
                             .builder().id(entity.getId()).plan(plans).build();
