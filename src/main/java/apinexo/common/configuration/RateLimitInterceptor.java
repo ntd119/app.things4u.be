@@ -11,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.logs.entity.LogEntity;
@@ -129,8 +130,9 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
         // response_body
         String responseBody = "";
-        if (response instanceof CachedBodyHttpServletResponse w) {
-            responseBody = new String(w.getCachedBody(), response.getCharacterEncoding());
+        if (response instanceof ContentCachingResponseWrapper w) {
+            byte[] arr = w.getContentAsByteArray();
+            responseBody = new String(arr, response.getCharacterEncoding());
         }
 
         LogEntity entity = LogEntity.builder().id(id).subscriptionId(subscriptionId).time(time).username(username)

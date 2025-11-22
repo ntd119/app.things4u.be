@@ -3,6 +3,7 @@ package apinexo.common.configuration;
 import java.io.IOException;
 
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
@@ -19,18 +20,15 @@ public class CacheRequestResponseFilter implements Filter {
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
             throws IOException, ServletException {
 
-        CachedBodyHttpServletRequest wrappedRequest =
-                new CachedBodyHttpServletRequest((HttpServletRequest) req);
+        CachedBodyHttpServletRequest wrappedRequest = new CachedBodyHttpServletRequest((HttpServletRequest) req);
 
-        CachedBodyHttpServletResponse wrappedResponse =
-                new CachedBodyHttpServletResponse((HttpServletResponse) res);
+        ContentCachingResponseWrapper wrappedResponse = new ContentCachingResponseWrapper((HttpServletResponse) res);
 
-        long startTime = System.currentTimeMillis();
-
-        wrappedRequest.setAttribute("startTime", startTime);
+        long start = System.currentTimeMillis();
+        wrappedRequest.setAttribute("startTime", start);
 
         chain.doFilter(wrappedRequest, wrappedResponse);
 
-        res.getOutputStream().write(wrappedResponse.getCachedBody());
+        wrappedResponse.copyBodyToResponse();
     }
 }
