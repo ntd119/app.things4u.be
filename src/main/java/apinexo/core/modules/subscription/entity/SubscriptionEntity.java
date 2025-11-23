@@ -66,7 +66,7 @@ public class SubscriptionEntity {
     private String period;
 
     @Column(name = "quota_used")
-    private Long quotaUsed;
+    private long quotaUsed;
 
     @Column(name = "rate_limit")
     private Long rateLimit;
