@@ -15,6 +15,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.ContentCachingResponseWrapper;
 
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.common.utils.RateLimitEnum;
 import apinexo.core.modules.logs.entity.LogEntity;
 import apinexo.core.modules.logs.service.LogService;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -81,8 +82,9 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         Long rateLimit = subscriptionEntity.getRateLimit();
         String rateLimitPeriod = subscriptionEntity.getRateLimitPeriod();
         long now = utils.milliseconds();
-        long oneHourAgo = now - 3600_000;
-        long count = logService.countRequests(subscriptionEntity.getId(), oneHourAgo);
+        RateLimitEnum period = RateLimitEnum.valueOf(rateLimitPeriod.toUpperCase());
+        long startTime = now - period.toMillis();
+        long count = logService.countRequests(subscriptionEntity.getId(), startTime);
         if (count >= rateLimit) {
             rateLimitError(response, rateLimit, rateLimitPeriod);
             return false;
