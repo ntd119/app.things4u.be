@@ -27,7 +27,7 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
 
     @Modifying
     @Transactional
-    @Query("UPDATE SubscriptionEntity s SET s.billingPeriodFrom = :billingFrom, s.billingPeriodTo = :billingTo WHERE s.id = :id")
+    @Query("UPDATE SubscriptionEntity s SET s.quotaUsed = 0, s.billingPeriodFrom = :billingFrom, s.billingPeriodTo = :billingTo WHERE s.id = :id")
     void updateBillingPeriod(@Param("id") String id, @Param("billingFrom") Long billingFrom,
             @Param("billingTo") Long billingTo);
 }
