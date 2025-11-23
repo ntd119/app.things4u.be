@@ -64,6 +64,9 @@ public class AdminCreateApiRequest {
             @JsonProperty("rate_limit_period")
             private String rateLimitPeriod;
 
+            @JsonProperty("is_rate_limit")
+            private String isRateLimit;
+
             @JsonProperty("is_soft_limit")
             private String isSoftLimit;
 
