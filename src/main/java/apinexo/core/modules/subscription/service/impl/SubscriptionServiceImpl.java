@@ -99,6 +99,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 // +1 month
                 billingPeriodTo = addOneMonth(billingPeriodFrom);
             }
+            subscriptionEntity.setBillingPeriodFrom(billingPeriodFrom);
+            subscriptionEntity.setBillingPeriodTo(billingPeriodTo);
+            subscriptionEntity.setQuota(0L);
             subscriptionRepository.updateBillingPeriod(subscriptionEntity.getId(), billingPeriodFrom, billingPeriodTo);
         }
     }

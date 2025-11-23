@@ -156,6 +156,9 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             UserEntity userEntity = userOptional.get();
 
             List<SubscriptionEntity> subscriptionEntities = subscriptionService.findByUserId(userEntity.getId());
+            if (CollectionUtils.isNotEmpty(subscriptionEntities)) {
+                subscriptionEntities.forEach(subscriptionService::updateBillingPeriod);
+            }
             List<SubscriptionResponse> apiPlansResponses = new ArrayList<>();
             if (CollectionUtils.isNotEmpty(subscriptionEntities)) {
                 for (SubscriptionEntity subscriptionEntity : subscriptionEntities) {
