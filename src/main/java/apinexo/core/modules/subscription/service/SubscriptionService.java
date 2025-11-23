@@ -12,8 +12,7 @@ public interface SubscriptionService {
 
     SubscriptionEntity save(SubscriptionEntity entity);
 
-    SubscriptionEntity save(String subscriptionId, UserEntity userEntity, ApiEntity apiEntity,
-            PlansEntity plansEntity);
+    SubscriptionEntity save(String subscriptionId, UserEntity userEntity, ApiEntity apiEntity, PlansEntity plansEntity);
 
     void delete(SubscriptionEntity entity);
 
@@ -24,4 +23,6 @@ public interface SubscriptionService {
     Optional<SubscriptionEntity> findById(String id);
 
     void increaseQuotaUsed(String id);
+
+    Long getQuotaUsedById(String id);
 }

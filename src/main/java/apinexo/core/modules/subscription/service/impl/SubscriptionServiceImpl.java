@@ -81,4 +81,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public void increaseQuotaUsed(String id) {
         subscriptionRepository.increaseQuotaUsed(id);
     }
+
+    @Override
+    public Long getQuotaUsedById(String id) {
+        return subscriptionRepository.getQuotaUsedById(id);
+    }
 }

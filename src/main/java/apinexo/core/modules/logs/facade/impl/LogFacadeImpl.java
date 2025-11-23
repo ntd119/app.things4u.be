@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import apinexo.core.modules.logs.dto.DayLogResponse;
@@ -24,7 +23,7 @@ public class LogFacadeImpl implements LogFacade {
     private final LogService logService;
 
     @Override
-    public ResponseEntity<Object> getChart(Jwt jwt, String subscriptionId, Long from, Long to) {
+    public ResponseEntity<Object> getChart(String subscriptionId, Long from, Long to) {
         try {
             List<Object[]> rows = logService.getDailyLogs(subscriptionId, from, to);
 

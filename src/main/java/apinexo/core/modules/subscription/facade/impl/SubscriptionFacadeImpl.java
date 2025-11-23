@@ -29,6 +29,7 @@ import apinexo.core.modules.subscription.converter.SubscriptionConverter;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionFreeResponse;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionResponse;
+import apinexo.core.modules.subscription.dto.SubscriptionGetQuotaUsedResponse;
 import apinexo.core.modules.subscription.dto.SubscriptionResponse;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.facade.SubscriptionFacade;
@@ -97,7 +98,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 if (subscriptionOptional.isPresent()) {
                     subscriptionService.delete(subscriptionOptional.get());
                 }
-                SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity);
+                SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity,
+                        plansEntity);
                 ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
 
 //                // openmeter: Creates customer
@@ -180,5 +182,15 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             return ResponseEntity.ok(response);
         }
         return utils.badRequest("The subscription does not exist");
+    }
+
+    @Override
+    public ResponseEntity<Object> getQuotaUsed(String subscriptionId) {
+        try {
+            long quotaUsed = subscriptionService.getQuotaUsedById(subscriptionId);
+            return ResponseEntity.ok(SubscriptionGetQuotaUsedResponse.builder().total(quotaUsed).build());
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
     }
 }

@@ -12,4 +12,6 @@ public interface SubscriptionFacade {
     public ResponseEntity<Object> getSubscriptions(Jwt jwt);
 
     public ResponseEntity<Object> cancelSubscription(Jwt jwt, String subscriptionId);
+
+    public ResponseEntity<Object> getQuotaUsed(String subscriptionId);
 }

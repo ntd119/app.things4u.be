@@ -39,4 +39,9 @@ public class SubscriptionController {
         String subscriptionId = body.get("subscription_id");
         return subscriptionFacade.cancelSubscription(jwt, subscriptionId);
     }
+    
+    @GetMapping("/get-quota-used")
+    public ResponseEntity<Object> getQuotaUsed(String subscriptionId) {
+        return subscriptionFacade.getQuotaUsed(subscriptionId);
+    }
 }
