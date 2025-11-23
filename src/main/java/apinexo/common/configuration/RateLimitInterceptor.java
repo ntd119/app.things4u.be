@@ -73,8 +73,15 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        // check quota
+        // reset quota
         SubscriptionEntity subscriptionEntity = optionalSubscription.get();
+        long currentDate = utils.milliseconds();
+        long billingPeriodTo = subscriptionEntity.getBillingPeriodTo();
+        if (currentDate > billingPeriodTo) {
+
+        }
+
+        // check quota
         long quota = subscriptionEntity.getQuota();
         long quotaUsed = subscriptionEntity.getQuotaUsed();
         if (quotaUsed >= quota) {
