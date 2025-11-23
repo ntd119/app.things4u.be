@@ -94,7 +94,22 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         }
 
         // subscriptionId
-        request.setAttribute("subscriptionId", optionalSubscription.get().getId());
+        request.setAttribute("subscription_id", optionalSubscription.get().getId());
+
+        // email
+        request.setAttribute("email", userEntity.getEmail());
+
+        // user_name
+        request.setAttribute("user_name", "");
+
+        // first_name
+        request.setAttribute("first_name", userEntity.getFirstName());
+
+        // last_name
+        request.setAttribute("last_name", userEntity.getLastName());
+
+        // location
+        request.setAttribute("location", "");
 
         return true;
     }
@@ -106,22 +121,22 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         String id = utils.uuidRandom();
 
         // subscription_id
-        String subscriptionId = (String) request.getAttribute("subscriptionId");
+        String subscriptionId = (String) request.getAttribute("subscription_id");
 
         // time
         Long time = utils.milliseconds();
 
         // user_name
-        String username = "";
+        String username = (String) request.getAttribute("user_name");
 
         // email
-        String email = "";
+        String email = (String) request.getAttribute("email");
 
         // first_name
-        String firstName = "";
+        String firstName = (String) request.getAttribute("first_name");
 
         // last_name
-        String lastName = "";
+        String lastName = (String) request.getAttribute("last_name");
 
         // endpoint
         String endpoint = request.getRequestURI();
@@ -130,7 +145,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         String method = request.getMethod();
 
         // location
-        String location = "";
+        String location = (String) request.getAttribute("location");
 
         // response_status
         Integer responseStatus = response.getStatus();
