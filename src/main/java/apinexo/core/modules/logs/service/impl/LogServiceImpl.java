@@ -34,4 +34,9 @@ public class LogServiceImpl implements LogService {
     public List<Object[]> getDailyLogs(String subscriptionId, Long from, Long to) {
         return logRepository.countLogsGroupByDay(subscriptionId, from, to);
     }
+
+    @Override
+    public long countRequests(String subscriptionId, Long startTime) {
+        return logRepository.countRequests(subscriptionId, startTime);
+    }
 }

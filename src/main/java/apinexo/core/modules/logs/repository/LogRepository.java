@@ -27,4 +27,12 @@ public interface LogRepository extends JpaRepository<LogEntity, String> {
             """, nativeQuery = true)
     List<Object[]> countLogsGroupByDay(@Param("subscriptionId") String subscriptionId, @Param("from") Long from,
             @Param("to") Long to);
+
+    @Query("""
+                SELECT COUNT(l)
+                FROM LogEntity l
+                WHERE l.subscriptionId = :subscriptionId
+                  AND l.time >= :startTime
+            """)
+    long countRequests(@Param("subscriptionId") String subscriptionId, @Param("startTime") Long startTime);
 }

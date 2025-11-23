@@ -77,6 +77,17 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        // check rate limit
+        Long rateLimit = subscriptionEntity.getRateLimit();
+        String rateLimitPeriod = subscriptionEntity.getRateLimitPeriod();
+        long now = utils.milliseconds();
+        long oneHourAgo = now - 3600_000;
+        long count = logService.countRequests(subscriptionEntity.getId(), oneHourAgo);
+        if (count >= rateLimit) {
+            rateLimitError(response, rateLimit, rateLimitPeriod);
+            return false;
+        }
+
         // subscriptionId
         request.setAttribute("subscriptionId", optionalSubscription.get().getId());
 
@@ -186,6 +197,15 @@ public class RateLimitInterceptor implements HandlerInterceptor {
                 .write("{\"message\": \"You have exceeded the MONTHLY quota for Requests on your current plan, "
                         + currentPlan.toUpperCase() + ". Upgrade your plan at " + feServer + "/api/" + apiId
                         + "/pricing\"}");
+        response.getWriter().flush();
+    }
+
+    private void rateLimitError(HttpServletResponse response, Long rateLimit, String rateLimitPeriod)
+            throws IOException {
+        response.setStatus(429);
+        response.setContentType("application/json");
+        response.getWriter().write(
+                "{\"message\": \"Rate limit exceeded (" + rateLimit + " requests per " + rateLimitPeriod + ").\"}");
         response.getWriter().flush();
     }
 
