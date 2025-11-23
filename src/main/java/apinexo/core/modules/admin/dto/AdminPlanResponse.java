@@ -55,6 +55,9 @@ public class AdminPlanResponse {
         @JsonProperty("is_soft_limit")
         private String isSoftLimit;
 
+        @JsonProperty("is_rate_limit")
+        private String isRateLimit;
+
         @JsonProperty("key")
         private String key;
 
