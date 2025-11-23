@@ -22,4 +22,6 @@ public interface SubscriptionService {
     List<SubscriptionEntity> findByUserId(String userId);
 
     Optional<SubscriptionEntity> findById(String id);
+
+    void increaseQuotaUsed(String id);
 }

@@ -75,4 +75,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public Optional<SubscriptionEntity> findById(String id) {
         return subscriptionRepository.findById(id);
     }
+
+    @Override
+    public void increaseQuotaUsed(String id) {
+        subscriptionRepository.increaseQuotaUsed(id);
+    }
 }

@@ -22,6 +22,7 @@ import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.transaction.Transactional;
 
 @Component
 public class RateLimitInterceptor implements HandlerInterceptor {
@@ -143,8 +144,14 @@ public class RateLimitInterceptor implements HandlerInterceptor {
                 .location(location).responseStatus(responseStatus).latency(latency).requestHeaders(requestHeaders)
                 .requestQueryParameters(requestQueryParameters).requestBody(requestBody)
                 .responseHeaders(responseHeaders).responseBody(responseBody).build();
-        logService.save(entity);
+        this.saveDb(entity, subscriptionId);
         HandlerInterceptor.super.afterCompletion(request, response, handler, ex);
+    }
+
+    @Transactional
+    private void saveDb(LogEntity entity, String subscriptionId) {
+        logService.save(entity);
+        subscriptionService.increaseQuotaUsed(subscriptionId);
     }
 
     private void unauthorized(HttpServletResponse response) throws IOException {
