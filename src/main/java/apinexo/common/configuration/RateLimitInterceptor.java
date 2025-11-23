@@ -56,12 +56,14 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             return false;
         }
 
+        // check api key exist
         Optional<UserEntity> optionalUser = userService.findByApiKey(apiKey);
         if (optionalUser.isEmpty()) {
             authenticationError(response);
             return false;
         }
 
+        // check user subscribe
         UserEntity userEntity = optionalUser.get();
         String apiId = resolveApiName(request.getRequestURI());
         Optional<SubscriptionEntity> optionalSubscription = subscriptionService.findByUserIdAndApiId(userEntity.getId(),
@@ -70,6 +72,8 @@ public class RateLimitInterceptor implements HandlerInterceptor {
             authenticationError(response);
             return false;
         }
+
+        // check quota
         SubscriptionEntity subscriptionEntity = optionalSubscription.get();
         long quota = subscriptionEntity.getQuota();
         long quotaUsed = subscriptionEntity.getQuotaUsed();
