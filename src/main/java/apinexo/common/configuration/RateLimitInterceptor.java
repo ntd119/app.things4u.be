@@ -79,15 +79,18 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         }
 
         // check rate limit
-        Long rateLimit = subscriptionEntity.getRateLimit();
-        String rateLimitPeriod = subscriptionEntity.getRateLimitPeriod();
-        long now = utils.milliseconds();
-        RateLimitEnum period = RateLimitEnum.valueOf(rateLimitPeriod.toUpperCase());
-        long startTime = now - period.toMillis();
-        long count = logService.countRequests(subscriptionEntity.getId(), startTime);
-        if (count >= rateLimit) {
-            rateLimitError(response, rateLimit, rateLimitPeriod);
-            return false;
+        boolean isRateLimit = subscriptionEntity.getIsRateLimit();
+        if (isRateLimit) {
+            Long rateLimit = subscriptionEntity.getRateLimit();
+            String rateLimitPeriod = subscriptionEntity.getRateLimitPeriod();
+            long now = utils.milliseconds();
+            RateLimitEnum period = RateLimitEnum.valueOf(rateLimitPeriod.toUpperCase());
+            long startTime = now - period.toMillis();
+            long count = logService.countRequests(subscriptionEntity.getId(), startTime);
+            if (count >= rateLimit) {
+                rateLimitError(response, rateLimit, rateLimitPeriod);
+                return false;
+            }
         }
 
         // subscriptionId
