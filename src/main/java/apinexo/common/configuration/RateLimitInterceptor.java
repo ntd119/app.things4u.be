@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.util.ContentCachingResponseWrapper;
@@ -28,6 +29,9 @@ import jakarta.transaction.Transactional;
 public class RateLimitInterceptor implements HandlerInterceptor {
 
     private static final String API_KEY_HEADER = "x-api-key";
+
+    @Value("${fe.server}")
+    private String feServer;
 
     @Autowired
     private UserService userService;
@@ -63,6 +67,13 @@ public class RateLimitInterceptor implements HandlerInterceptor {
                 apiId);
         if (optionalSubscription.isEmpty()) {
             authenticationError(response);
+            return false;
+        }
+        SubscriptionEntity subscriptionEntity = optionalSubscription.get();
+        long quota = subscriptionEntity.getQuota();
+        long quotaUsed = subscriptionEntity.getQuotaUsed();
+        if (quotaUsed >= quota) {
+            exceededQuotaError(response, subscriptionEntity.getCurrentPlan(), subscriptionEntity.getApi().getId());
             return false;
         }
 
@@ -165,6 +176,16 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         response.setStatus(403);
         response.setContentType("application/json");
         response.getWriter().write("{\"message\": \"You are not subscribed to this API.\"}");
+        response.getWriter().flush();
+    }
+
+    private void exceededQuotaError(HttpServletResponse response, String currentPlan, String apiId) throws IOException {
+        response.setStatus(429);
+        response.setContentType("application/json");
+        response.getWriter()
+                .write("{\"message\": \"You have exceeded the MONTHLY quota for Requests on your current plan, "
+                        + currentPlan.toUpperCase() + ". Upgrade your plan at " + feServer + "/api/" + apiId
+                        + "/pricing\"}");
         response.getWriter().flush();
     }
 
