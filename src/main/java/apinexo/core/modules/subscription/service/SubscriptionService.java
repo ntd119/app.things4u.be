@@ -25,4 +25,6 @@ public interface SubscriptionService {
     void increaseQuotaUsed(String id);
 
     Long getQuotaUsedById(String id);
+
+    void updateBillingPeriod(SubscriptionEntity subscriptionEntity);
 }

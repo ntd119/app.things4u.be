@@ -1,5 +1,6 @@
 package apinexo.core.modules.subscription.service.impl;
 
+import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
@@ -85,5 +86,24 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public Long getQuotaUsedById(String id) {
         return subscriptionRepository.getQuotaUsedById(id);
+    }
+
+    @Override
+    public void updateBillingPeriod(SubscriptionEntity subscriptionEntity) {
+        long currentDate = utils.milliseconds();
+        long billingPeriodTo = subscriptionEntity.getBillingPeriodTo();
+        if (currentDate > billingPeriodTo) {
+            long billingPeriodFrom = subscriptionEntity.getBillingPeriodFrom();
+            while (currentDate > billingPeriodTo) {
+                billingPeriodFrom = billingPeriodTo;
+                // +1 month
+                billingPeriodTo = addOneMonth(billingPeriodFrom);
+            }
+            subscriptionRepository.updateBillingPeriod(subscriptionEntity.getId(), billingPeriodFrom, billingPeriodTo);
+        }
+    }
+
+    private long addOneMonth(long timestampMillis) {
+        return Instant.ofEpochMilli(timestampMillis).atZone(ZoneId.of("UTC")).plusMonths(1).toInstant().toEpochMilli();
     }
 }
