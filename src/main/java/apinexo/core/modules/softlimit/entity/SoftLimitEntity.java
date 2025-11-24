@@ -20,6 +20,12 @@ import lombok.Setter;
 public class SoftLimitEntity {
 
     @Id
+    @Column(name = "id")
+    private String id;
+
+    @Column(name = "up_to")
+    private Long upTo;
+
     @Column(name = "price_per_request")
     private Double pricePerRequest;
 

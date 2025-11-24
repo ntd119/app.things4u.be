@@ -2,8 +2,10 @@ package apinexo.core.modules.admin.facade.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -16,6 +18,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
+import apinexo.core.modules.admin.dto.AdminCreatePriceAdditionalRequest;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest.PlanDTO;
 import apinexo.core.modules.admin.facade.AdminFacade;
 import apinexo.core.modules.api.entity.ApiEntity;
@@ -93,6 +96,23 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                 }
             }
             return ResponseEntity.ok(response);
+        } catch (HttpClientErrorException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> createPriceAdditional(AdminCreatePriceAdditionalRequest request) {
+        try {
+            String upTo = request.getUpTo();
+            String price = request.getPrice();
+            if (StringUtils.isBlank(upTo) || StringUtils.isBlank(price)) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Input up_to and price"));
+            }
+            JsonNode result = stripeService.createPriceSoftLimit(request.getUpTo(), request.getPrice());
+            return ResponseEntity.ok(result);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {

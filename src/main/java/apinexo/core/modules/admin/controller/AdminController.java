@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
+import apinexo.core.modules.admin.dto.AdminCreatePriceAdditionalRequest;
 import apinexo.core.modules.admin.facade.AdminFacade;
 import lombok.RequiredArgsConstructor;
 
@@ -20,5 +21,10 @@ public class AdminController {
     @PostMapping("/create-api")
     public ResponseEntity<Object> createApi(@RequestBody AdminCreateApiRequest request) {
         return adminFacade.createApi(request);
+    }
+
+    @PostMapping("/create-price-additional")
+    public ResponseEntity<Object> createPriceAdditional(@RequestBody AdminCreatePriceAdditionalRequest request) {
+        return adminFacade.createPriceAdditional(request);
     }
 }

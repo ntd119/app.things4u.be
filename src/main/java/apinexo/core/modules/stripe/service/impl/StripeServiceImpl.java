@@ -1,5 +1,7 @@
 package apinexo.core.modules.stripe.service.impl;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -26,7 +28,8 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     private String stripeSecret;
 
     @Override
-    public JsonNode createPriceSoftLimit() {
+    public JsonNode createPriceSoftLimit(String upTo, String price) {
+        BigDecimal unitAmount = new BigDecimal(price).multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_UP);
         HttpHeaders headers = utils.buildHeader();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(stripeSecret, "");
@@ -36,17 +39,11 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("recurring[usage_type]", "metered");
         body.add("billing_scheme", "tiered");
         body.add("tiers_mode", "graduated");
-        body.add("product_data[name]", "JSearch");
-        body.add("nickname", "Pro");
-        body.add("tiers[0][up_to]", "10000");
+        body.add("product_data[name]", String.format("%s_%s", upTo, price));
+        body.add("tiers[0][up_to]", upTo);
         body.add("tiers[0][unit_amount]", "0");
         body.add("tiers[1][up_to]", "inf");
-        body.add("tiers[1][unit_amount_decimal]", "0.003");
-        body.add("metadata[api_id]", "jsearch");
-        body.add("metadata[key]", "pro");
-        body.add("metadata[is_soft_limit]", "true");
-        body.add("metadata[rate_limit]", "5");
-        body.add("metadata[rate_limit_period]", "second");
+        body.add("tiers[1][unit_amount_decimal]", unitAmount.toPlainString());
         String url = "https://api.stripe.com/v1/prices";
         return executePostRequest(JsonNode.class, url, body, headers).getBody();
     }
