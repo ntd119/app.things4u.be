@@ -20,6 +20,7 @@ import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
+import apinexo.core.modules.logs.service.LogService;
 import apinexo.core.modules.plans.converter.PlansConverter;
 import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
@@ -43,6 +44,8 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
     private final ApiService apiService;
 
     private final SubscriptionService subscriptionService;
+
+    private LogService logService;
 
     private final PlansConverter plansConverter;
 
@@ -100,9 +103,13 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                     Optional<SubscriptionEntity> subscriptionOptional = subscriptionService
                             .findByUserIdAndApiId(userEntity.getId(), apiEntity.getId());
                     if (subscriptionOptional.isPresent()) {
-                        subscriptionService.delete(subscriptionOptional.get());
+                        SubscriptionEntity subscriptionEntity = subscriptionOptional.get();
+                        subscriptionService.delete(subscriptionEntity);
+                        // delete old log
+                        logService.deleteBySubscriptionId(subscriptionEntity.getId());
                     }
-                    SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity);
+                    SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity,
+                            plansEntity);
                     ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
                     SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
                             .builder().id(entity.getId()).plan(plans).build();

@@ -202,7 +202,9 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
         Optional<SubscriptionEntity> subscriptionOptional = subscriptionService.findById(subscriptionId);
         if (subscriptionOptional.isPresent()) {
             SubscriptionEntity entity = subscriptionOptional.get();
+            // delete subscribe
             subscriptionService.delete(entity);
+            // delete log
             logService.deleteBySubscriptionId(entity.getId());
             ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
             SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse.builder()
