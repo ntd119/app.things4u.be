@@ -36,7 +36,7 @@ public class ApiPlansResponse {
     private Boolean active;
 
     @JsonProperty("price")
-    private Integer price;
+    private Double price;
 
     @JsonProperty("is_free")
     private Boolean isFree;

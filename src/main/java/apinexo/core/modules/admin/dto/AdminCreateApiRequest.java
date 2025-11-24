@@ -43,7 +43,7 @@ public class AdminCreateApiRequest {
         private String period;
         private String currency;
         private Boolean active;
-        private Integer price;
+        private Double price;
 
         @JsonProperty("is_free")
         private Boolean isFree;

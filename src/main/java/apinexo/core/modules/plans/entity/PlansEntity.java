@@ -51,7 +51,7 @@ public class PlansEntity extends EntityCommon {
     private String currency;
 
     @Column(name = "price")
-    private Integer price;
+    private Double price;
 
     @Column(name = "is_free")
     private Boolean isFree;

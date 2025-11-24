@@ -83,6 +83,9 @@ public class SubscriptionEntity {
     @Column(name = "is_rate_limit")
     private Boolean isRateLimit;
 
+    @Column(name = "price")
+    private Double price;
+
     @PrePersist
     public void prePersist() {
         active = true;
