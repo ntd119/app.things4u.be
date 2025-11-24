@@ -27,6 +27,7 @@ import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.softlimit.entity.SoftLimitEntity;
 import apinexo.core.modules.softlimit.service.SoftLimitService;
+import apinexo.core.modules.stripe.service.StripeService;
 import apinexo.core.modules.subscription.converter.SubscriptionConverter;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionFreeResponse;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
@@ -57,6 +58,10 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     private final SubscriptionService subscriptionService;
 
     private final SoftLimitService limitService;
+
+    private final StripeService stripeService;
+
+    private final SoftLimitService softLimitService;
 
     private final PlansConverter plansConverter;
 
@@ -134,10 +139,18 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                     Double overagePrices = plansEntity.getOveragePrices();
                     String id = String.format("%s_%s_%s", apiEntity.getId(), upTo, overagePrices);
                     Optional<SoftLimitEntity> optionalSoftLimit = limitService.findByid(id);
+                    String overagePriceId = "";
                     if (!optionalSoftLimit.isEmpty()) {
-                        String overagePriceId = optionalSoftLimit.get().getPriceId();
-                        bodyClient.add("line_items[1][price]", overagePriceId);
+                        overagePriceId = optionalSoftLimit.get().getPriceId();
+                    } else {
+                        JsonNode result = stripeService.createPriceSoftLimit(apiEntity.getName(), String.valueOf(upTo),
+                                String.valueOf(overagePrices));
+                        overagePriceId = utils.jsonNodeAt(result, "/id", String.class);
+                        SoftLimitEntity entity = SoftLimitEntity.builder().id(id).upTo(Long.valueOf(upTo))
+                                .pricePerRequest(Double.valueOf(overagePrices)).priceId(overagePriceId).build();
+                        softLimitService.save(entity);
                     }
+                    bodyClient.add("line_items[1][price]", overagePriceId);
                 }
 
                 // Add metadata
