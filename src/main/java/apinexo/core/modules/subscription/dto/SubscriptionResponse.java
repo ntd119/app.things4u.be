@@ -54,6 +54,9 @@ public class SubscriptionResponse {
     @JsonProperty("overage_prices")
     private Double overagePrices;
 
+    @JsonProperty("price")
+    private Double price;
+
     @JsonProperty("plan")
     private ApiPlansResponse plan;
 }

@@ -36,6 +36,7 @@ public class SubscriptionConverterImpl implements SubscriptionConverter {
         subscriptionResponse.setRateLimitPeriod(entity.getRateLimitPeriod());
         subscriptionResponse.setIsSoftLimit(entity.getIsSoftLimit());
         subscriptionResponse.setOveragePrices(entity.getOveragePrices());
+        subscriptionResponse.setPrice(entity.getPrice());
         return subscriptionResponse;
     }
 }
