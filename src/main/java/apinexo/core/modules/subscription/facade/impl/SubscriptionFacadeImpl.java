@@ -25,6 +25,8 @@ import apinexo.core.modules.logs.service.LogService;
 import apinexo.core.modules.plans.converter.PlansConverter;
 import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
+import apinexo.core.modules.softlimit.entity.SoftLimitEntity;
+import apinexo.core.modules.softlimit.service.SoftLimitService;
 import apinexo.core.modules.subscription.converter.SubscriptionConverter;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionFreeResponse;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionRequest;
@@ -53,6 +55,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     private final ApiService apiService;
 
     private final SubscriptionService subscriptionService;
+
+    private final SoftLimitService limitService;
 
     private final PlansConverter plansConverter;
 
@@ -122,6 +126,19 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 bodyClient.add("line_items[0][quantity]", "1");
                 bodyClient.add("payment_method_types[0]", "card");
                 bodyClient.add("payment_method_types[1]", "link");
+
+                JsonNode metadata = utils.convertStrToJson(plansEntity.getMetadata());
+                boolean isSoftLimit = utils.jsonNodeAt(metadata, "/is_soft_limit", Boolean.class);
+                if (isSoftLimit) {
+                    Long upTo = plansEntity.getUpTo();
+                    Double overagePrices = plansEntity.getOveragePrices();
+                    String id = String.format("%s_%s", upTo, overagePrices);
+                    Optional<SoftLimitEntity> optionalSoftLimit = limitService.findByid(id);
+                    if (!optionalSoftLimit.isEmpty()) {
+                        String overagePriceId = optionalSoftLimit.get().getPriceId();
+                        bodyClient.add("line_items[1][price]", overagePriceId);
+                    }
+                }
 
                 // Add metadata
                 bodyClient.add("metadata[sub]", sub);
