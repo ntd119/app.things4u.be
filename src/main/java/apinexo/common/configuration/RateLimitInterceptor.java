@@ -78,11 +78,14 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         subscriptionService.updateBillingPeriod(subscriptionEntity);
 
         // check quota
-        long quota = subscriptionEntity.getQuota();
-        long quotaUsed = subscriptionEntity.getQuotaUsed();
-        if (quotaUsed >= quota) {
-            exceededQuotaError(response, subscriptionEntity.getCurrentPlan(), subscriptionEntity.getApi().getId());
-            return false;
+        boolean isSoftLimit =  subscriptionEntity.getIsSoftLimit();
+        if (!isSoftLimit) {
+            long quota = subscriptionEntity.getQuota();
+            long quotaUsed = subscriptionEntity.getQuotaUsed();
+            if (quotaUsed >= quota) {
+                exceededQuotaError(response, subscriptionEntity.getCurrentPlan(), subscriptionEntity.getApi().getId());
+                return false;
+            }
         }
 
         // check rate limit

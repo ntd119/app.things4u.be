@@ -28,7 +28,7 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     private String stripeSecret;
 
     @Override
-    public JsonNode createPriceSoftLimit(String upTo, String price) {
+    public JsonNode createPriceSoftLimit(String apiName, String upTo, String price) {
         BigDecimal unitAmount = new BigDecimal(price).multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_UP);
         HttpHeaders headers = utils.buildHeader();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -39,7 +39,7 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("recurring[usage_type]", "metered");
         body.add("billing_scheme", "tiered");
         body.add("tiers_mode", "graduated");
-        body.add("product_data[name]", String.format("%s_%s", upTo, price));
+        body.add("product_data[name]", apiName);
         body.add("tiers[0][up_to]", upTo);
         body.add("tiers[0][unit_amount]", "0");
         body.add("tiers[1][up_to]", "inf");

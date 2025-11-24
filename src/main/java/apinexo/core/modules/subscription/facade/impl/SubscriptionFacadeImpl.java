@@ -132,7 +132,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 if (isSoftLimit) {
                     Long upTo = plansEntity.getUpTo();
                     Double overagePrices = plansEntity.getOveragePrices();
-                    String id = String.format("%s_%s", upTo, overagePrices);
+                    String id = String.format("%s_%s_%s", apiEntity.getId(), upTo, overagePrices);
                     Optional<SoftLimitEntity> optionalSoftLimit = limitService.findByid(id);
                     if (!optionalSoftLimit.isEmpty()) {
                         String overagePriceId = optionalSoftLimit.get().getPriceId();

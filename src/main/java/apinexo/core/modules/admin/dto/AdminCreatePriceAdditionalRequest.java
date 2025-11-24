@@ -13,6 +13,12 @@ import lombok.NoArgsConstructor;
 @Builder
 public class AdminCreatePriceAdditionalRequest {
 
+    @JsonProperty("api_id")
+    private String apiId;
+
+    @JsonProperty("api_name")
+    private String apiName;
+
     @JsonProperty("up_to")
     private String upTo;
 

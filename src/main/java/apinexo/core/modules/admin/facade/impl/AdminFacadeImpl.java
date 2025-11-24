@@ -111,15 +111,19 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     @Override
     public ResponseEntity<Object> createPriceAdditional(AdminCreatePriceAdditionalRequest request) {
         try {
+            String apiId = request.getApiId();
+            String apiName = request.getApiName();
             String upTo = request.getUpTo();
             String price = request.getPrice();
-            if (StringUtils.isBlank(upTo) || StringUtils.isBlank(price)) {
-                return ResponseEntity.badRequest().body(Map.of("message", "Input up_to and price"));
+
+            if (StringUtils.isBlank(apiId) || StringUtils.isBlank(apiName) || StringUtils.isBlank(upTo)
+                    || StringUtils.isBlank(price)) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Input api_id, api_name, up_to and price"));
             }
-            String id = String.format("%s_%s", upTo, price);
+            String id = String.format("%s_%s_%s", apiId, upTo, price);
             Optional<SoftLimitEntity> optional = softLimitService.findByid(id);
             if (optional.isEmpty()) {
-                JsonNode result = stripeService.createPriceSoftLimit(request.getUpTo(), request.getPrice());
+                JsonNode result = stripeService.createPriceSoftLimit(apiName, request.getUpTo(), request.getPrice());
                 SoftLimitEntity entity = SoftLimitEntity.builder().id(id).upTo(Long.valueOf(upTo))
                         .pricePerRequest(Double.valueOf(price)).priceId(utils.jsonNodeAt(result, "/id", String.class))
                         .build();

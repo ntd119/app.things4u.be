@@ -6,7 +6,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 public interface StripeService {
 
-    JsonNode createPriceSoftLimit(String upTo, String price);
+    JsonNode createPriceSoftLimit(String apiName, String upTo, String price);
 
     JsonNode createPriceHardLimit(MultiValueMap<String, Object> body);
 }
