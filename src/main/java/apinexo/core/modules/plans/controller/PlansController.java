@@ -17,7 +17,7 @@ public class PlansController {
     private final PlansFacade plansFacade;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> plans( @PathVariable String id) {
+    public ResponseEntity<Object> plans(@PathVariable String id) {
         return plansFacade.plans(id);
     }
 }

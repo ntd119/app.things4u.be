@@ -10,6 +10,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
@@ -28,7 +29,6 @@ import apinexo.core.modules.logs.service.LogService;
 import apinexo.core.modules.plans.converter.PlansConverter;
 import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
-import apinexo.core.modules.stripe.dto.StripeCreatePortalSessionRequest;
 import apinexo.core.modules.stripe.facade.StripeFacade;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionFreeResponse;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -143,11 +143,17 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
     }
 
     @Override
-    public ResponseEntity<Object> createPortalSession(StripeCreatePortalSessionRequest request) {
+    public ResponseEntity<Object> createPortalSession(Jwt jwt) {
         try {
+            String sub = jwt.getClaimAsString("sub");
+            Optional<UserEntity> existing = userService.findByAuth0UserId(sub);
+            if (existing.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "The user does not exist"));
+            }
+            UserEntity userEntity = existing.get();
             Stripe.apiKey = stripeSecret;
             Map<String, Object> params = new HashMap<>();
-            params.put("customer", request.getCustomerId());
+            params.put("customer", userEntity.getStripeCustomerId());
             params.put("return_url", String.format("%s/account/billing", feServer));
             com.stripe.model.billingportal.Session session = com.stripe.model.billingportal.Session.create(params);
             return ResponseEntity.ok(Map.of("url", session.getUrl()));
