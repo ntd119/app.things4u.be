@@ -3,14 +3,19 @@ package apinexo.core.modules.logs.repository;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import apinexo.core.modules.logs.entity.LogEntity;
 import io.lettuce.core.dynamic.annotation.Param;
+import jakarta.transaction.Transactional;
 
 public interface LogRepository extends JpaRepository<LogEntity, String> {
 
-    void deleteBySubscriptionId(String subscriptionId);
+    @Modifying
+    @Transactional
+    @Query("delete from LogEntity l where l.subscriptionId = :subscriptionId")
+    void deleteBySubscriptionId(@Param("subscriptionId") String subscriptionId);
 
     List<LogEntity> findBySubscriptionId(String subscriptionId);
 

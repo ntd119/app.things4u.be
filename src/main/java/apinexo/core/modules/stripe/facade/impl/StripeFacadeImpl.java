@@ -45,7 +45,7 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
 
     private final SubscriptionService subscriptionService;
 
-    private LogService logService;
+    private final LogService logService;
 
     private final PlansConverter plansConverter;
 
