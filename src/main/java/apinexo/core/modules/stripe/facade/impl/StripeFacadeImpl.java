@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -87,6 +88,12 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                         return utils.badRequest("The user does not exist");
                     }
                     UserEntity userEntity = userOptional.get();
+                    String stripeCustomerId = userEntity.getStripeCustomerId();
+                    if (StringUtils.isBlank(stripeCustomerId)) {
+                        stripeCustomerId = session.getCustomer();
+                        userEntity.setStripeCustomerId(stripeCustomerId);
+                        userService.save(userEntity);
+                    }
 
                     String apiId = session.getMetadata().get("apiId");
                     Optional<ApiEntity> apiOptional = apiService.findbyId(apiId);

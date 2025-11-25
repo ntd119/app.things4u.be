@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -126,11 +127,16 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 bodyClient.add("mode", "subscription");
                 bodyClient.add("success_url", body.getUrl());
                 bodyClient.add("cancel_url", body.getUrl());
-                bodyClient.add("customer_email", userEmail);
                 bodyClient.add("line_items[0][price]", priceId);
                 bodyClient.add("line_items[0][quantity]", "1");
                 bodyClient.add("payment_method_types[0]", "card");
                 bodyClient.add("payment_method_types[1]", "link");
+                String stripeCustomerId = userEntity.getStripeCustomerId();
+                if (StringUtils.isBlank(stripeCustomerId)) {
+                    bodyClient.add("customer_email", userEmail);
+                } else {
+                    bodyClient.add("customer", stripeCustomerId);
+                }
 
                 JsonNode metadata = utils.convertStrToJson(plansEntity.getMetadata());
                 boolean isSoftLimit = utils.jsonNodeAt(metadata, "/is_soft_limit", Boolean.class);
