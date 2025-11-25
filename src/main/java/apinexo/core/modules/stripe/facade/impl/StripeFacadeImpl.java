@@ -1,7 +1,9 @@
 package apinexo.core.modules.stripe.facade.impl;
 
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 
+import com.stripe.Stripe;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
 import com.stripe.model.checkout.Session;
@@ -24,6 +27,7 @@ import apinexo.core.modules.logs.service.LogService;
 import apinexo.core.modules.plans.converter.PlansConverter;
 import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
+import apinexo.core.modules.stripe.dto.StripeCreatePortalSessionRequest;
 import apinexo.core.modules.stripe.facade.StripeFacade;
 import apinexo.core.modules.subscription.dto.SubscriptionChangeSubscriptionFreeResponse;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -51,6 +55,12 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
 
     @Value("${stripe.secret.endpoint}")
     private String stripeSecretEndpoint;
+
+    @Value("${stripe.secret.key}")
+    private String stripeSecret;
+
+    @Value("${fe.server}")
+    private String feServer;
 
     @Override
     public ResponseEntity<Object> webhook(HttpServletRequest request) {
@@ -118,6 +128,22 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                 break;
             }
             return ResponseEntity.ok("OK");
+        } catch (HttpClientErrorException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> createPortalSession(StripeCreatePortalSessionRequest request) {
+        try {
+            Stripe.apiKey = stripeSecret;
+            Map<String, Object> params = new HashMap<>();
+            params.put("customer", request.getCustomerId());
+            params.put("return_url", String.format("%s/account/billing", feServer));
+            com.stripe.model.billingportal.Session session = com.stripe.model.billingportal.Session.create(params);
+            return ResponseEntity.ok(Map.of("url", session.getUrl()));
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.err(ex.getMessage()));
         } catch (Exception ex) {

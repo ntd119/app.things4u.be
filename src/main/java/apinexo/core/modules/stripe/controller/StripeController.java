@@ -2,22 +2,29 @@ package apinexo.core.modules.stripe.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import apinexo.core.modules.stripe.dto.StripeCreatePortalSessionRequest;
 import apinexo.core.modules.stripe.facade.StripeFacade;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/dev/stripe")
+@RequestMapping("/dev")
 public class StripeController {
 
     private final StripeFacade stripeFacade;
 
-    @PostMapping("/webhook")
+    @PostMapping("/stripe/webhook")
     public ResponseEntity<Object> webhook(HttpServletRequest request) {
         return stripeFacade.webhook(request);
+    }
+
+    @PostMapping("/create-portal-session")
+    public ResponseEntity<Object> createPortalSession(@RequestBody StripeCreatePortalSessionRequest request) {
+        return stripeFacade.createPortalSession(request);
     }
 }
