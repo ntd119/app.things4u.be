@@ -40,7 +40,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String generateApiKey() {
-        String apikey = String.format("ak_%s", utils.generateRandomHexString(47));
-        return apikey;
+        for (int i = 0; i < 10; i++) {
+            String apiKey = "ak_" + utils.generateRandomHexString(47);
+            if (findByApiKey(apiKey).isEmpty()) {
+                return apiKey;
+            }
+        }
+        throw new IllegalStateException("Unable to generate unique API key after multiple attempts");
     }
 }
