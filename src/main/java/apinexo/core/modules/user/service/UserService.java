@@ -13,4 +13,6 @@ public interface UserService {
     Optional<UserEntity> findByApiKey(String apiKey);
 
     UserEntity save(UserEntity entity);
+
+    String generateApiKey();
 }

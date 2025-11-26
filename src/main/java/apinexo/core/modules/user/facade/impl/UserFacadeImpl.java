@@ -40,7 +40,6 @@ public class UserFacadeImpl implements UserFacade {
             if (existing.isPresent()) {
                 entity = existing.get();
             } else {
-                String apikey = String.format("ak_%s", utils.generateRandomHexString(47));
                 JsonNode user = auth0Service.getUser(sub).getBody();
                 if (Objects.isNull(user) || user.isEmpty()) {
                     return ResponseEntity.badRequest().body(new ApiException("The user does not exist"));
@@ -71,7 +70,7 @@ public class UserFacadeImpl implements UserFacade {
                 // auth0_user_id
                 String auth0UserId = utils.jsonNodeAt(user, "/user_id", String.class);
 
-                entity = UserEntity.builder().id(userId).apiKey(apikey).email(email).emailVerified(emailVerified)
+                entity = UserEntity.builder().id(userId).apiKey(userService.generateApiKey()).email(email).emailVerified(emailVerified)
                         .firstName(firstName).lastName(lastName).picture(picture).auth0UserId(auth0UserId).build();
                 entity = userService.save(entity);
 
@@ -96,9 +95,8 @@ public class UserFacadeImpl implements UserFacade {
             if (!existing.isPresent()) {
                 return ResponseEntity.badRequest().body(Map.of("message", "The user does not exist"));
             }
-            String apikey = String.format("ak_%s", utils.generateRandomHexString(47));
             UserEntity entity = existing.get();
-            entity.setApiKey(apikey);
+            entity.setApiKey(userService.generateApiKey());
             entity = userService.save(entity);
             UserGetUserResponse response = UserGetUserResponse.builder().userId(entity.getId()).email(entity.getEmail())
                     .emailVerified(entity.getEmailVerified()).firstName(entity.getFirstName())

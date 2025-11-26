@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
+import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.repository.UserRepository;
 import apinexo.core.modules.user.service.UserService;
@@ -12,6 +13,8 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+
+    private final ApinexoUtils utils;
 
     private final UserRepository repository;
 
@@ -33,5 +36,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public Optional<UserEntity> findByApiKey(String apiKey) {
         return repository.findByApiKey(apiKey);
+    }
+
+    @Override
+    public String generateApiKey() {
+        String apikey = String.format("ak_%s", utils.generateRandomHexString(47));
+        return apikey;
     }
 }
