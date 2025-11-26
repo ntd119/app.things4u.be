@@ -21,4 +21,9 @@ public class ApiKeyController {
     public ResponseEntity<Object> getOrCreateApiKey(@AuthenticationPrincipal Jwt jwt) {
         return apiKeyFacade.getOrCreateApiKey(jwt);
     }
+
+    @GetMapping("/reset-api-key")
+    public ResponseEntity<Object> resetApiKey(@AuthenticationPrincipal Jwt jwt) {
+        return apiKeyFacade.resetApiKey(jwt);
+    }
 }

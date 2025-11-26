@@ -1,5 +1,6 @@
 package apinexo.core.modules.apikey.facade.impl;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -75,6 +76,25 @@ public class ApiKeyFacadeImpl implements ApiKeyFacade {
                 entity = userService.save(entity);
 
             }
+            ApikeyResponse apikeyResponse = ApikeyResponse.builder().apiKey(entity.getApiKey()).build();
+            return ResponseEntity.ok(apikeyResponse);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> resetApiKey(Jwt jwt) {
+        try {
+            String sub = jwt.getClaimAsString("sub");
+            Optional<UserEntity> existing = userService.findByAuth0UserId(sub);
+            if (!existing.isPresent()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "The user does not exist"));
+            }
+            String apikey = String.format("ak_%s", utils.generateRandomHexString(47));
+            UserEntity entity = existing.get();
+            entity.setApiKey(apikey);
+            entity = userService.save(entity);
             ApikeyResponse apikeyResponse = ApikeyResponse.builder().apiKey(entity.getApiKey()).build();
             return ResponseEntity.ok(apikeyResponse);
         } catch (Exception ex) {

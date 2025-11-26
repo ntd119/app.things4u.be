@@ -6,4 +6,6 @@ import org.springframework.security.oauth2.jwt.Jwt;
 public interface ApiKeyFacade {
 
     public ResponseEntity<Object> getOrCreateApiKey(Jwt jwt);
+
+    public ResponseEntity<Object> resetApiKey(Jwt jwt);
 }
