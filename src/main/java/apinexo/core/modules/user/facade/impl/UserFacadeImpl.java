@@ -1,5 +1,6 @@
 package apinexo.core.modules.user.facade.impl;
 
+import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -82,6 +83,29 @@ public class UserFacadeImpl implements UserFacade {
                     .stripeCustomerId(entity.getStripeCustomerId()).api_key(entity.getApiKey()).build();
             return ResponseEntity.ok(response);
 
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> resetApiKey(Jwt jwt) {
+        try {
+            String sub = jwt.getClaimAsString("sub");
+            Optional<UserEntity> existing = userService.findByAuth0UserId(sub);
+            if (!existing.isPresent()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "The user does not exist"));
+            }
+            String apikey = String.format("ak_%s", utils.generateRandomHexString(47));
+            UserEntity entity = existing.get();
+            entity.setApiKey(apikey);
+            entity = userService.save(entity);
+            UserGetUserResponse response = UserGetUserResponse.builder().userId(entity.getId()).email(entity.getEmail())
+                    .emailVerified(entity.getEmailVerified()).firstName(entity.getFirstName())
+                    .lastName(entity.getLastName()).company(entity.getCompany()).picture(entity.getPicture())
+                    .auth0UserId(entity.getAuth0UserId()).openmeterCustomerId(entity.getOpenmeterCustomerId())
+                    .stripeCustomerId(entity.getStripeCustomerId()).api_key(entity.getApiKey()).build();
+            return ResponseEntity.ok(response);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }

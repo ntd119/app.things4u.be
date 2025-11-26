@@ -21,4 +21,9 @@ public class UserController {
     public ResponseEntity<Object> getUser(@AuthenticationPrincipal Jwt jwt) {
         return facade.getUser(jwt);
     }
+
+    @GetMapping("/reset-api-key")
+    public ResponseEntity<Object> resetApiKey(@AuthenticationPrincipal Jwt jwt) {
+        return facade.resetApiKey(jwt);
+    }
 }
