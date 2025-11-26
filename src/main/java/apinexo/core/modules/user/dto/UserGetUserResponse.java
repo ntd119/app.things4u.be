@@ -22,6 +22,9 @@ public class UserGetUserResponse {
     @JsonProperty("first_name")
     private String firstName;
 
+    @JsonProperty("api_key")
+    private String api_key;
+
     @JsonProperty("last_name")
     private String lastName;
 
