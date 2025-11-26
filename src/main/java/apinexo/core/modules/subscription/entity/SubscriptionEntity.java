@@ -56,6 +56,9 @@ public class SubscriptionEntity {
     @Column(nullable = false, name = "active")
     private boolean active;
 
+    @Column(name = "is_free")
+    private boolean isFree;
+
     @Column(name = "current_plan")
     private String currentPlan;
 

@@ -50,7 +50,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .isSoftLimit(utils.jsonNodeAt(metadata, "/is_soft_limit", Boolean.class))
                 .isRateLimit(utils.jsonNodeAt(metadata, "/is_rate_limit", Boolean.class))
                 .overagePrices(plansEntity.getOveragePrices())
-                .price(plansEntity.getPrice()).build();
+                .price(plansEntity.getPrice())
+                .isFree(plansEntity.getIsFree()).build();
         subscribe.setSubscribedAt(LocalDateTime.now());
 
         return subscriptionRepository.save(subscribe);

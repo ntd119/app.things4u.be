@@ -7,6 +7,7 @@ import java.util.Objects;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -68,5 +69,15 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("recurring[interval]", "month");
         String url = "https://api.stripe.com/v1/prices";
         return executePostRequest(JsonNode.class, url, body, headers).getBody();
+    }
+
+    @Override
+    public ResponseEntity<Object> cancelSubscription(String subscriptionId) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth(stripeSecret, "");
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        String url = "https://api.stripe.com/v1/subscriptions/" + subscriptionId;
+        ResponseEntity<JsonNode> response = executeDeleteRequest(JsonNode.class, url, null, headers);
+        return new ResponseEntity<>(response.getBody(), response.getStatusCode());
     }
 }

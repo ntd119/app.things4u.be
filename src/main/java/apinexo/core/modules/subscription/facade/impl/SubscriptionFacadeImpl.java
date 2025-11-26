@@ -208,6 +208,11 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
         Optional<SubscriptionEntity> subscriptionOptional = subscriptionService.findById(subscriptionId);
         if (subscriptionOptional.isPresent()) {
             SubscriptionEntity entity = subscriptionOptional.get();
+            if (!entity.isFree()) {
+                // cancel subscription from stripe
+                stripeService.cancelSubscription(subscriptionId);
+            }
+
             // delete subscribe
             subscriptionService.delete(entity);
             // delete log

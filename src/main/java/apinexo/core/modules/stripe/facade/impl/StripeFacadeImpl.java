@@ -115,7 +115,7 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                     }
                     PlansEntity plansEntity = plansOptional.get();
 
-                    String subscriptionId = utils.generateRandomHexString(24);
+                    String subscriptionId = session.getSubscription();
                     // delete old subscribe
                     Optional<SubscriptionEntity> subscriptionOptional = subscriptionService
                             .findByUserIdAndApiId(userEntity.getId(), apiEntity.getId());
