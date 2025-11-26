@@ -78,9 +78,9 @@ public class UserFacadeImpl implements UserFacade {
             }
             UserGetUserResponse response = UserGetUserResponse.builder().userId(entity.getId()).email(entity.getEmail())
                     .emailVerified(entity.getEmailVerified()).firstName(entity.getFirstName())
-                    .lastName(entity.getLastName()).company(entity.getCompany()).picture(entity.getPicture())
-                    .auth0UserId(entity.getAuth0UserId()).openmeterCustomerId(entity.getOpenmeterCustomerId())
-                    .stripeCustomerId(entity.getStripeCustomerId()).api_key(entity.getApiKey()).build();
+                    .lastName(entity.getLastName()).userName(entity.getUserName()).picture(entity.getPicture())
+                    .auth0UserId(entity.getAuth0UserId()).stripeCustomerId(entity.getStripeCustomerId())
+                    .api_key(entity.getApiKey()).build();
             return ResponseEntity.ok(response);
 
         } catch (Exception ex) {
@@ -102,9 +102,9 @@ public class UserFacadeImpl implements UserFacade {
             entity = userService.save(entity);
             UserGetUserResponse response = UserGetUserResponse.builder().userId(entity.getId()).email(entity.getEmail())
                     .emailVerified(entity.getEmailVerified()).firstName(entity.getFirstName())
-                    .lastName(entity.getLastName()).company(entity.getCompany()).picture(entity.getPicture())
-                    .auth0UserId(entity.getAuth0UserId()).openmeterCustomerId(entity.getOpenmeterCustomerId())
-                    .stripeCustomerId(entity.getStripeCustomerId()).api_key(entity.getApiKey()).build();
+                    .lastName(entity.getLastName()).userName(entity.getUserName()).picture(entity.getPicture())
+                    .auth0UserId(entity.getAuth0UserId()).stripeCustomerId(entity.getStripeCustomerId())
+                    .api_key(entity.getApiKey()).build();
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());

@@ -36,17 +36,14 @@ public class UserEntity {
     @Column(name = "last_name")
     private String lastName;
 
-    @Column(name = "company")
-    private String company;
+    @Column(name = "user_name")
+    private String userName;
 
     @Column(name = "picture")
     private String picture;
 
     @Column(name = "auth0_user_id")
     private String auth0UserId;
-
-    @Column(name = "openmeter_customer_id")
-    private String openmeterCustomerId;
 
     @Column(name = "stripe_customer_id")
     private String stripeCustomerId;

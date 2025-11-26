@@ -28,17 +28,14 @@ public class UserGetUserResponse {
     @JsonProperty("last_name")
     private String lastName;
 
-    @JsonProperty("company")
-    private String company;
+    @JsonProperty("user_name")
+    private String userName;
 
     @JsonProperty("picture")
     private String picture;
 
     @JsonProperty("auth0_user_id")
     private String auth0UserId;
-
-    @JsonProperty("openmeter_customer_id")
-    private String openmeterCustomerId;
 
     @JsonProperty("stripe_customer_id")
     private String stripeCustomerId;
