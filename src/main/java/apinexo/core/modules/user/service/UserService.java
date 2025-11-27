@@ -16,5 +16,5 @@ public interface UserService {
 
     String generateApiKey();
 
-    Optional<UserEntity> findByUserName(String userName);
+    Optional<UserEntity> findByUserNameAndIdNot(String userName, String id);
 }

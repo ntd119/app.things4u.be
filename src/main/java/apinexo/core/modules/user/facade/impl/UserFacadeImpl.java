@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
@@ -122,12 +123,17 @@ public class UserFacadeImpl implements UserFacade {
 
             // check user name
             String userName = request.getUserName();
-            Optional<UserEntity> optional = userService.findByUserName(userName);
+            if (StringUtils.isBlank(userName)) {
+                return ResponseEntity.badRequest().body(Map.of("message", "Username must not be empty"));
+            }
+
+            UserEntity entity = existing.get();
+            userName = userName.trim();
+            Optional<UserEntity> optional = userService.findByUserNameAndIdNot(userName, entity.getId());
             if (optional.isPresent()) {
                 return ResponseEntity.badRequest().body(Map.of("message", "The username already exists"));
             }
 
-            UserEntity entity = existing.get();
             entity.setFirstName(request.getFirstName());
             entity.setLastName(request.getLastName());
             entity.setUserName(userName);
