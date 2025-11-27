@@ -119,10 +119,18 @@ public class UserFacadeImpl implements UserFacade {
             if (!existing.isPresent()) {
                 return ResponseEntity.badRequest().body(Map.of("message", "The user does not exist"));
             }
+
+            // check user name
+            String userName = request.getUserName();
+            Optional<UserEntity> optional = userService.findByUserName(userName);
+            if (optional.isPresent()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "The username already exists"));
+            }
+
             UserEntity entity = existing.get();
             entity.setFirstName(request.getFirstName());
             entity.setLastName(request.getLastName());
-            entity.setUserName(request.getUserName());
+            entity.setUserName(userName);
             entity = userService.save(entity);
             UserGetUserResponse response = UserGetUserResponse.builder().userId(entity.getId()).email(entity.getEmail())
                     .emailVerified(entity.getEmailVerified()).firstName(entity.getFirstName())

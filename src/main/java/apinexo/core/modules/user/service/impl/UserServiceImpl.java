@@ -48,4 +48,9 @@ public class UserServiceImpl implements UserService {
         }
         throw new IllegalStateException("Unable to generate unique API key after multiple attempts");
     }
+
+    @Override
+    public Optional<UserEntity> findByUserName(String userName) {
+        return repository.findByUserName(userName);
+    }
 }

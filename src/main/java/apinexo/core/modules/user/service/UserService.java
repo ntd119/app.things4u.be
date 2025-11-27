@@ -15,4 +15,6 @@ public interface UserService {
     UserEntity save(UserEntity entity);
 
     String generateApiKey();
+
+    Optional<UserEntity> findByUserName(String userName);
 }
