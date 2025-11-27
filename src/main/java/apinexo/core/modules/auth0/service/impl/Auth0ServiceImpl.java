@@ -48,7 +48,8 @@ public class Auth0ServiceImpl extends AbstractService implements Auth0Service {
                 .clientSecret(clientSecret).audience(audience + "/api/v2/").grantType("client_credentials").build();
         HttpHeaders headers = utils.buildHeader();
         String url = audience + "/oauth/token";
-        ResponseEntity<JsonNode> response = executePostRequest(JsonNode.class, url, utils.convertDtoToJson(body), headers);
+        ResponseEntity<JsonNode> response = executePostRequest(JsonNode.class, url, utils.convertDtoToJson(body),
+                headers);
         return response;
     }
 
@@ -73,6 +74,21 @@ public class Auth0ServiceImpl extends AbstractService implements Auth0Service {
         Map<String, String> body = new HashMap<>();
         body.put("user_id", userId);
         ResponseEntity<JsonNode> response = executePostRequest(JsonNode.class, url, body, headers);
+        return response;
+    }
+
+    @Override
+    public ResponseEntity<String> changePassword(String email) {
+        JsonNode tokenObj = this.generateToken().getBody();
+        String token = utils.jsonNodeAt(tokenObj, "/access_token", String.class);
+        HttpHeaders headers = utils.buildHeader();
+        headers.setBearerAuth(token);
+        String url = audience + "/dbconnections/change_password";
+        Map<String, String> body = new HashMap<>();
+        body.put("client_id", clientId);
+        body.put("email", email);
+        body.put("connection", "Username-Password-Authentication");
+        ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
         return response;
     }
 }

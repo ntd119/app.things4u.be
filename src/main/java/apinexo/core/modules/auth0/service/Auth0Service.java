@@ -12,5 +12,7 @@ public interface Auth0Service {
 
     ResponseEntity<JsonNode> resendVerificationEmail(String userId);
 
+    ResponseEntity<String> changePassword(String email);
+
     ResponseEntity<JsonNode> generateToken();
 }

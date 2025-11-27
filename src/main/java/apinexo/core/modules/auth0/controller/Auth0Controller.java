@@ -1,6 +1,9 @@
 package apinexo.core.modules.auth0.controller;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,5 +23,10 @@ public class Auth0Controller {
     @PostMapping("/resend-verification")
     public ResponseEntity<Object> resendVerification(@RequestBody Auth0ResendVerificationRequest request) {
         return auth0Facade.resendVerification(request);
+    }
+
+    @GetMapping("/change-password")
+    public ResponseEntity<Object> changePassword(@AuthenticationPrincipal Jwt jwt) {
+        return auth0Facade.changePassword(jwt);
     }
 }
