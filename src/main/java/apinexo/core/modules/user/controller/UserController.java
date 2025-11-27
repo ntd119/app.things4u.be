@@ -4,9 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import apinexo.core.modules.user.dto.UserUpdateProfileRequest;
 import apinexo.core.modules.user.facade.UserFacade;
 import lombok.RequiredArgsConstructor;
 
@@ -25,5 +27,10 @@ public class UserController {
     @GetMapping("/reset-api-key")
     public ResponseEntity<Object> resetApiKey(@AuthenticationPrincipal Jwt jwt) {
         return facade.resetApiKey(jwt);
+    }
+
+    @GetMapping("/update-profile")
+    public ResponseEntity<Object> updateProfile(@AuthenticationPrincipal Jwt jwt, @RequestBody UserUpdateProfileRequest request) {
+        return facade.updateProfile(jwt, request);
     }
 }

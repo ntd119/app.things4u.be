@@ -14,6 +14,7 @@ import apinexo.client.exception.ApiException;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.auth0.service.Auth0Service;
 import apinexo.core.modules.user.dto.UserGetUserResponse;
+import apinexo.core.modules.user.dto.UserUpdateProfileRequest;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.facade.UserFacade;
 import apinexo.core.modules.user.service.UserService;
@@ -70,8 +71,9 @@ public class UserFacadeImpl implements UserFacade {
                 // auth0_user_id
                 String auth0UserId = utils.jsonNodeAt(user, "/user_id", String.class);
 
-                entity = UserEntity.builder().id(userId).apiKey(userService.generateApiKey()).email(email).emailVerified(emailVerified)
-                        .firstName(firstName).lastName(lastName).picture(picture).auth0UserId(auth0UserId).build();
+                entity = UserEntity.builder().id(userId).apiKey(userService.generateApiKey()).email(email)
+                        .emailVerified(emailVerified).firstName(firstName).lastName(lastName).picture(picture)
+                        .auth0UserId(auth0UserId).build();
                 entity = userService.save(entity);
 
             }
@@ -97,6 +99,30 @@ public class UserFacadeImpl implements UserFacade {
             }
             UserEntity entity = existing.get();
             entity.setApiKey(userService.generateApiKey());
+            entity = userService.save(entity);
+            UserGetUserResponse response = UserGetUserResponse.builder().userId(entity.getId()).email(entity.getEmail())
+                    .emailVerified(entity.getEmailVerified()).firstName(entity.getFirstName())
+                    .lastName(entity.getLastName()).userName(entity.getUserName()).picture(entity.getPicture())
+                    .auth0UserId(entity.getAuth0UserId()).stripeCustomerId(entity.getStripeCustomerId())
+                    .api_key(entity.getApiKey()).build();
+            return ResponseEntity.ok(response);
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> updateProfile(Jwt jwt, UserUpdateProfileRequest request) {
+        try {
+            String sub = jwt.getClaimAsString("sub");
+            Optional<UserEntity> existing = userService.findByAuth0UserId(sub);
+            if (!existing.isPresent()) {
+                return ResponseEntity.badRequest().body(Map.of("message", "The user does not exist"));
+            }
+            UserEntity entity = existing.get();
+            entity.setFirstName(request.getFirstName());
+            entity.setLastName(request.getLastName());
+            entity.setUserName(request.getUserName());
             entity = userService.save(entity);
             UserGetUserResponse response = UserGetUserResponse.builder().userId(entity.getId()).email(entity.getEmail())
                     .emailVerified(entity.getEmailVerified()).firstName(entity.getFirstName())
