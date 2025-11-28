@@ -127,7 +127,7 @@ public class ApinexoUtils {
 
     public HttpHeaders buildHeaderRandom(HttpHeaders originalHeaders) {
         HttpHeaders newHeaders = new HttpHeaders();
-        List<String> keys = new ArrayList<>(originalHeaders.keySet());
+        List<String> keys = new ArrayList<>(originalHeaders.toSingleValueMap().keySet());
         Collections.shuffle(keys);
         for (String key : keys) {
             newHeaders.set(key, originalHeaders.getFirst(key));
