@@ -6,14 +6,16 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
-import apinexo.core.modules.auth0.request.client.Auth0GenerateTokenClientRequest;
 import apinexo.core.modules.auth0.service.Auth0Service;
 
 @Service
@@ -38,19 +40,24 @@ public class Auth0ServiceImpl extends AbstractService implements Auth0Service {
         HttpHeaders headers = utils.buildHeader();
         headers.setBearerAuth(token);
         String url = audience + "/api/v2/users?q=user_id:\"" + sub + "\"&search_engine=v3";
-        ResponseEntity<JsonNode> response = executeGetRequest(JsonNode.class, url, null, headers);
-        return response;
+        ResponseEntity<String> response = executeGetRequest(String.class, url, null, headers);
+        JsonNode json = utils.convertStrToJson(response.getBody());
+        return ResponseEntity.status(response.getStatusCode()).body(json);
     }
 
     @Override
     public ResponseEntity<JsonNode> generateToken() {
-        Auth0GenerateTokenClientRequest body = Auth0GenerateTokenClientRequest.builder().clientId(clientId)
-                .clientSecret(clientSecret).audience(audience + "/api/v2/").grantType("client_credentials").build();
         HttpHeaders headers = utils.buildHeader();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("grant_type", "client_credentials");
+        body.add("client_id", clientId);
+        body.add("client_secret", clientSecret);
+        body.add("audience", audience + "/api/v2/");
         String url = audience + "/oauth/token";
-        ResponseEntity<JsonNode> response = executePostRequest(JsonNode.class, url, utils.convertDtoToJson(body),
-                headers);
-        return response;
+        ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
+        JsonNode json = utils.convertStrToJson(response.getBody());
+        return ResponseEntity.status(response.getStatusCode()).body(json);
     }
 
     @Override
