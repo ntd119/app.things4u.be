@@ -67,8 +67,9 @@ public class Auth0ServiceImpl extends AbstractService implements Auth0Service {
         HttpHeaders headers = utils.buildHeader();
         headers.setBearerAuth(token);
         String url = audience + "/api/v2/users-by-email?email=" + email;
-        ResponseEntity<JsonNode> response = executeGetRequest(JsonNode.class, url, null, headers);
-        return response;
+        ResponseEntity<String> response = executeGetRequest(String.class, url, null, headers);
+        JsonNode json = utils.convertStrToJson(response.getBody());
+        return ResponseEntity.status(response.getStatusCode()).body(json);
     }
 
     @Override
@@ -80,8 +81,9 @@ public class Auth0ServiceImpl extends AbstractService implements Auth0Service {
         String url = "https://login.apinexo.com/api/v2/jobs/verification-email";
         Map<String, String> body = new HashMap<>();
         body.put("user_id", userId);
-        ResponseEntity<JsonNode> response = executePostRequest(JsonNode.class, url, body, headers);
-        return response;
+        ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
+        JsonNode json = utils.convertStrToJson(response.getBody());
+        return ResponseEntity.status(response.getStatusCode()).body(json);
     }
 
     @Override
