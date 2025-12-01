@@ -31,7 +31,7 @@ public class LogFacadeImpl implements LogFacade {
             Map<LocalDate, Long> errorMap = new HashMap<>();
 
             for (Object[] row : rows) {
-                LocalDate date = ((java.sql.Date) row[0]).toLocalDate();
+                LocalDate date = (LocalDate) row[0];
                 Long total = ((Number) row[1]).longValue();
                 Long errors = ((Number) row[2]).longValue();
 
