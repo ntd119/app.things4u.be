@@ -77,7 +77,7 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         headers.setBasicAuth(stripeSecret, "");
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         String url = "https://api.stripe.com/v1/subscriptions/" + subscriptionId;
-        ResponseEntity<JsonNode> response = executeDeleteRequest(JsonNode.class, url, null, headers);
+        ResponseEntity<String> response = executeDeleteRequest(String.class, url, null, headers);
         return new ResponseEntity<>(response.getBody(), response.getStatusCode());
     }
 }

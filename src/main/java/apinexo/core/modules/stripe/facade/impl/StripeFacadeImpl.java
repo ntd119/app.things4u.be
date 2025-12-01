@@ -35,7 +35,6 @@ import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.service.SubscriptionService;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -64,11 +63,10 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
     private String feServer;
 
     @Override
-    public ResponseEntity<Object> webhook(HttpServletRequest request) {
+    public ResponseEntity<Object> webhook(byte[] payload, String sigHeader) {
         try {
-            String payload = new String(request.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
-            String sigHeader = request.getHeader("Stripe-Signature");
-            Event event = Webhook.constructEvent(payload, sigHeader, stripeSecretEndpoint);
+            String payloadString = new String(payload, StandardCharsets.UTF_8);
+            Event event = Webhook.constructEvent(payloadString, sigHeader, stripeSecretEndpoint);
             switch (event.getType()) {
             case "checkout.session.completed":
                 EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();

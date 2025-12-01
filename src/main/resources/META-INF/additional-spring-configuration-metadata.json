@@ -13,5 +13,35 @@
     "name": "stripe.secret.endpoint",
     "type": "java.lang.String",
     "description": "A description for 'stripe.secret.endpoint'"
+  },
+  {
+    "name": "spring.security.cors.allowed-origins",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.security.cors.allowed-origins'"
+  },
+  {
+    "name": "spring.security.cors.allowed-methods",
+    "type": "java.lang.String",
+    "description": "A description for 'spring.security.cors.allowed-methods'"
+  },
+  {
+    "name": "auth0.client-secret",
+    "type": "java.lang.String",
+    "description": "A description for 'auth0.client-secret'"
+  },
+  {
+    "name": "auth0.audience",
+    "type": "java.lang.String",
+    "description": "A description for 'auth0.audience'"
+  },
+  {
+    "name": "openmeter.secret-token",
+    "type": "java.lang.String",
+    "description": "A description for 'openmeter.secret-token'"
+  }
+]}{
+    "name": "auth0.client-id",
+    "type": "java.lang.String",
+    "description": "A description for 'auth0.client-id'"
   }
 ]}
