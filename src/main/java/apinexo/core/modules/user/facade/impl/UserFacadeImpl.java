@@ -36,12 +36,13 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public ResponseEntity<Object> getUser(Jwt jwt) {
         try {
-            String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> existing = userService.findByAuth0UserId(sub);
+            String emailReq = jwt.getClaimAsString("email");
+            Optional<UserEntity> existing = userService.findByEmail(emailReq);
             UserEntity entity = null;
             if (existing.isPresent()) {
                 entity = existing.get();
             } else {
+                String sub = jwt.getClaimAsString("sub");
                 JsonNode user = auth0Service.getUser(sub).getBody();
                 if (Objects.isNull(user) || user.isEmpty()) {
                     return ResponseEntity.badRequest().body(new ApiException("The user does not exist"));
@@ -93,8 +94,8 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public ResponseEntity<Object> resetApiKey(Jwt jwt) {
         try {
-            String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> existing = userService.findByAuth0UserId(sub);
+            String email = jwt.getClaimAsString("email");
+            Optional<UserEntity> existing = userService.findByEmail(email);
             if (!existing.isPresent()) {
                 return ResponseEntity.badRequest().body(Map.of("message", "The user does not exist"));
             }
@@ -115,8 +116,8 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public ResponseEntity<Object> updateProfile(Jwt jwt, UserUpdateProfileRequest request) {
         try {
-            String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> existing = userService.findByAuth0UserId(sub);
+            String email = jwt.getClaimAsString("email");
+            Optional<UserEntity> existing = userService.findByEmail(email);
             if (!existing.isPresent()) {
                 return ResponseEntity.badRequest().body(Map.of("message", "The user does not exist"));
             }

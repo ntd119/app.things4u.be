@@ -8,7 +8,7 @@ import apinexo.core.modules.user.entity.UserEntity;
 
 public interface UserRepository extends JpaRepository<UserEntity, String> {
 
-    Optional<UserEntity> findByAuth0UserId(String auth0UserId);
+    Optional<UserEntity> findByEmail(String email);
 
     Optional<UserEntity> findByApiKey(String apiKey);
 

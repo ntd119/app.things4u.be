@@ -37,8 +37,8 @@ public class OpenmeterFacadeImpl extends AbstractService implements OpenmeterFac
     @Override
     public ResponseEntity<Object> omToken(Jwt jwt) {
         try {
-            String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> user = userService.findByAuth0UserId(sub);
+            String email = jwt.getClaimAsString("email");
+            Optional<UserEntity> user = userService.findByEmail(email);
             if (!user.isPresent()) {
                 return ResponseEntity.badRequest().body(new ApiException("The user does not exist"));
             }

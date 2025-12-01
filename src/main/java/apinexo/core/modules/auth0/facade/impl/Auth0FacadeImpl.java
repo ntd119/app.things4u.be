@@ -59,8 +59,8 @@ public class Auth0FacadeImpl extends AbstractService implements Auth0Facade {
     @Override
     public ResponseEntity<Object> changePassword(Jwt jwt) {
         try {
-            String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> existing = userService.findByAuth0UserId(sub);
+            String email = jwt.getClaimAsString("email");
+            Optional<UserEntity> existing = userService.findByEmail(email);
             if (!existing.isPresent()) {
                 return ResponseEntity.badRequest().body(Map.of("message", "The user does not exist"));
             }

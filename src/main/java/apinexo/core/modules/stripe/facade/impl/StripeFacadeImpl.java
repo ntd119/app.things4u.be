@@ -78,9 +78,9 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                     session = ApiResource.GSON.fromJson(rawJson, Session.class);
                 }
                 if (session != null) {
-                    String sub = session.getMetadata().get("sub");
+                    String email = session.getMetadata().get("email");
 
-                    Optional<UserEntity> userOptional = userService.findByAuth0UserId(sub);
+                    Optional<UserEntity> userOptional = userService.findByEmail(email);
 
                     if (!userOptional.isPresent()) {
                         return utils.badRequest("The user does not exist");
@@ -143,8 +143,8 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
     @Override
     public ResponseEntity<Object> createPortalSession(Jwt jwt) {
         try {
-            String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> existing = userService.findByAuth0UserId(sub);
+            String email = jwt.getClaimAsString("email");
+            Optional<UserEntity> existing = userService.findByEmail(email);
             if (existing.isEmpty()) {
                 return ResponseEntity.badRequest().body(Map.of("message", "The user does not exist"));
             }

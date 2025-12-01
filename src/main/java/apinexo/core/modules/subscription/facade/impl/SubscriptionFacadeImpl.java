@@ -75,8 +75,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     @Transactional
     public ResponseEntity<Object> changeSubscription(Jwt jwt, SubscriptionChangeSubscriptionRequest body) {
         try {
-            String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> userOptional = userService.findByAuth0UserId(sub);
+            String email = jwt.getClaimAsString("email");
+            Optional<UserEntity> userOptional = userService.findByEmail(email);
 
             if (!userOptional.isPresent()) {
                 return utils.badRequest("The user does not exist");
@@ -160,7 +160,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 }
 
                 // Add metadata
-                bodyClient.add("metadata[sub]", sub);
+                bodyClient.add("metadata[email]", email);
                 bodyClient.add("metadata[apiId]", body.getApiId());
                 bodyClient.add("metadata[planKey]", body.getPlanKey());
 
@@ -179,8 +179,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     @Override
     public ResponseEntity<Object> getSubscriptions(Jwt jwt) {
         try {
-            String sub = jwt.getClaimAsString("sub");
-            Optional<UserEntity> userOptional = userService.findByAuth0UserId(sub);
+            String email = jwt.getClaimAsString("email");
+            Optional<UserEntity> userOptional = userService.findByEmail(email);
 
             if (!userOptional.isPresent()) {
                 return utils.badRequest("The user does not exist");
