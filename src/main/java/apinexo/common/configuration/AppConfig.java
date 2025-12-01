@@ -106,7 +106,8 @@ public class AppConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(ConstantUtils.SERVER_FE, ConstantUtils.SERVER_BE));
+        config.setAllowedOrigins(List.of(ConstantUtils.SERVER_FE, ConstantUtils.SERVER_BE,
+                ConstantUtils.SERVER_FE_LOCAL, ConstantUtils.SERVER_BE_LOCAL));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
