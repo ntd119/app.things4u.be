@@ -73,9 +73,20 @@ public class UserFacadeImpl implements UserFacade {
                 // auth0_user_id
                 String auth0UserId = utils.jsonNodeAt(user, "/user_id", String.class);
 
+                // nickname
+                String userName = utils.jsonNodeAt(user, "/nickname", String.class);
+                for (int i = 0; i < 10; i++) {
+                    if (i > 0) {
+                        userName = String.format("%s%d", userName, utils.random(100, 10000));
+                    }
+                    if (userService.findByUserName(userName).isEmpty()) {
+                        break;
+                    }
+                }
+
                 entity = UserEntity.builder().id(userId).apiKey(userService.generateApiKey()).email(email)
                         .emailVerified(emailVerified).firstName(firstName).lastName(lastName).picture(picture)
-                        .auth0UserId(auth0UserId).build();
+                        .auth0UserId(auth0UserId).userName(userName).build();
                 entity = userService.save(entity);
 
             }

@@ -50,6 +50,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Optional<UserEntity> findByUserName(String userName) {
+        return repository.findByUserName(userName);
+    }
+
+    @Override
     public Optional<UserEntity> findByUserNameAndIdNot(String userName, String id) {
         return repository.findByUserNameAndIdNot(userName, id);
     }
