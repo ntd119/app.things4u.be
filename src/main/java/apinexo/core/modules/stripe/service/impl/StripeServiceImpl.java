@@ -85,7 +85,7 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     }
 
     @Override
-    public ResponseEntity<Object> reportUsage(String subscriptionId, long quantity) {
+    public ResponseEntity<Object> reportUsage(String subscriptionItemId, long quantity) {
         HttpHeaders headers = utils.buildHeader();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(stripeSecret, "");
@@ -93,7 +93,7 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("quantity", String.valueOf(quantity));
         body.add("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
         body.add("action", "set"); // set/increment
-        String url = "https://api.stripe.com/v1/subscription_items/" + subscriptionId + "/usage_records";
+        String url = "https://api.stripe.com/v1/subscription_items/" + subscriptionItemId + "/usage_records";
         ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
         JsonNode json = utils.convertStrToJson(response.getBody());
         return ResponseEntity.status(response.getStatusCode()).body(json);
