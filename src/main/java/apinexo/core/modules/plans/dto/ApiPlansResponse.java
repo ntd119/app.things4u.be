@@ -1,7 +1,5 @@
 package apinexo.core.modules.plans.dto;
 
-import java.util.List;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -43,7 +41,7 @@ public class ApiPlansResponse {
     private Boolean isFree;
 
     @JsonProperty("overage_prices")
-    private List<String> overagePrices;
+    private Double overagePrices;
 
     @JsonProperty("metadata")
     @JsonRawValue
