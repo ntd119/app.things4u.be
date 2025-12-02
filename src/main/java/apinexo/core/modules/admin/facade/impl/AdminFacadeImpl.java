@@ -62,7 +62,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                         id = utils.generateRandomHexString(24);
                     } else {
                         MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-                        body.add("unit_amount", planDTO.getPrice());
+                        body.add("unit_amount", planDTO.getPrice() * 100);
                         body.add("product_data[name]", request.getName() + " " + planDTO.getNickname());
                         body.add("nickname", planDTO.getNickname());
                         body.add("metadata[api_id]", request.getId());

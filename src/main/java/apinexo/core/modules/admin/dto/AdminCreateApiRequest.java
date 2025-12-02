@@ -49,7 +49,7 @@ public class AdminCreateApiRequest {
         private Boolean isFree;
 
         @JsonProperty("overage_prices")
-        private List<Object> overagePrices;
+        private Double overagePrices;
 
         private Metadata metadata;
 
