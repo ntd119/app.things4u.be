@@ -91,7 +91,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
                 return false;
             }
         } else {
-            if (quotaUsed >= quota) {
+            if (quotaUsed > quota) {
                 long overageUsed = (quotaUsed - quota);
                 if (overageUsed % 50 == 0) {
                     stripeService.reportUsage(subscriptionEntity.getId(), overageUsed);
