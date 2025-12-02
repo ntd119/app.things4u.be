@@ -17,6 +17,9 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.stripe.Stripe;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
+import com.stripe.model.Subscription;
+import com.stripe.model.SubscriptionItem;
+import com.stripe.model.SubscriptionItemCollection;
 import com.stripe.model.checkout.Session;
 import com.stripe.net.ApiResource;
 import com.stripe.net.Webhook;
@@ -123,6 +126,13 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                         // delete old log
                         logService.deleteBySubscriptionId(subscriptionEntity.getId());
                     }
+
+                    Subscription subscription = Subscription.retrieve(subscriptionId);
+                    SubscriptionItemCollection items = subscription.getItems();
+                    for (SubscriptionItem item : items.getData()) {
+                        String subscriptionItemId = item.getId();
+                    }
+
                     SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity,
                             plansEntity);
                     ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
