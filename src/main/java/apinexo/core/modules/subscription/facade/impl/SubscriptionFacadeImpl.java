@@ -17,6 +17,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.stripe.exception.StripeException;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
@@ -207,24 +208,30 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     @Transactional
     @Override
     public ResponseEntity<Object> cancelSubscription(Jwt jwt, String subscriptionId) {
-        Optional<SubscriptionEntity> subscriptionOptional = subscriptionService.findById(subscriptionId);
-        if (subscriptionOptional.isPresent()) {
-            SubscriptionEntity entity = subscriptionOptional.get();
-            if (!entity.isFree()) {
-                // cancel subscription from stripe
-                stripeService.cancelSubscription(subscriptionId);
-            }
+        try {
+            Optional<SubscriptionEntity> subscriptionOptional = subscriptionService.findById(subscriptionId);
+            if (subscriptionOptional.isPresent()) {
+                SubscriptionEntity entity = subscriptionOptional.get();
+                if (!entity.isFree()) {
+                    // cancel subscription from stripe
+                    stripeService.cancelSubscription(subscriptionId);
+                    // stripeService.createMeteredUsageInvoice(entity.getUser().getStripeCustomerId(),
+                    // subscriptionId);
+                }
 
-            // delete subscribe
-            subscriptionService.delete(entity);
-            // delete log
-            logService.deleteBySubscriptionId(entity.getId());
-            ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
-            SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse.builder()
-                    .id(entity.getId()).plan(plans).build();
-            return ResponseEntity.ok(response);
+                // delete subscribe
+                subscriptionService.delete(entity);
+                // delete log
+                logService.deleteBySubscriptionId(entity.getId());
+                ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
+                SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
+                        .builder().id(entity.getId()).plan(plans).build();
+                return ResponseEntity.ok(response);
+            }
+            return utils.badRequest("The subscription does not exist");
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
         }
-        return utils.badRequest("The subscription does not exist");
     }
 
     @Override
