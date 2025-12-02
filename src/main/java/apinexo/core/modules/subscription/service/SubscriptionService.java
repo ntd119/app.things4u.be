@@ -12,7 +12,8 @@ public interface SubscriptionService {
 
     SubscriptionEntity save(SubscriptionEntity entity);
 
-    SubscriptionEntity save(String subscriptionId, UserEntity userEntity, ApiEntity apiEntity, PlansEntity plansEntity);
+    SubscriptionEntity save(String subscriptionId, UserEntity userEntity, ApiEntity apiEntity, PlansEntity plansEntity,
+            String subscriptionItemId);
 
     void delete(SubscriptionEntity entity);
 

@@ -108,8 +108,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 if (subscriptionOptional.isPresent()) {
                     subscriptionService.delete(subscriptionOptional.get());
                 }
-                SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity,
-                        plansEntity);
+                SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity,
+                        null);
                 ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
                 SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
                         .builder().id(entity.getId()).plan(plans).build();

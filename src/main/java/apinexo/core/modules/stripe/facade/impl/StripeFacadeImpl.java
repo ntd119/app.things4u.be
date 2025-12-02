@@ -127,14 +127,19 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                         logService.deleteBySubscriptionId(subscriptionEntity.getId());
                     }
 
+                    Stripe.apiKey = stripeSecret;
                     Subscription subscription = Subscription.retrieve(subscriptionId);
                     SubscriptionItemCollection items = subscription.getItems();
+                    String subscriptionItemId = null;
                     for (SubscriptionItem item : items.getData()) {
-                        String subscriptionItemId = item.getId();
+                        String usageType = item.getPrice().getRecurring().getUsageType();
+                        if ("metered".equals(usageType)) {
+                            subscriptionItemId = item.getId();
+                        }
                     }
 
                     SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity,
-                            plansEntity);
+                            plansEntity, subscriptionItemId);
                     ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
                     SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
                             .builder().id(entity.getId()).plan(plans).build();

@@ -89,6 +89,9 @@ public class SubscriptionEntity {
     @Column(name = "price")
     private Double price;
 
+    @Column(name = "subscription_item_id")
+    private String subscriptionItemId;
+
     @PrePersist
     public void prePersist() {
         active = true;

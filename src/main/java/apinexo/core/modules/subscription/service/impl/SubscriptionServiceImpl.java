@@ -36,7 +36,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionEntity save(String subscriptionId, UserEntity userEntity, ApiEntity apiEntity,
-            PlansEntity plansEntity) {
+            PlansEntity plansEntity, String subscriptionItemId) {
         LocalDateTime fromDate = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
         LocalDateTime toDate = fromDate.plusMonths(1);
         JsonNode metadata = utils.convertStrToJson(plansEntity.getMetadata());
@@ -49,9 +49,8 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 .rateLimitPeriod(utils.jsonNodeAt(metadata, "/rate_limit_period", String.class))
                 .isSoftLimit(utils.jsonNodeAt(metadata, "/is_soft_limit", Boolean.class))
                 .isRateLimit(utils.jsonNodeAt(metadata, "/is_rate_limit", Boolean.class))
-                .overagePrices(plansEntity.getOveragePrices())
-                .price(plansEntity.getPrice())
-                .isFree(plansEntity.getIsFree()).build();
+                .overagePrices(plansEntity.getOveragePrices()).price(plansEntity.getPrice())
+                .isFree(plansEntity.getIsFree()).subscriptionItemId(subscriptionItemId).build();
         subscribe.setSubscribedAt(LocalDateTime.now());
 
         return subscriptionRepository.save(subscribe);
