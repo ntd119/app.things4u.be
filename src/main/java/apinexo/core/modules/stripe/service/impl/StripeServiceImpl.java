@@ -80,4 +80,18 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         ResponseEntity<String> response = executeDeleteRequest(String.class, url, null, headers);
         return new ResponseEntity<>(response.getBody(), response.getStatusCode());
     }
+
+    @Override
+    public ResponseEntity<Object> reportUsage(String subscriptionId, long quantity) {
+        HttpHeaders headers = utils.buildHeader();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBasicAuth(stripeSecret, "");
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("quantity", String.valueOf(quantity));
+        body.add("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
+        body.add("action", "set"); // set/increment
+        String url = "https://api.stripe.com/v1/subscription_items/" + subscriptionId + "/usage_records";
+        ResponseEntity<String> response = executeDeleteRequest(String.class, url, null, headers);
+        return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+    }
 }

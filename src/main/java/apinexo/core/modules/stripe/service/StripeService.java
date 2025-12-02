@@ -12,4 +12,6 @@ public interface StripeService {
     JsonNode createPriceHardLimit(MultiValueMap<String, Object> body);
 
     ResponseEntity<Object> cancelSubscription(String subscriptionId);
+
+    ResponseEntity<Object> reportUsage(String subscriptionId, long quantity);
 }
