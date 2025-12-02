@@ -46,7 +46,8 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("tiers[1][up_to]", "inf");
         body.add("tiers[1][unit_amount_decimal]", unitAmount.toPlainString());
         String url = "https://api.stripe.com/v1/prices";
-        return executePostRequest(JsonNode.class, url, body, headers).getBody();
+        ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
+        return utils.convertStrToJson(response.getBody());
     }
 
     @Override
@@ -68,7 +69,8 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("currency", "usd");
         body.add("recurring[interval]", "month");
         String url = "https://api.stripe.com/v1/prices";
-        return executePostRequest(JsonNode.class, url, body, headers).getBody();
+        ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
+        return utils.convertStrToJson(response.getBody());
     }
 
     @Override
@@ -78,7 +80,8 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         String url = "https://api.stripe.com/v1/subscriptions/" + subscriptionId;
         ResponseEntity<String> response = executeDeleteRequest(String.class, url, null, headers);
-        return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+        JsonNode json = utils.convertStrToJson(response.getBody());
+        return ResponseEntity.status(response.getStatusCode()).body(json);
     }
 
     @Override
@@ -91,7 +94,8 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
         body.add("action", "set"); // set/increment
         String url = "https://api.stripe.com/v1/subscription_items/" + subscriptionId + "/usage_records";
-        ResponseEntity<String> response = executeDeleteRequest(String.class, url, null, headers);
-        return new ResponseEntity<>(response.getBody(), response.getStatusCode());
+        ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
+        JsonNode json = utils.convertStrToJson(response.getBody());
+        return ResponseEntity.status(response.getStatusCode()).body(json);
     }
 }
