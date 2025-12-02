@@ -84,7 +84,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                     PlansEntity plansEntity = PlansEntity.builder().id(id).nickname(planDTO.getNickname())
                             .key(planDTO.getKey()).upTo(planDTO.getUpTo()).period(planDTO.getPeriod())
                             .currency(planDTO.getCurrency()).active(planDTO.getActive()).price(planDTO.getPrice())
-                            .isFree(planDTO.getIsFree()).metadata(metadata.toPrettyString()).api(apiEntity).build();
+                            .isFree(planDTO.getIsFree()).metadata(metadata.toPrettyString()).api(apiEntity)
+                            .overagePrices(planDTO.getOveragePrices()).build();
                     plans.add(plansEntity);
                 }
                 apiEntity.setPlans(plans);
