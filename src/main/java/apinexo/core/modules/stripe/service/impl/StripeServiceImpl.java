@@ -43,7 +43,7 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("currency", "usd");
         body.add("recurring[interval]", "month");
         body.add("recurring[usage_type]", "metered");
-        body.add("billing_scheme", "tiered");
+        body.add("billing_scheme", "per_unit");
         body.add("tiers_mode", "graduated");
         body.add("product_data[name]", apiName);
         body.add("tiers[0][up_to]", upTo);
