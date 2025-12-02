@@ -3,6 +3,7 @@ package apinexo.core.modules.admin.dto;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -43,6 +44,7 @@ public class AdminPlanResponse {
     private List<String> overagePrices;
 
     @JsonProperty("metadata")
+    @JsonRawValue
     private Metadata metadata;
 
     @Data

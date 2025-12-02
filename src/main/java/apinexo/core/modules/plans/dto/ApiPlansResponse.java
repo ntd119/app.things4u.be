@@ -3,6 +3,7 @@ package apinexo.core.modules.plans.dto;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import lombok.AllArgsConstructor;
@@ -45,5 +46,6 @@ public class ApiPlansResponse {
     private List<String> overagePrices;
 
     @JsonProperty("metadata")
+    @JsonRawValue
     private JsonNode metadata;
 }
