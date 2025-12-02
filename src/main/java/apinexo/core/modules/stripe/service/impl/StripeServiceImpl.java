@@ -2,6 +2,8 @@ package apinexo.core.modules.stripe.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,6 +15,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
+import com.stripe.model.Subscription;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
@@ -74,14 +79,15 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     }
 
     @Override
-    public ResponseEntity<Object> cancelSubscription(String subscriptionId) {
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(stripeSecret, "");
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        String url = "https://api.stripe.com/v1/subscriptions/" + subscriptionId;
-        ResponseEntity<String> response = executeDeleteRequest(String.class, url, null, headers);
-        JsonNode json = utils.convertStrToJson(response.getBody());
-        return ResponseEntity.status(response.getStatusCode()).body(json);
+    public ResponseEntity<Object> cancelSubscription(String subscriptionId) throws StripeException {
+        Stripe.apiKey = stripeSecret;
+        Subscription sub = Subscription.retrieve(subscriptionId);
+        Map<String, Object> params = new HashMap<>();
+        params.put("invoice_now", true);
+        params.put("prorate", true);
+        params.put("cancellation_details", Map.of("comment", "User cancelled from backend"));
+        Subscription cancelled = sub.cancel(params);
+        return ResponseEntity.ok(cancelled);
     }
 
     @Override
@@ -94,6 +100,20 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         body.add("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
         body.add("action", "set"); // set/increment
         String url = "https://api.stripe.com/v1/subscription_items/" + subscriptionItemId + "/usage_records";
+        ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
+        JsonNode json = utils.convertStrToJson(response.getBody());
+        return ResponseEntity.status(response.getStatusCode()).body(json);
+    }
+
+    public ResponseEntity<Object> createMeteredUsageInvoice(String customerId, String subscriptionId) {
+        HttpHeaders headers = utils.buildHeader();
+        headers.setBasicAuth(stripeSecret, "");
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
+        body.add("customer", customerId);
+        body.add("subscription", subscriptionId);
+        body.add("auto_advance", "true");
+        String url = "https://api.stripe.com/v1/invoices";
         ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
         JsonNode json = utils.convertStrToJson(response.getBody());
         return ResponseEntity.status(response.getStatusCode()).body(json);

@@ -4,6 +4,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.stripe.exception.StripeException;
 
 public interface StripeService {
 
@@ -11,7 +12,9 @@ public interface StripeService {
 
     JsonNode createPriceHardLimit(MultiValueMap<String, Object> body);
 
-    ResponseEntity<Object> cancelSubscription(String subscriptionId);
+    ResponseEntity<Object> cancelSubscription(String subscriptionId) throws StripeException;
 
     ResponseEntity<Object> reportUsage(String subscriptionId, long quantity);
+
+    ResponseEntity<Object> createMeteredUsageInvoice(String customerId, String subscriptionId);
 }
