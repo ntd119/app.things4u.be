@@ -127,14 +127,17 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                         logService.deleteBySubscriptionId(subscriptionEntity.getId());
                     }
 
-                    Stripe.apiKey = stripeSecret;
-                    Subscription subscription = Subscription.retrieve(subscriptionId);
-                    SubscriptionItemCollection items = subscription.getItems();
+                    boolean isSoftLimit = Boolean.valueOf(session.getMetadata().get("isSoftLimit"));
                     String subscriptionItemId = null;
-                    for (SubscriptionItem item : items.getData()) {
-                        String usageType = item.getPrice().getRecurring().getUsageType();
-                        if ("metered".equals(usageType)) {
-                            subscriptionItemId = item.getId();
+                    if (isSoftLimit) {
+                        Stripe.apiKey = stripeSecret;
+                        Subscription subscription = Subscription.retrieve(subscriptionId);
+                        SubscriptionItemCollection items = subscription.getItems();
+                        for (SubscriptionItem item : items.getData()) {
+                            String usageType = item.getPrice().getRecurring().getUsageType();
+                            if ("metered".equals(usageType)) {
+                                subscriptionItemId = item.getId();
+                            }
                         }
                     }
 

@@ -160,6 +160,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 }
 
                 // Add metadata
+                bodyClient.add("metadata[isSoftLimit]", String.valueOf(isSoftLimit));
                 bodyClient.add("metadata[email]", email);
                 bodyClient.add("metadata[apiId]", body.getApiId());
                 bodyClient.add("metadata[planKey]", body.getPlanKey());
