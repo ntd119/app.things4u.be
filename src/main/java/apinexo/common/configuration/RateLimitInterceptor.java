@@ -18,6 +18,7 @@ import apinexo.common.utils.ApinexoUtils;
 import apinexo.common.utils.RateLimitEnum;
 import apinexo.core.modules.logs.entity.LogEntity;
 import apinexo.core.modules.logs.service.LogService;
+import apinexo.core.modules.stripe.service.StripeService;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.service.SubscriptionService;
 import apinexo.core.modules.user.entity.UserEntity;
@@ -42,6 +43,9 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
     @Autowired
     private SubscriptionService subscriptionService;
+
+    @Autowired
+    private StripeService stripeService;
 
     @Autowired
     private ApinexoUtils utils;
@@ -78,13 +82,20 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         subscriptionService.updateBillingPeriod(subscriptionEntity);
 
         // check quota
-        boolean isSoftLimit =  subscriptionEntity.getIsSoftLimit();
+        boolean isSoftLimit = subscriptionEntity.getIsSoftLimit();
+        long quota = subscriptionEntity.getQuota();
+        long quotaUsed = subscriptionEntity.getQuotaUsed();
         if (!isSoftLimit) {
-            long quota = subscriptionEntity.getQuota();
-            long quotaUsed = subscriptionEntity.getQuotaUsed();
             if (quotaUsed >= quota) {
                 exceededQuotaError(response, subscriptionEntity.getCurrentPlan(), subscriptionEntity.getApi().getId());
                 return false;
+            }
+        } else {
+            if (quotaUsed >= quota) {
+                long overageUsed = (quotaUsed - quota);
+                if (overageUsed % 50 == 0) {
+                    stripeService.reportUsage(subscriptionEntity.getId(), overageUsed);
+                }
             }
         }
 
