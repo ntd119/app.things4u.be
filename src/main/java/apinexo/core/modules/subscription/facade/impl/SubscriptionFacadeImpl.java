@@ -214,8 +214,6 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 if (!entity.isFree()) {
                     // cancel subscription from stripe
                     stripeService.cancelSubscription(subscriptionId);
-                    // stripeService.createMeteredUsageInvoice(entity.getUser().getStripeCustomerId(),
-                    // subscriptionId);
                 }
 
                 // delete subscribe

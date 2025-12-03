@@ -95,25 +95,13 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         HttpHeaders headers = utils.buildHeader();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(stripeSecret, "");
+
         MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
         body.add("quantity", String.valueOf(quantity));
         body.add("timestamp", String.valueOf(System.currentTimeMillis() / 1000));
-        body.add("action", "set"); // set/increment
-        String url = "https://api.stripe.com/v1/subscription_items/" + subscriptionItemId + "/usage_records";
-        ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
-        JsonNode json = utils.convertStrToJson(response.getBody());
-        return ResponseEntity.status(response.getStatusCode()).body(json);
-    }
+        body.add("action", "increment");
 
-    public ResponseEntity<Object> createMeteredUsageInvoice(String customerId, String subscriptionId) {
-        HttpHeaders headers = utils.buildHeader();
-        headers.setBasicAuth(stripeSecret, "");
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        MultiValueMap<String, String> body = new LinkedMultiValueMap<>();
-        body.add("customer", customerId);
-        body.add("subscription", subscriptionId);
-        body.add("auto_advance", "true");
-        String url = "https://api.stripe.com/v1/invoices";
+        String url = "https://api.stripe.com/v1/subscription_items/" + subscriptionItemId + "/usage_records";
         ResponseEntity<String> response = executePostRequest(String.class, url, body, headers);
         JsonNode json = utils.convertStrToJson(response.getBody());
         return ResponseEntity.status(response.getStatusCode()).body(json);

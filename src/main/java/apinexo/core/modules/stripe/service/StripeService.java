@@ -15,6 +15,4 @@ public interface StripeService {
     ResponseEntity<Object> cancelSubscription(String subscriptionId) throws StripeException;
 
     ResponseEntity<Object> reportUsage(String subscriptionId, long quantity);
-
-    ResponseEntity<Object> createMeteredUsageInvoice(String customerId, String subscriptionId);
 }
