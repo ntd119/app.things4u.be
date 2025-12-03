@@ -12,7 +12,7 @@ public interface StripeService {
 
     JsonNode createPriceHardLimit(MultiValueMap<String, Object> body);
 
-    ResponseEntity<Object> cancelSubscription(String subscriptionId) throws StripeException;
+    ResponseEntity<Object> cancelSubscription(String subscriptionId, String customerId, String subscriptionItemId) throws StripeException;
 
     ResponseEntity<Object> reportUsage(String subscriptionId, long quantity);
 }

@@ -2,6 +2,9 @@ package apinexo.core.modules.stripe.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.Instant;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -13,9 +16,13 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Invoice;
+import com.stripe.model.InvoiceItem;
+import com.stripe.model.Subscription;
 import com.stripe.param.InvoiceCreateParams;
+import com.stripe.param.InvoiceItemCreateParams;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
@@ -77,19 +84,72 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     }
 
     @Override
-    public ResponseEntity<Object> cancelSubscription(String subscriptionId, String customerId) throws StripeException {
-        InvoiceCreateParams invoiceParams = InvoiceCreateParams.builder().setCustomer(customerId)
-                .setSubscription(subscriptionId).setAutoAdvance(true).build();
-        Invoice invoice = Invoice.create(invoiceParams);
-        invoice = invoice.finalizeInvoice();
+    public ResponseEntity<Object> cancelSubscription(String subscriptionId, String customerId,
+            String subscriptionItemId) throws StripeException {
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.setBasicAuth(stripeSecret, "");
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-        String url = "https://api.stripe.com/v1/subscriptions/" + subscriptionId;
-        ResponseEntity<String> response = executeDeleteRequest(String.class, url, null, headers);
-        JsonNode json = utils.convertStrToJson(response.getBody());
-        return ResponseEntity.status(response.getStatusCode()).body(json);
+        Stripe.apiKey = stripeSecret;
+
+        // -----------------------------------------
+        // 1) Tính toán số tiền usage
+        // -----------------------------------------
+        long billableUsage = 15000;
+        long totalCents = Math.round(billableUsage * 0.003 * 100); // Stripe tính bằng cents
+
+        if (totalCents <= 0) {
+            // Không có usage để charge, chỉ hủy subscription
+            Subscription sub = Subscription.retrieve(subscriptionId);
+            sub.cancel();
+
+            Map<String, Object> result = Map.of(
+                    "status", "subscription_cancelled",
+                    "message", "No usage to bill"
+            );
+            return ResponseEntity.ok(result);
+        }
+
+        // -----------------------------------------
+        // 2) Tạo invoice item gắn subscription
+        // -----------------------------------------
+        InvoiceItemCreateParams itemParams = InvoiceItemCreateParams.builder()
+                .setCustomer(customerId)
+                .setSubscription(subscriptionId)
+                .setCurrency("usd")
+                .setAmount(totalCents)
+                .setDescription("Final usage charge (" + billableUsage + " units)")
+                .build();
+
+        InvoiceItem.create(itemParams);
+
+        // -----------------------------------------
+        // 3) Tạo invoice thật + finalize
+        // -----------------------------------------
+        InvoiceCreateParams createParams = InvoiceCreateParams.builder()
+                .setCustomer(customerId)
+                .setSubscription(subscriptionId)
+                .setAutoAdvance(true)
+                .build();
+
+        Invoice finalInvoice = Invoice.create(createParams);
+        finalInvoice = finalInvoice.finalizeInvoice();
+
+        // -----------------------------------------
+        // 4) Hủy subscription
+        // -----------------------------------------
+        Subscription sub = Subscription.retrieve(subscriptionId);
+        sub.cancel();
+
+        // -----------------------------------------
+        // 5) Trả về thông tin invoice
+        // -----------------------------------------
+        Map<String, Object> response = Map.of(
+                "status", "success",
+                "invoice_id", finalInvoice.getId(),
+                "invoice_url", finalInvoice.getHostedInvoiceUrl(),
+                "invoice_total_usd", finalInvoice.getAmountDue() / 100.0,
+                "message", "Subscription cancelled and final usage invoice created."
+        );
+
+        return ResponseEntity.ok(response);
     }
 
     @Override
