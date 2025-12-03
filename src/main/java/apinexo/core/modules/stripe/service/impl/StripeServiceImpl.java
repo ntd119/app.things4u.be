@@ -2,9 +2,6 @@ package apinexo.core.modules.stripe.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.time.Instant;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -86,71 +83,23 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     @Override
     public ResponseEntity<Object> cancelSubscription(String subscriptionId, String customerId,
             String subscriptionItemId) throws StripeException {
-
         Stripe.apiKey = stripeSecret;
-
-        // -----------------------------------------
-        // 1) Tính toán số tiền usage
-        // -----------------------------------------
         long billableUsage = 15000;
-        long totalCents = Math.round(billableUsage * 0.003 * 100); // Stripe tính bằng cents
-
-        if (totalCents <= 0) {
-            // Không có usage để charge, chỉ hủy subscription
-            Subscription sub = Subscription.retrieve(subscriptionId);
-            sub.cancel();
-
-            Map<String, Object> result = Map.of(
-                    "status", "subscription_cancelled",
-                    "message", "No usage to bill"
-            );
-            return ResponseEntity.ok(result);
+        long totalCents = Math.round(billableUsage * 0.003 * 100);
+        if (totalCents > 0) {
+            InvoiceItemCreateParams itemParams = InvoiceItemCreateParams.builder().setCustomer(customerId)
+                    .setSubscription(subscriptionId).setCurrency("usd").setAmount(totalCents)
+                    .setDescription("Final usage charge (" + billableUsage + " units)").build();
+            InvoiceItem.create(itemParams);
+            InvoiceCreateParams createParams = InvoiceCreateParams.builder().setCustomer(customerId)
+                    .setSubscription(subscriptionId).setAutoAdvance(true).build();
+            Invoice finalInvoice = Invoice.create(createParams);
+            finalInvoice = finalInvoice.finalizeInvoice();
+            finalInvoice.pay();
         }
-
-        // -----------------------------------------
-        // 2) Tạo invoice item gắn subscription
-        // -----------------------------------------
-        InvoiceItemCreateParams itemParams = InvoiceItemCreateParams.builder()
-                .setCustomer(customerId)
-                .setSubscription(subscriptionId)
-                .setCurrency("usd")
-                .setAmount(totalCents)
-                .setDescription("Final usage charge (" + billableUsage + " units)")
-                .build();
-
-        InvoiceItem.create(itemParams);
-
-        // -----------------------------------------
-        // 3) Tạo invoice thật + finalize
-        // -----------------------------------------
-        InvoiceCreateParams createParams = InvoiceCreateParams.builder()
-                .setCustomer(customerId)
-                .setSubscription(subscriptionId)
-                .setAutoAdvance(true)
-                .build();
-
-        Invoice finalInvoice = Invoice.create(createParams);
-        finalInvoice = finalInvoice.finalizeInvoice();
-        Invoice paidInvoice = finalInvoice.pay();
-
-        // -----------------------------------------
-        // 4) Hủy subscription
-        // -----------------------------------------
         Subscription sub = Subscription.retrieve(subscriptionId);
-        sub.cancel();
-
-        // -----------------------------------------
-        // 5) Trả về thông tin invoice
-        // -----------------------------------------
-        Map<String, Object> response = Map.of(
-                "status", "success",
-                "invoice_id", finalInvoice.getId(),
-                "invoice_url", finalInvoice.getHostedInvoiceUrl(),
-                "invoice_total_usd", finalInvoice.getAmountDue() / 100.0,
-                "message", "Subscription cancelled and final usage invoice created."
-        );
-
-        return ResponseEntity.ok(response);
+        sub = sub.cancel();
+        return ResponseEntity.ok(sub);
     }
 
     @Override
