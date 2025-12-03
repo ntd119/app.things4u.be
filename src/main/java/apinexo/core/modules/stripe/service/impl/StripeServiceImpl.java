@@ -118,4 +118,15 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         JsonNode json = utils.convertStrToJson(response.getBody());
         return ResponseEntity.status(response.getStatusCode()).body(json);
     }
+
+    @Override
+    public ResponseEntity<Object> usageRecordSummaries(String subscriptionItemId) {
+        HttpHeaders headers = utils.buildHeader();
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        headers.setBasicAuth(stripeSecret, "");
+        String url = "https://api.stripe.com/v1/subscription_items/" + subscriptionItemId + "/usage_record_summaries";
+        ResponseEntity<String> response = executeGetRequest(String.class, url, headers);
+        JsonNode json = utils.convertStrToJson(response.getBody());
+        return ResponseEntity.status(response.getStatusCode()).body(json);
+    }
 }
