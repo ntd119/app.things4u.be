@@ -2,8 +2,6 @@ package apinexo.core.modules.stripe.service.impl;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,12 +13,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Customer;
 import com.stripe.model.Invoice;
-import com.stripe.model.InvoiceCollection;
-import com.stripe.model.Subscription;
+import com.stripe.param.InvoiceCreateParams;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
@@ -82,19 +77,19 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     }
 
     @Override
-    public ResponseEntity<Object> cancelSubscription(String subscriptionId) throws StripeException {
-        Stripe.apiKey = stripeSecret;
-        Subscription sub = Subscription.retrieve(subscriptionId);
-        Map<String, Object> params = new HashMap<>();
-        params.put("invoice_now", true);
-        params.put("prorate", true);
-        params.put("cancellation_details", Map.of("comment", "User cancelled from backend"));
-        Subscription cancelled = sub.cancel(params);
-        String invoiceId = cancelled.getLatestInvoice();
-        Invoice invoice = Invoice.retrieve(invoiceId);
-        Invoice finalized = invoice.finalizeInvoice();
-        Invoice paid = finalized.pay();
-        return ResponseEntity.ok(paid);
+    public ResponseEntity<Object> cancelSubscription(String subscriptionId, String customerId) throws StripeException {
+        InvoiceCreateParams invoiceParams = InvoiceCreateParams.builder().setCustomer(customerId)
+                .setSubscription(subscriptionId).setAutoAdvance(true).build();
+        Invoice invoice = Invoice.create(invoiceParams);
+        invoice = invoice.finalizeInvoice();
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setBasicAuth(stripeSecret, "");
+        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+        String url = "https://api.stripe.com/v1/subscriptions/" + subscriptionId;
+        ResponseEntity<String> response = executeDeleteRequest(String.class, url, null, headers);
+        JsonNode json = utils.convertStrToJson(response.getBody());
+        return ResponseEntity.status(response.getStatusCode()).body(json);
     }
 
     @Override
