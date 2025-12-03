@@ -17,6 +17,9 @@ import org.springframework.util.MultiValueMap;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
+import com.stripe.model.Customer;
+import com.stripe.model.Invoice;
+import com.stripe.model.InvoiceCollection;
 import com.stripe.model.Subscription;
 
 import apinexo.common.dtos.AbstractService;
@@ -87,7 +90,11 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
         params.put("prorate", true);
         params.put("cancellation_details", Map.of("comment", "User cancelled from backend"));
         Subscription cancelled = sub.cancel(params);
-        return ResponseEntity.ok(cancelled);
+        String invoiceId = cancelled.getLatestInvoice();
+        Invoice invoice = Invoice.retrieve(invoiceId);
+        Invoice finalized = invoice.finalizeInvoice();
+        Invoice paid = finalized.pay();
+        return ResponseEntity.ok(paid);
     }
 
     @Override
