@@ -131,6 +131,7 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
 
         Invoice finalInvoice = Invoice.create(createParams);
         finalInvoice = finalInvoice.finalizeInvoice();
+        Invoice paidInvoice = finalInvoice.pay();
 
         // -----------------------------------------
         // 4) Hủy subscription
