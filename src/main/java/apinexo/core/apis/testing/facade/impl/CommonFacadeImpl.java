@@ -26,10 +26,10 @@ public class CommonFacadeImpl extends AbstractService implements CommonFacade {
             headers.setContentType(MediaType.APPLICATION_JSON);
 
             if (method.equals("GET")) {
-                return executeGetRequest(JsonNode.class, url, headers);
+                return executeGetRequest(String.class, url, headers);
             }
             if (method.equals("POST")) {
-                return executePostRequest(JsonNode.class, url, utils.convertDtoToJson(body), headers);
+                return executePostRequest(String.class, url, utils.convertDtoToJson(body), headers);
             }
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
         } catch (HttpClientErrorException ex) {
