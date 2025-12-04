@@ -6,7 +6,7 @@ info:
 servers:
   - url: http://localhost:8080/zillow
 paths:
-  /search:
+  /properties/auto-complete:
     get:
       summary: Job Search
       description: >-
@@ -18,7 +18,7 @@ paths:
           required: true
           schema:
             type: string
-            example: 'developer jobs in chicago'
+            example: 'Houston'
           description: >-
             Free-form jobs search query.  
               It is highly recommended to include job title and location as part of the query, see query examples below.  
