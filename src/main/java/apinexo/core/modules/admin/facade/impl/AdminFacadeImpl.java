@@ -51,7 +51,6 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     public ResponseEntity<Object> createApi(AdminCreateApiRequest request) {
         try {
             Optional<ApiEntity> optional = apiService.findbyId(request.getId());
-            // if (CollectionUtils.isEmpty(plansEntities)) {
             ApiEntity apiEntity = null;
             if (optional.isPresent()) {
                 apiEntity = optional.get();
