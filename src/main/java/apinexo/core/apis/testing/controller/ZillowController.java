@@ -17,13 +17,14 @@ public class ZillowController {
 
     private final CommonFacade facade;
 
+    private final String BASE_URL = "http://45.63.16.213:8080/rapidapi/zillow/com";
+
     @RequestMapping(value = "/**", method = { RequestMethod.GET, RequestMethod.POST })
     public ResponseEntity<?> handleDynamicApi(HttpServletRequest request, @RequestBody(required = false) String body) {
         String path = request.getRequestURI();
         String method = request.getMethod();
         String query = request.getQueryString();
-        String baseUrl = "http://45.63.16.213:8080/rapidapi/zillow/com";
-        String url = baseUrl + path.replace("/zillow", "");
+        String url = BASE_URL + path.replace("/zillow", "");
         if (query != null) {
             url += "?" + query;
         }
