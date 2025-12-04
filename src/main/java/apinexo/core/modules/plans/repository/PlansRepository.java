@@ -10,4 +10,5 @@ public interface PlansRepository extends JpaRepository<PlansEntity, String> {
 
     List<PlansEntity> findByApi_Id(String apiId);
 
+    PlansEntity findByApi_IdAndKey(String apiId, String key);
 }

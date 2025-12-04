@@ -7,4 +7,6 @@ import apinexo.core.modules.plans.entity.PlansEntity;
 public interface PlansService {
 
     List<PlansEntity> findByApiId(String apiId);
+
+    PlansEntity findByApi_IdAndKey(String apiId, String key);
 }

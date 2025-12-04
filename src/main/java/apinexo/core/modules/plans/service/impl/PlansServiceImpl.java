@@ -19,4 +19,9 @@ public class PlansServiceImpl implements PlansService {
     public List<PlansEntity> findByApiId(String apiId) {
         return plansRepository.findByApi_Id(apiId);
     }
+
+    @Override
+    public PlansEntity findByApi_IdAndKey(String apiId, String key) {
+        return plansRepository.findByApi_IdAndKey(apiId, key);
+    }
 }

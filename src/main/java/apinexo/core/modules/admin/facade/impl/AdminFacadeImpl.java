@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -20,12 +21,11 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
-import apinexo.core.modules.admin.dto.AdminCreatePriceAdditionalRequest;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest.PlanDTO;
+import apinexo.core.modules.admin.dto.AdminCreatePriceAdditionalRequest;
 import apinexo.core.modules.admin.facade.AdminFacade;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
-import apinexo.core.modules.plans.dto.ApiPlansResponse;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.plans.service.PlansService;
 import apinexo.core.modules.softlimit.entity.SoftLimitEntity;
@@ -50,14 +50,24 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     @Override
     public ResponseEntity<Object> createApi(AdminCreateApiRequest request) {
         try {
-            List<PlansEntity> plansEntities = apiPlansService.findByApiId(request.getId());
-            if (CollectionUtils.isEmpty(plansEntities)) {
-                ApiEntity apiEntity = ApiEntity.builder().id(request.getId()).name(request.getName())
+            Optional<ApiEntity> optional = apiService.findbyId(request.getId());
+            // if (CollectionUtils.isEmpty(plansEntities)) {
+            ApiEntity apiEntity = null;
+            if (optional.isPresent()) {
+                apiEntity = optional.get();
+            } else {
+                apiEntity = ApiEntity.builder().id(request.getId()).name(request.getName())
                         .shortDescription(request.getShortDescription()).longDescription(request.getLongDescription())
                         .image(request.getImage()).build();
-                List<PlanDTO> planDTOs = request.getPlans();
-                List<PlansEntity> plans = new ArrayList<>();
-                for (PlanDTO planDTO : planDTOs) {
+            }
+            List<PlanDTO> planDTOs = request.getPlans();
+            List<PlansEntity> plans = apiEntity.getPlans();
+            if (CollectionUtils.isEmpty(plans)) {
+                plans = new ArrayList<>();
+            }
+            for (PlanDTO planDTO : planDTOs) {
+                PlansEntity findPlans = apiPlansService.findByApi_IdAndKey(request.getId(), planDTO.getKey());
+                if (Objects.isNull(findPlans)) {
                     String id = null;
                     if (planDTO.getIsFree()) {
                         id = utils.generateRandomHexString(24);
@@ -88,22 +98,10 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                             .overagePrices(planDTO.getOveragePrices()).index(planDTO.getIndex()).build();
                     plans.add(plansEntity);
                 }
-                apiEntity.setPlans(plans);
-                ApiEntity apiSaved = apiService.save(apiEntity);
-                plansEntities = apiSaved.getPlans();
             }
-            List<ApiPlansResponse> response = new ArrayList<>();
-            if (CollectionUtils.isNotEmpty(plansEntities)) {
-                for (PlansEntity entity : plansEntities) {
-                    ApiPlansResponse plan = ApiPlansResponse.builder().id(entity.getId()).nickname(entity.getNickname())
-                            .key(entity.getKey()).upTo(entity.getUpTo()).period(entity.getPeriod())
-                            .currency(entity.getCurrency()).active(entity.getActive()).price(entity.getPrice())
-                            .isFree(entity.getIsFree()).overagePrices(entity.getOveragePrices())
-                            .metadata(utils.convertStrToJson(entity.getMetadata())).build();
-                    response.add(plan);
-                }
-            }
-            return ResponseEntity.ok(response);
+            apiEntity.setPlans(plans);
+            ApiEntity apiSaved = apiService.save(apiEntity);
+            return ResponseEntity.ok(apiSaved);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {
