@@ -71,6 +71,9 @@ public class PlansEntity extends EntityCommon {
     @JsonIgnore
     private ApiEntity api;
 
+    @Column(name = "index")
+    private Integer index;
+
     @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SubscriptionEntity> subscriptions;
 

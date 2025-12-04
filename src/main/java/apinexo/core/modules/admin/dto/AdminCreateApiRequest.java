@@ -51,6 +51,9 @@ public class AdminCreateApiRequest {
         @JsonProperty("overage_prices")
         private Double overagePrices;
 
+        @JsonProperty("index")
+        private Integer index;
+
         private Metadata metadata;
 
         @Data
