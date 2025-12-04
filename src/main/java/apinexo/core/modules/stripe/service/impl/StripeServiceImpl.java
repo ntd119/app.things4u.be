@@ -93,9 +93,11 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
             if (billableUsage > 0) {
                 long totalCents = Math.round(billableUsage * subscription.getOveragePrices() * 100);
                 String customerId = subscription.getUser().getStripeCustomerId();
+                String description = String.format("%s %s", subscription.getApi().getName(),
+                        subscription.getCurrentPlan());
                 InvoiceItemCreateParams itemParams = InvoiceItemCreateParams.builder().setCustomer(customerId)
                         .setSubscription(subscriptionId).setCurrency("usd").setAmount(totalCents)
-                        .setDescription("Final usage charge (" + billableUsage + " units)").build();
+                        .setDescription(description).build();
                 InvoiceItem.create(itemParams);
                 InvoiceCreateParams createParams = InvoiceCreateParams.builder().setCustomer(customerId)
                         .setSubscription(subscriptionId).setAutoAdvance(true).build();
