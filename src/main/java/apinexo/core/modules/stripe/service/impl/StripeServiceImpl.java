@@ -24,6 +24,7 @@ import com.stripe.param.InvoiceItemCreateParams;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.stripe.service.StripeService;
+import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -81,21 +82,28 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     }
 
     @Override
-    public ResponseEntity<Object> cancelSubscription(String subscriptionId, String customerId,
-            String subscriptionItemId) throws StripeException {
+    public ResponseEntity<Object> cancelSubscription(SubscriptionEntity subscription) throws StripeException {
         Stripe.apiKey = stripeSecret;
-        long billableUsage = 15000;
-        long totalCents = Math.round(billableUsage * 0.003 * 100);
-        if (totalCents > 0) {
-            InvoiceItemCreateParams itemParams = InvoiceItemCreateParams.builder().setCustomer(customerId)
-                    .setSubscription(subscriptionId).setCurrency("usd").setAmount(totalCents)
-                    .setDescription("Final usage charge (" + billableUsage + " units)").build();
-            InvoiceItem.create(itemParams);
-            InvoiceCreateParams createParams = InvoiceCreateParams.builder().setCustomer(customerId)
-                    .setSubscription(subscriptionId).setAutoAdvance(true).build();
-            Invoice finalInvoice = Invoice.create(createParams);
-            finalInvoice = finalInvoice.finalizeInvoice();
-            finalInvoice.pay();
+        String subscriptionId = subscription.getId();
+        boolean isSoftLimit = subscription.getIsSoftLimit();
+        if (isSoftLimit) {
+            long quota = subscription.getQuota();
+            long currentUsage = this.getCurrentUsage(subscription.getSubscriptionItemId());
+            long billableUsage = currentUsage - quota;
+            if (billableUsage > 0) {
+                long totalCents = Math.round(billableUsage * subscription.getOveragePrices() * 100);
+                String customerId = subscription.getUser().getStripeCustomerId();
+                InvoiceItemCreateParams itemParams = InvoiceItemCreateParams.builder().setCustomer(customerId)
+                        .setSubscription(subscriptionId).setCurrency("usd").setAmount(totalCents)
+                        .setDescription("Final usage charge (" + billableUsage + " units)").build();
+                InvoiceItem.create(itemParams);
+                InvoiceCreateParams createParams = InvoiceCreateParams.builder().setCustomer(customerId)
+                        .setSubscription(subscriptionId).setAutoAdvance(true).build();
+                Invoice finalInvoice = Invoice.create(createParams);
+                finalInvoice = finalInvoice.finalizeInvoice();
+                finalInvoice.pay();
+            }
+
         }
         Subscription sub = Subscription.retrieve(subscriptionId);
         sub = sub.cancel();
@@ -120,13 +128,13 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     }
 
     @Override
-    public ResponseEntity<Object> usageRecordSummaries(String subscriptionItemId) {
+    public long getCurrentUsage(String subscriptionItemId) {
         HttpHeaders headers = utils.buildHeader();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(stripeSecret, "");
         String url = "https://api.stripe.com/v1/subscription_items/" + subscriptionItemId + "/usage_record_summaries";
         ResponseEntity<String> response = executeGetRequest(String.class, url, headers);
         JsonNode json = utils.convertStrToJson(response.getBody());
-        return ResponseEntity.status(response.getStatusCode()).body(json);
+        return utils.jsonNodeAt(json, "/data/0/total_usage", Long.class);
     }
 }

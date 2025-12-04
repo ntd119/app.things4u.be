@@ -210,20 +210,19 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
         try {
             Optional<SubscriptionEntity> subscriptionOptional = subscriptionService.findById(subscriptionId);
             if (subscriptionOptional.isPresent()) {
-                SubscriptionEntity entity = subscriptionOptional.get();
-                if (!entity.isFree()) {
+                SubscriptionEntity subscriptionEntity = subscriptionOptional.get();
+                if (!subscriptionEntity.isFree()) {
                     // cancel subscription from stripe
-                    stripeService.cancelSubscription(subscriptionId, entity.getUser().getStripeCustomerId(),
-                            entity.getSubscriptionItemId());
+                    stripeService.cancelSubscription(subscriptionEntity);
                 }
 
                 // delete subscribe
-                subscriptionService.delete(entity);
+                subscriptionService.delete(subscriptionEntity);
                 // delete log
-                logService.deleteBySubscriptionId(entity.getId());
-                ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
+                logService.deleteBySubscriptionId(subscriptionEntity.getId());
+                ApiPlansResponse plans = plansConverter.entity2Resposne(subscriptionEntity.getPlan());
                 SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
-                        .builder().id(entity.getId()).plan(plans).build();
+                        .builder().id(subscriptionEntity.getId()).plan(plans).build();
                 return ResponseEntity.ok(response);
             }
             return utils.badRequest("The subscription does not exist");
