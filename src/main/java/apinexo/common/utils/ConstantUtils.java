@@ -6,10 +6,6 @@ public class ConstantUtils {
     public static final String DATE_FORMAT_YYYYMM = "yyyy-MM";
     public static final String TIME_ZONE_DEFAULT = "America/New_York";
     public static final String TIME_ZONE_UCT = "UCT";
-    public static final String SERVER_FE = "https://app.apinexo.com";
-    public static final String SERVER_BE = "https://api.apinexo.com";
-    public static final String SERVER_FE_LOCAL = "http://localhost:3000";
-    public static final String SERVER_BE_LOCAL = "http://localhost:8080";
 
     public static class Pattern {
         public static final String PAGE_URL = "/(\\d+_p)/";

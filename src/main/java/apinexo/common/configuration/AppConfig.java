@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.List;
 import java.util.Random;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.tomcat.TomcatConnectorCustomizer;
 import org.springframework.boot.tomcat.servlet.TomcatServletWebServerFactory;
 import org.springframework.boot.web.server.WebServerFactoryCustomizer;
@@ -22,11 +23,16 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import apinexo.common.utils.ConstantUtils;
 import okhttp3.OkHttpClient;
 
 @Configuration
 public class AppConfig {
+
+    @Value("${fe.server}")
+    private String feServer;
+
+    @Value("${be.server}")
+    private String beServer;
 
     @Bean
     RestTemplate getRestTemplate() {
@@ -106,8 +112,7 @@ public class AppConfig {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(ConstantUtils.SERVER_FE, ConstantUtils.SERVER_BE,
-                ConstantUtils.SERVER_FE_LOCAL, ConstantUtils.SERVER_BE_LOCAL));
+        config.setAllowedOrigins(List.of(feServer, beServer));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
