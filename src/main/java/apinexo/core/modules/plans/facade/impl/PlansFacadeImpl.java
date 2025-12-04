@@ -2,6 +2,7 @@ package apinexo.core.modules.plans.facade.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +35,10 @@ public class PlansFacadeImpl extends AbstractService implements PlansFacade {
             List<ApiPlansResponse> response = new ArrayList<>();
             if (CollectionUtils.isNotEmpty(plansEntities)) {
                 for (PlansEntity entity : plansEntities) {
-                    response.add(plansConverter.entity2Resposne(entity));
+                    Boolean active = entity.getActive();
+                    if (Objects.nonNull(active) && active.booleanValue()) {
+                        response.add(plansConverter.entity2Resposne(entity));
+                    }
                 }
             }
             return ResponseEntity.ok(response);
