@@ -43,6 +43,9 @@ public class ApiPlansResponse {
     @JsonProperty("overage_prices")
     private Double overagePrices;
 
+    @JsonProperty("index")
+    private Integer index;
+
     @JsonProperty("metadata")
     @JsonRawValue
     private JsonNode metadata;

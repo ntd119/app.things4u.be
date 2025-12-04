@@ -20,6 +20,6 @@ public class PlansConverterImpl implements PlansConverter {
                 .upTo(entity.getUpTo()).period(entity.getPeriod()).currency(entity.getCurrency())
                 .active(entity.getActive()).price(entity.getPrice()).isFree(entity.getIsFree())
                 .overagePrices(entity.getOveragePrices()).metadata(utils.convertStrToJson(entity.getMetadata()))
-                .build();
+                .index(entity.getIndex()).build();
     }
 }
