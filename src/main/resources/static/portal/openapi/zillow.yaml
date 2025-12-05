@@ -34236,6 +34236,7 @@ paths:
                       "status": true,
                       "message": "Successful"
                 }
+
   /properties/get-available-times:
     get:
       summary: "properties/get-available-times"
@@ -34637,6 +34638,94 @@ paths:
                     },
                     "status": true,
                     "message": "Successful"
+                }
+
+  /properties/local-legal-protection:
+    get:
+      summary: "properties/local-legal-protection"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                    "data": {
+                        "country": "USA",
+                        "state": "TX",
+                        "county": "Harris County",
+                        "city": "Houston",
+                        "homeStatus": "FOR_SALE",
+                        "localProtections": {
+                          "protectionLevels": {
+                            "lgbt": {
+                              "level": "state",
+                              "statePageUrl": "http://www.lgbtmap.org/equality_maps/profile_state/tx"
+                            },
+                            "soi": {
+                              "level": "state"
+                            },
+                            "voucher": {
+                              "level": "state"
+                            }
+                          },
+                          "protections": [
+                            {
+                              "covers": {
+                                "genderIdentity": false,
+                                "sexualOrientation": false,
+                                "housingChoiceVoucher": null,
+                                "sourceOfIncome": null
+                              },
+                              "description": "Including protection from being fired, denied employment, or otherwise discriminated against by an employer.",
+                              "type": "Employment"
+                            },
+                            {
+                              "covers": {
+                                "genderIdentity": false,
+                                "sexualOrientation": false,
+                                "housingChoiceVoucher": false,
+                                "sourceOfIncome": false
+                              },
+                              "description": "Including protection from being unfairly evicted, denied housing, or refused the ability to rent or buy housing.",
+                              "type": "Housing"
+                            },
+                            {
+                              "covers": {
+                                "genderIdentity": false,
+                                "sexualOrientation": false,
+                                "housingChoiceVoucher": null,
+                                "sourceOfIncome": null
+                              },
+                              "description": "Including protection from being unfairly refused services or entry to places accessible to the public (stores, restaurants, parks, etc.).",
+                              "type": "Public accommodations"
+                            }
+                          ]
+                        }
+                      },
+                      "status": true,
+                      "message": "Successful"
                 }
 
 components:
