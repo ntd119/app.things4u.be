@@ -40921,6 +40921,341 @@ paths:
                   "message": "Successful"
                 }
 
+  /agents/reviews:
+    get:
+      summary: "agents/reviews"
+      tags:
+        - Agents
+      parameters:
+        - name: encodedZuid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "X1-ZUz3fc6ch3xp8p_10irz"
+          description: |
+            - Required: true
+            - The `encodedZuid` can be retrieved from /agents/details endpoint(data->displayUser->encodedZuid)
+            - Ex: `X1-ZUz3fc6ch3xp8p_10irz`
+        - name: resultsPerPage
+          in: query
+          schema:
+            type: number
+            default: 5
+          description: |
+            - Total number of record per api call
+            - Ex: `20`
+            - It has a value ranging from 0 to 100
+            - Default value: `5`
+        - name: page
+          in: query
+          schema:
+            type: number
+            default: 1
+          description: |
+            - The page index, for paging purpose
+            - Ex: `2`
+            - Default: `1`
+        - name: sortBy
+          in: query
+          schema:
+            type: string
+            enum: [newest, rating_high, rating_low]
+            default: "newest"
+          description: |
+            - Sort by
+            - Default: `newest`
+            - Ex: `newest`
+            - Choose one of the values below
+            - `newest`: Newest first
+            - `rating_high`: Rating (high to low)
+            - `rating_low`: Rating (low to high)
+        - name: serviceTypeIds
+          in: query
+          schema:
+            type: string
+            example: "9,10,11,12"
+          description: |
+            - Filter by
+            - Default: All reviews
+            - Ex: `9,10,11,12`
+            - The `serviceTypeIds` can be retrieved from response of this endpoint(data->filters->serviceTypeIds)
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                  "data": {
+                    "reviews": [
+                      {
+                        "reviewComment": "Mandy is an amazing realtor and I highly recommend working with her. She answered all the questions about first time home buying process. She makes the whole process very personalized to make sure  that you get what you are looking for. She helped me lease and I’m going straight to her to purchase ! Definitely somebody you can trust.",
+                        "reviewId": 8224800,
+                        "subRatings": [
+                          {
+                            "description": "Local knowledge",
+                            "score": 5
+                          },
+                          {
+                            "description": "Process expertise",
+                            "score": 5
+                          },
+                          {
+                            "description": "Responsiveness",
+                            "score": 5
+                          },
+                          {
+                            "description": "Negotiation skills",
+                            "score": 5
+                          }
+                        ],
+                        "reviewee": {
+                          "screenName": "mandyc19",
+                          "firstName": "Mandy",
+                          "lastName": "Randhawa",
+                          "suffix": null,
+                          "showName": true,
+                          "encodedZuid": "X1-ZU1723owsu7aqrt_adn9b"
+                        },
+                        "reviewer": {
+                          "screenName": "DonavanThomas0",
+                          "firstName": "Donavan",
+                          "lastName": "Thomas",
+                          "suffix": null,
+                          "showName": true,
+                          "encodedZuid": "X1-ZUtsqe91zk2ebt_7aoc0"
+                        },
+                        "rating": 5,
+                        "createDate": "2024-03-11T10:58:00",
+                        "rebuttal": null,
+                        "workDescription": "Helped me rent a Apartment home in Memorial, Houston, TX."
+                      },
+                      {
+                        "reviewComment": "Avery did a phenomenal job helping us purchase our townhome in Houston. She is an expert on the Greater Houston market, and she made sure to find the perfect home for our specifics needs. She navigated tough conversations with the seller seamlessly and represented us well during the negotiation phase. We’ve worked with other realtors in the past, and Avery was leaps and bounds above past experiences. I will continue to highly recommend Avery to friends, family, and anyone considering purchasing a home. ",
+                        "reviewId": 8218490,
+                        "subRatings": [
+                          {
+                            "description": "Local knowledge",
+                            "score": 5
+                          },
+                          {
+                            "description": "Process expertise",
+                            "score": 5
+                          },
+                          {
+                            "description": "Responsiveness",
+                            "score": 5
+                          },
+                          {
+                            "description": "Negotiation skills",
+                            "score": 5
+                          }
+                        ],
+                        "reviewee": {
+                          "screenName": "averydoub",
+                          "firstName": "Avery",
+                          "lastName": "Doubenmier",
+                          "suffix": null,
+                          "showName": true,
+                          "encodedZuid": "X1-ZU166qtap4monwp_5gnlt"
+                        },
+                        "reviewer": {
+                          "screenName": "Corydferguson1",
+                          "firstName": null,
+                          "lastName": null,
+                          "suffix": null,
+                          "showName": true,
+                          "encodedZuid": "X1-ZUrwba6cgmj7yh_1oeg0"
+                        },
+                        "rating": 5,
+                        "createDate": "2024-03-05T20:09:00",
+                        "rebuttal": null,
+                        "workDescription": "Bought a Townhouse home in 2024 in Midtown, Houston, TX."
+                      },
+                      {
+                        "reviewComment": "Working with Destiny was an absolute pleasure from start to finish. Her professionalism, dedication, and expertise truly made our home buying experience seamless and stress-free. Destiny went above and beyond to understand our needs and preferences, guiding us through every step of the process with patience and a genuine commitment to finding the perfect home for us. Her communication skills were exceptional, always keeping us informed and updated. With her keen eye for detail and extensive knowledge of the market, Destiny helped us secure a fantastic deal. ",
+                        "reviewId": 8217942,
+                        "subRatings": [
+                          {
+                            "description": "Local knowledge",
+                            "score": 5
+                          },
+                          {
+                            "description": "Process expertise",
+                            "score": 5
+                          },
+                          {
+                            "description": "Responsiveness",
+                            "score": 5
+                          },
+                          {
+                            "description": "Negotiation skills",
+                            "score": 5
+                          }
+                        ],
+                        "reviewee": {
+                          "screenName": "destiny012",
+                          "firstName": "Destiny",
+                          "lastName": "Villa",
+                          "suffix": null,
+                          "showName": true,
+                          "encodedZuid": "X1-ZUr32exd93lhxl_7dhgy"
+                        },
+                        "reviewer": {
+                          "screenName": "traciealondon",
+                          "firstName": null,
+                          "lastName": null,
+                          "suffix": null,
+                          "showName": true,
+                          "encodedZuid": "X1-ZUtuwzdu6v26mh_7ucam"
+                        },
+                        "rating": 5,
+                        "createDate": "2024-03-05T13:46:00",
+                        "rebuttal": null,
+                        "workDescription": "Bought a Single Family home in 2024 in Picadilly ridge, Pflugerville, TX."
+                      },
+                      {
+                        "reviewComment": "Cam did an excellent job selling our house in Houston. He knows the market very well and was able to close a good deal in a challenging market. We were also out of town during the sale process, and Cam took care of all aspects of the sale seamlessly.",
+                        "reviewId": 8217182,
+                        "subRatings": [
+                          {
+                            "description": "Local knowledge",
+                            "score": 5
+                          },
+                          {
+                            "description": "Process expertise",
+                            "score": 5
+                          },
+                          {
+                            "description": "Responsiveness",
+                            "score": 5
+                          },
+                          {
+                            "description": "Negotiation skills",
+                            "score": 5
+                          }
+                        ],
+                        "reviewee": {
+                          "screenName": "cam11722",
+                          "firstName": "Cam",
+                          "lastName": "Doubenmier",
+                          "suffix": null,
+                          "showName": true,
+                          "encodedZuid": "X1-ZU15tnymx4sfuo9_81d4z"
+                        },
+                        "reviewer": {
+                          "screenName": "AntonioSnow4",
+                          "firstName": null,
+                          "lastName": null,
+                          "suffix": null,
+                          "showName": true,
+                          "encodedZuid": "X1-ZU12vv5pteuh0y1_3cswb"
+                        },
+                        "rating": 5,
+                        "createDate": "2024-03-05T04:33:00",
+                        "rebuttal": null,
+                        "workDescription": "Sold a Single Family home in 2024 in Neartown - montrose, Houston, TX."
+                      },
+                      {
+                        "reviewComment": "Malik was very attentive and responsive. He was patient and showed me multiple listings. He was very knowledgeable. He made a normally stressful process go by. Rey smoothly. I will most definitely recommend him to all my friends and use him again. ",
+                        "reviewId": 8217051,
+                        "subRatings": [
+                          {
+                            "description": "Local knowledge",
+                            "score": 5
+                          },
+                          {
+                            "description": "Process expertise",
+                            "score": 5
+                          },
+                          {
+                            "description": "Responsiveness",
+                            "score": 5
+                          },
+                          {
+                            "description": "Negotiation skills",
+                            "score": 5
+                          }
+                        ],
+                        "reviewee": {
+                          "screenName": "Malik736",
+                          "firstName": "Malik",
+                          "lastName": "Alley",
+                          "suffix": null,
+                          "showName": true,
+                          "encodedZuid": "X1-ZU17053czp0nmdl_9od0t"
+                        },
+                        "reviewer": {
+                          "screenName": "alleywendy3",
+                          "firstName": "Wendy",
+                          "lastName": "Alley",
+                          "suffix": null,
+                          "showName": true,
+                          "encodedZuid": "X1-ZUt1jnchz8hkax_90hcs"
+                        },
+                        "rating": 5,
+                        "createDate": "2024-03-04T19:51:00",
+                        "rebuttal": null,
+                        "workDescription": "Showed home in 2024 in TX 77469."
+                      }
+                    ],
+                    "filters": [
+                      {
+                        "prompt": "All reviews",
+                        "count": 2231,
+                        "serviceTypeIds": null
+                      },
+                      {
+                        "serviceTypeIds": [1],
+                        "count": 1057,
+                        "prompt": "Helped me buy"
+                      },
+                      {
+                        "serviceTypeIds": [2],
+                        "count": 193,
+                        "prompt": "Helped me sell"
+                      },
+                      {
+                        "serviceTypeIds": [3],
+                        "count": 128,
+                        "prompt": "Helped me buy and sell"
+                      },
+                      {
+                        "serviceTypeIds": [7,6,4,5,999],
+                        "count": 457,
+                        "prompt": "We connected, but it did not work out"
+                      },
+                      {
+                        "serviceTypeIds": [9,10,11,12],
+                        "count": 376,
+                        "prompt": "Renting or property management"
+                      },
+                      {
+                        "serviceTypeIds": [15],
+                        "count": 1,
+                        "prompt": "They never responded to my inquiry"
+                      }
+                    ]
+                  },
+                  "meta": {
+                    "currentPage": 1,
+                    "limit": 5,
+                    "totalRecords": 2231,
+                    "totalPage": 447
+                  },
+                  "status": true,
+                  "message": "Successful"
+                }
+
 components:
   securitySchemes:
     X-API-Key:
