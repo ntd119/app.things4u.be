@@ -9,6 +9,8 @@ paths:
   /properties/auto-complete:
     get:
       summary: "properties/auto-complete"
+      tags:
+        - Property search
       parameters:
         - name: query
           in: query
@@ -110,6 +112,139 @@ paths:
                   "message": "Successful"
                 }
 
+  /properties/auto-complete-v2:
+    get:
+      summary: "properties/auto-complete-v2"
+      tags:
+        - Property search
+      parameters:
+        - name: query
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Houston"
+          description: |
+            - Required: true
+            - Ex: `Houston`
+        - name: limit
+          in: query
+          schema:
+            type: number
+            example: 25
+            default: 10
+          description: |
+            - Total number of record per api call
+            - Ex: `25`
+            - Default: `10`
+        - name: searchContext
+          in: query
+          schema:
+            type: string
+            enum: [FOR_SALE, FOR_SALE, FOR_RENT, SOLD]
+            default: "FOR_SALE"
+          description: |
+            - Search context
+            - Choose one of the values below
+            - Default: `FOR_SALE`
+            - `FOR_SALE`
+            - `FOR_RENT`
+            - `SOLD`
+        - name: resultType
+          in: query
+          schema:
+            type: string
+          description: |
+            - Result type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `ADDRESSES,FORSALE`
+            - `ADDRESSES`
+            - `FORSALE`
+            - `RENTALS`
+            - `SOLD`
+            - `REGIONS`
+            - `SEMANTIC_REGIONS`
+            - `SCHOOLS`
+            - `SCHOOL_DISTRICTS`
+            - `AFFORDABILITY`
+            - `COMMERCIAL_NAME`
+            - `COMMERCIAL_ADDRESS`
+            - `COMMUNITIES`
+            - `BUILDER_COMMUNITIES`
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                  "data": [
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, TX",
+                      "regionId": 39051,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, MO",
+                      "regionId": 28591,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, PA",
+                      "regionId": 45822,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, MN",
+                      "regionId": 11987,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, MS",
+                      "regionId": 18637,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, AL",
+                      "regionId": 18636,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, DE",
+                      "regionId": 55828,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, AK",
+                      "regionId": 43625,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, OH",
+                      "regionId": 55829,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston Lake, MO",
+                      "regionId": 42326,
+                      "subType": "CITY"
+                    }
+                  ],
+                  "status": true,
+                  "message": "Successful"
+                }
 
 components:
   securitySchemes:
@@ -120,3 +255,5 @@ components:
       description: API Key
 security:
   - X-API-Key: []
+tags:
+  - name: Property search
