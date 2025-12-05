@@ -378,6 +378,223 @@ paths:
                   "status": true,
                   "message": "Successful"
                 }
+  /properties/search:
+    get:
+      summary: "properties/search"
+      tags:
+        - Property search
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Houston, TX"
+          description: |
+            - Required: true
+            - The `location` can be retrieved from /properties/auto-complete endpoint(data->display)
+            - Ex: `Houston, TX`
+        - name: resultsPerPage
+          in: query
+          schema:
+            type: number
+            example: 2
+            default: 25
+          description: |
+            - Total number of record per api call
+            - Ex: `2`
+            - Default: `25`
+        - name: page
+          in: query
+          schema:
+            type: number
+            example: 2
+            default: 1
+          description: |
+           - The page index, for paging purpose
+            - Ex: `2`
+            - Default: `1`
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [forSale,forRent,sold]
+            default: "forSale"
+          description: |
+            - Status type of the properties
+            - Default : `forSale`
+            - Choose one of the values below
+            - `forSale`: For sale
+            - `forRent`: For rent
+            - `sold`: Sold
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [relevance,recentlyChanged,daysOn,price,beds,baths,livingArea,lotArea,yearBuilt,rentalPriorityScore]
+            default: "relevance"
+          description: |
+            - Sort by
+            - Default : `relevance`
+            - Choose one of the values below
+            - `relevance`: Homes for You (with sortType=desc)
+            - `recentlyChanged`: Recently Changed (with sortType=desc)
+            - `daysOn`: Newest (with sortType=asc)
+            - `price`: Price: High to Low (with sortType=desc)
+            - `price`: Price: Low to High (with sortType=asc)
+            - `beds`: Bedrooms (with sortType=desc)
+            - `baths`: Bathrooms (with sortType=desc)
+            - `livingArea`: Square Feet (with sortType=desc)
+            - `lotArea`: Lot Size (with sortType=desc)
+            - `yearBuilt`: Year Built (with sortType=desc)
+            - `rentalPriorityScore`: Default in case status=forRent (with sortType=desc)
+        - name: sortType
+          in: query
+          schema:
+            type: string
+            enum: [asc,desc]
+            default: "desc"
+          description: |
+            - Order type
+            - Default : `desc`
+            - Choose one of the values below
+            - `asc`: Ascending (smallest value first)
+            - `desc`: Descending (largest value first)
+        - name: priceRange
+          in: query
+          schema:
+            type: string
+          description: |
+            - Price range
+            - Min and max prices should be separated by commas
+            - Ex: `160000,1500000`
+            - In the case of only having the minimum price: Ex: `160000`
+            - In the case of only having the maximum price: Ex: `,1500000`
+            - In case of having both: Ex: `160000,1500000`
+        - name: priceType
+          in: query
+          schema:
+            type: string
+            enum: [listPrice,monthlyPayment]
+            default: "listPrice"
+          description: |
+            - Price type
+            - Default : `listPrice`
+            - Choose one of the values below
+            - `listPrice`: List price
+            - `monthlyPayment`: Monthly payment
+        - name: hoaFees
+          in: query
+          schema:
+            type: number
+          description: |
+            - Hoa fees
+            - Default : Any
+            - Choose one of the values below
+            - `0`: No HOA Fee
+            - `100`: 100/month
+            - `200`: 200/month
+            - ................
+            - `2000`: 2000/month
+        - name: includeNoHoaDataHomes
+          in: query
+          schema:
+            type: boolean
+          description: |
+            - Include homes with no Hoa data
+            - The includeNoHoaDataHomes only takes effect when `hoaFees` is selected.
+            - Default : `true`
+        - name: bedrooms
+          in: query
+          schema:
+            type: string
+            example: '0,5'
+          description: |
+            - Bedrooms
+            - Default : Any
+            - Min and max bedrooms should be separated by commas
+            - Ex: `0,5`
+            - In the case of only having the minimum bedrooms: Ex: `0`
+            - In the case of only having the maximum bedrooms: Ex: `,5`
+            - In case of having both: Ex: `0,5`
+            - `0`: Studio
+            - `1`: 1
+            - ......
+            - `5`: 5
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                  "data": [
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, TX",
+                      "regionId": 39051,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, MO",
+                      "regionId": 28591,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, PA",
+                      "regionId": 45822,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, MN",
+                      "regionId": 11987,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, MS",
+                      "regionId": 18637,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, AL",
+                      "regionId": 18636,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, DE",
+                      "regionId": 55828,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, AK",
+                      "regionId": 43625,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston, OH",
+                      "regionId": 55829,
+                      "subType": "CITY"
+                    },
+                    {
+                      "__typename": "SearchAssistanceRegionResult",
+                      "id": "Houston Lake, MO",
+                      "regionId": 42326,
+                      "subType": "CITY"
+                    }
+                  ],
+                  "status": true,
+                  "message": "Successful"
+                }
 
 components:
   securitySchemes:
