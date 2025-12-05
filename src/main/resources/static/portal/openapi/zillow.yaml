@@ -22,7 +22,7 @@ paths:
             - Required: true
             - Ex: `Houston`
         - name: cookie
-          in: cookie
+          in: query
           schema:
             type: string
           description: |
@@ -1146,6 +1146,373 @@ paths:
                     },
                     "status": true,
                     "message": "Successful"
+                }
+
+  /properties/search-url:
+    get:
+      summary: "properties/search-url"
+      tags:
+        - Property search
+      parameters:
+        - name: url
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "https://www.zillow.com/newton-ks/?searchQueryState=%7B%22isMapVisible%22%3Atrue%2C%22mapBounds%22%3A%7B%22north%22%3A38.46391866296362%2C%22south%22%3A37.76594471791235%2C%22east%22%3A-96.58565674902346%2C%22west%22%3A-97.89989625097658%7D%2C%22usersSearchTerm%22%3A%22Newton%2C%20KS%22%2C%22filterState%22%3A%7B%22sort%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%2C%22ah%22%3A%7B%22value%22%3Atrue%7D%7D%2C%22isListVisible%22%3Atrue%2C%22regionSelection%22%3A%5B%7B%22regionId%22%3A19619%2C%22regionType%22%3A6%7D%5D%2C%22pagination%22%3A%7B%7D%7D"
+          description: |
+            - Required: true
+            - The URL to get properties
+            - `url` can be copied from the browser
+            - Ex:
+            `https://www.zillow.com/newton-ks/?searchQueryState=%7B%22isMapVisible%22%3Atrue%2C%22mapBounds%22%3A%7B%22north%22%3A38.46391866296362%2C%22south%22%3A37.76594471791235%2C%22east%22%3A-96.58565674902346%2C%22west%22%3A-97.89989625097658%7D%2C%22usersSearchTerm%22%3A%22Newton%2C%20KS%22%2C%22filterState%22%3A%7B%22sort%22%3A%7B%22value%22%3A%22globalrelevanceex%22%7D%2C%22ah%22%3A%7B%22value%22%3Atrue%7D%7D%2C%22isListVisible%22%3Atrue%2C%22regionSelection%22%3A%5B%7B%22regionId%22%3A19619%2C%22regionType%22%3A6%7D%5D%2C%22pagination%22%3A%7B%7D%7D`
+        - name: page
+          in: query
+          schema:
+            type: number
+            example: 1
+          description: |
+            - The page index, for paging purpose
+            - Ex: `1`
+            - Default: `Depends on the url`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                  "data": {
+                  "listResults": [
+                    {
+                      "zpid": "1336158",
+                      "id": "1336158",
+                      "rawHomeStatusCd": "ForSale",
+                      "marketingStatusSimplifiedCd": "For Sale by Agent",
+                      "imgSrc": "https://photos.zillowstatic.com/fp/90c839ddcf6801c6ed0c9c30fca70b31-p_e.jpg",
+                      "hasImage": true,
+                      "detailUrl": "https://www.zillow.com/homedetails/514-W-4th-St-Newton-KS-67114/1336158_zpid/",
+                      "statusType": "FOR_SALE",
+                      "statusText": "House for sale",
+                      "countryCurrency": "$",
+                      "price": "$50,000",
+                      "unformattedPrice": 50000,
+                      "address": "514 W 4th St, Newton, KS 67114",
+                      "addressStreet": "514 W 4th St",
+                      "addressCity": "Newton",
+                      "addressState": "KS",
+                      "addressZipcode": "67114",
+                      "isUndisclosedAddress": false,
+                      "beds": 1,
+                      "baths": 1,
+                      "area": 768,
+                      "latLong": {
+                        "latitude": 38.046524,
+                        "longitude": -97.353905
+                      },
+                      "isZillowOwned": false,
+                      "flexFieldText": "4 hours ago",
+                      "contentType": "timeOnInfo",
+                      "hdpData": {
+                        "homeInfo": {
+                          "zpid": 1336158,
+                          "streetAddress": "514 W 4th St",
+                          "zipcode": "67114",
+                          "city": "Newton",
+                          "state": "KS",
+                          "latitude": 38.046524,
+                          "longitude": -97.353905,
+                          "price": 50000,
+                          "bathrooms": 1,
+                          "bedrooms": 1,
+                          "livingArea": 768,
+                          "homeType": "SINGLE_FAMILY",
+                          "homeStatus": "FOR_SALE",
+                          "daysOnZillow": 0,
+                          "isFeatured": false,
+                          "shouldHighlight": false,
+                          "listing_sub_type": {
+                            "is_FSBA": true
+                          },
+                          "isUnmappable": false,
+                          "isPreforeclosureAuction": false,
+                          "homeStatusForHDP": "FOR_SALE",
+                          "priceForHDP": 50000,
+                          "timeOnZillow": 16698000,
+                          "isNonOwnerOccupied": true,
+                          "isPremierBuilder": false,
+                          "isZillowOwned": false,
+                          "currency": "USD",
+                          "country": "USA",
+                          "taxAssessedValue": 38800,
+                          "lotAreaValue": 5662.8,
+                          "lotAreaUnit": "sqft",
+                          "isShowcaseListing": false
+                        }
+                      },
+                      "isSaved": false,
+                      "isUserClaimingOwner": false,
+                      "isUserConfirmedClaim": false,
+                      "pgapt": "ForSale",
+                      "sgapt": "For Sale (Broker)",
+                      "shouldShowZestimateAsPrice": false,
+                      "has3DModel": false,
+                      "hasVideo": false,
+                      "isHomeRec": false,
+                      "hasAdditionalAttributions": true,
+                      "isFeaturedListing": false,
+                      "isShowcaseListing": false,
+                      "list": true,
+                      "relaxed": false,
+                      "info6String": "Zachary Collins",
+                      "brokerName": "LPT Realty, LLC",
+                      "carouselPhotos": [
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/90c839ddcf6801c6ed0c9c30fca70b31-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/4e04fdbab9111f89e053d2c78df7dc83-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/559fd05fa211576645268d68c08b4a71-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/aaa45ed5ada544c1c9dcddf5207273b2-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/bc87b9e1144e17ea08d49e7958aed6e9-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/d88ead71922aa009836e2e1df084202e-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/6c29c0c4fc23f10d32bdc2868e33a421-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/2e09b8009e1133d33c12d89b796cb22a-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/300ad8ef86f772dcc7615a8c1b637a0d-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/7b056e73dab18c81283cbab34c049b01-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/6ca42407a438f81067f6f50053dbb148-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/92d02f41b09f0ed4b5c655a7c4059664-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/bfbda03647243b4f518690c6ba34b5d5-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/b8db080c0ce8bc334d0f37b19c3dad6e-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/fbb0296e6f77928b6cc5ea3904fc2a7a-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/c1487aaab4924c8358772b76820a263d-p_e.jpg"
+                        }
+                      ]
+                    },
+                    {
+                      "zpid": "71127863",
+                      "id": "71127863",
+                      "rawHomeStatusCd": "ForSale",
+                      "marketingStatusSimplifiedCd": "For Sale by Agent",
+                      "imgSrc": "https://photos.zillowstatic.com/fp/6744dcbe691931865005e9fb28dcbf6f-p_e.jpg",
+                      "hasImage": true,
+                      "detailUrl": "https://www.zillow.com/homedetails/424-Wheatridge-Dr-Newton-KS-67114/71127863_zpid/",
+                      "statusType": "FOR_SALE",
+                      "statusText": "House for sale",
+                      "countryCurrency": "$",
+                      "price": "$265,000",
+                      "unformattedPrice": 265000,
+                      "address": "424 Wheatridge Dr, Newton, KS 67114",
+                      "addressStreet": "424 Wheatridge Dr",
+                      "addressCity": "Newton",
+                      "addressState": "KS",
+                      "addressZipcode": "67114",
+                      "isUndisclosedAddress": false,
+                      "beds": 4,
+                      "baths": 3,
+                      "area": 2280,
+                      "latLong": {
+                        "latitude": 38.0227,
+                        "longitude": -97.35256
+                      },
+                      "isZillowOwned": false,
+                      "flexFieldText": "Corner lot",
+                      "contentType": "homeInsight",
+                      "hdpData": {
+                        "homeInfo": {
+                          "zpid": 71127863,
+                          "streetAddress": "424 Wheatridge Dr",
+                          "zipcode": "67114",
+                          "city": "Newton",
+                          "state": "KS",
+                          "latitude": 38.0227,
+                          "longitude": -97.35256,
+                          "price": 265000,
+                          "bathrooms": 3,
+                          "bedrooms": 4,
+                          "livingArea": 2280,
+                          "homeType": "SINGLE_FAMILY",
+                          "homeStatus": "FOR_SALE",
+                          "daysOnZillow": 3,
+                          "isFeatured": false,
+                          "shouldHighlight": false,
+                          "zestimate": 262100,
+                          "rentZestimate": 1705,
+                          "listing_sub_type": {
+                            "is_FSBA": true
+                          },
+                          "isUnmappable": false,
+                          "isPreforeclosureAuction": false,
+                          "homeStatusForHDP": "FOR_SALE",
+                          "priceForHDP": 265000,
+                          "timeOnZillow": 285506000,
+                          "isNonOwnerOccupied": true,
+                          "isPremierBuilder": false,
+                          "isZillowOwned": false,
+                          "currency": "USD",
+                          "country": "USA",
+                          "taxAssessedValue": 215420,
+                          "lotAreaValue": 0.25,
+                          "lotAreaUnit": "acres",
+                          "isShowcaseListing": false
+                        }
+                      },
+                      "isSaved": false,
+                      "isUserClaimingOwner": false,
+                      "isUserConfirmedClaim": false,
+                      "pgapt": "ForSale",
+                      "sgapt": "For Sale (Broker)",
+                      "zestimate": 262100,
+                      "shouldShowZestimateAsPrice": false,
+                      "has3DModel": false,
+                      "hasVideo": false,
+                      "isHomeRec": false,
+                      "hasAdditionalAttributions": true,
+                      "isFeaturedListing": false,
+                      "isShowcaseListing": false,
+                      "list": true,
+                      "relaxed": false,
+                      "info6String": "Hidi Byrd",
+                      "brokerName": "Reece Nichols South Central Kansas",
+                      "carouselPhotos": [
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/6744dcbe691931865005e9fb28dcbf6f-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/713ee13aa6a151c4cb5f869daece3a59-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/8fe25cd868fe3b7817b0f8e1ec48cc74-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/e26581251774d93b76a7432ec25dc119-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/da4b39d0ddea298c48b1ac276796411c-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/e5163567cb96cc9f575f47304ef9eaf7-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/78cd71d8604da94ecc58d6c3f796861b-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/6d70f6748d2e765cbd4011f87bb824ec-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/5a44e99021a49e6156464e5a0619ab79-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/b226036ce1f0dacb8c02c595fb6b67a8-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/3761f5df47ab616fa2af4549226e965b-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/a5e6462f70a0a06c802f080f18019c35-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/997be5dfa557318c02555290490d89ef-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/0f97df0d2721a6f725edab750509c8e9-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/73e5b58aeca09f8dc084f1c33e3f5d7f-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/deeb4a93df5b1c28778b846403afd2dc-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/fbddb2fa8e07704dd9000cc548a8b5cd-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/6515d514cf980b63cd70019cfea43f87-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/131897ae53575547a632d1ccde27165b-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/83ed299cfd1e239a85435cc39277ddd9-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/6174a637c787a52be23d7eb3932c36cb-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/1d8794893dc3b849351753f762a7b778-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ecef23570b657176b275309d60c0c1e1-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/907278dc424a28157d04699fc0c4ba03-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/76efec0ef76c714f83f90716138c932c-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/fcbcfcf1bbe48784d338e6d37c65c17e-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/d8f7460d3270b279084423477a521bee-p_e.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ab2cfe2469f5acbe2430cd7f553d93e0-p_e.jpg"
+                        }
+                      ]
+                    }
+                  ],
+                  "mapResults": [],
+                  "relaxedResults": [],
+                  "resultsHash": "1b153d5e",
+                  "showForYouCount": 0,
+                  "relaxedResultsHash": "1",
+                  "resultsCommingled": true
+                },
+                "status": true,
+                "message": "Successful",
+                "meta": {
+                  "currentPage": 1,
+                  "limit": 41,
+                  "totalRecords": 86,
+                  "totalPage": 3
+                }
                 }
 
 components:
