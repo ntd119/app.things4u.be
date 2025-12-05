@@ -34727,6 +34727,47 @@ paths:
                       "status": true,
                       "message": "Successful"
                 }
+  
+  /properties/down-payment-assistance:
+    get:
+      summary: "properties/down-payment-assistance"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                   "data": {
+                    "downPaymentAssistance": {
+                      "resultCount": 35,
+                      "maxAssistance": 19450
+                    }
+                  },
+                  "status": true,
+                  "message": "Successful"
+                }
 
 components:
   securitySchemes:
