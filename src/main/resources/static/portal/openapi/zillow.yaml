@@ -8,15 +8,14 @@ servers:
 paths:
   /properties/auto-complete:
     get:
-      description: >-
-        properties/auto-complete
+      summary: "properties/auto-complete"
       parameters:
         - name: query
           in: query
           required: true
           schema:
             type: string
-            default: 'Houston'
+            example: "Houston"
           description: |
             - Required: true
             - Ex: `Houston`
@@ -24,7 +23,7 @@ paths:
           in: cookie
           schema:
             type: string
-          description: >-
+          description: |
             - The `cookie` can be copied from browser
       responses:
         "200":
@@ -110,6 +109,7 @@ paths:
                   "status": true,
                   "message": "Successful"
                 }
+
 
 components:
   securitySchemes:
