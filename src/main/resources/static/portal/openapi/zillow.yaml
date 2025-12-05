@@ -41256,6 +41256,198 @@ paths:
                   "message": "Successful"
                 }
 
+  /agents/sale-listings:
+    get:
+      summary: "agents/sale-listings"
+      tags:
+        - Agents
+      parameters:
+        - name: encodedZuid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "X1-ZU10bs62tnoyy2x_5dugv"
+          description: |
+            - Required: true
+            - `encodedZuid` can be retrieved from /agents/details endpoint(data->displayUser->encodedZuid)
+            - Ex: `X1-ZUz3fc6ch3xp8p_10irz`
+        - name: resultsPerPage
+          in: query
+          schema:
+            type: number
+            default: 5
+          description: |
+            - Total number of record per api call
+            - Ex: `20`
+            - It has a value ranging from 0 to 100
+            - Default value: `5`
+        - name: page
+          in: query
+          schema:
+            type: number
+            default: 1
+          description: |
+            - The page index, for paging purpose
+            - Ex: `2`
+            - Default: `1`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                  "data": [
+                      {
+                        "zpid": 31490747,
+                        "home_type": "condo",
+                        "address": {
+                          "line1": "377 Rector Pl APT 2A",
+                          "line2": "New York, NY 10280",
+                          "city": "New York",
+                          "stateOrProvince": "NY",
+                          "postalCode": "10280"
+                        },
+                        "bedrooms": 1,
+                        "bathrooms": 1,
+                        "openHouses": "",
+                        "hasOpenHouse": false,
+                        "primary_photo_url": "https://photos.zillowstatic.com/fp/c17c1ebe6cfadfe405174cf6b3d6a794-a_a.jpg",
+                        "price": 899000,
+                        "price_currency": "usd",
+                        "status": "fsba",
+                        "latitude": 40.7099,
+                        "longitude": -74.0179,
+                        "brokerage_name": "Platinum Properties",
+                        "home_marketing_status": "active",
+                        "home_marketing_type": "forSale",
+                        "has_vr_model": false,
+                        "listing_url": "/homedetails/377-Rector-Pl-APT-2A-New-York-NY-10280/31490747_zpid/"
+                      },
+                      {
+                        "zpid": 89334569,
+                        "home_type": "condo",
+                        "address": {
+                          "line1": "75 Wall St APT 35F",
+                          "line2": "New York, NY 10005",
+                          "city": "New York",
+                          "stateOrProvince": "NY",
+                          "postalCode": "10005"
+                        },
+                        "bedrooms": 3,
+                        "bathrooms": 3,
+                        "openHouses": "",
+                        "hasOpenHouse": false,
+                        "primary_photo_url": "https://photos.zillowstatic.com/fp/e383df75ba16a5099858dce08f5766d1-a_a.jpg",
+                        "price": 2395000,
+                        "price_currency": "usd",
+                        "status": "fsba",
+                        "latitude": 40.70504,
+                        "longitude": -74.00812,
+                        "brokerage_name": "Platinum Properties",
+                        "home_marketing_status": "active",
+                        "home_marketing_type": "forSale",
+                        "has_vr_model": false,
+                        "listing_url": "/homedetails/75-Wall-St-APT-35F-New-York-NY-10005/89334569_zpid/"
+                      },
+                      {
+                        "zpid": 89334546,
+                        "home_type": "condo",
+                        "address": {
+                          "line1": "75 Wall St APT 19M",
+                          "line2": "New York, NY 10005",
+                          "city": "New York",
+                          "stateOrProvince": "NY",
+                          "postalCode": "10005"
+                        },
+                        "bedrooms": 2,
+                        "bathrooms": 2,
+                        "openHouses": "",
+                        "hasOpenHouse": false,
+                        "primary_photo_url": "https://photos.zillowstatic.com/fp/ebd8cf8f1d14ecf5c61eb02c49b2bcc1-a_a.jpg",
+                        "price": 1595000,
+                        "price_currency": "usd",
+                        "status": "fsba",
+                        "latitude": 40.70504,
+                        "longitude": -74.00812,
+                        "brokerage_name": "Platinum Properties",
+                        "home_marketing_status": "active",
+                        "home_marketing_type": "forSale",
+                        "has_vr_model": false,
+                        "listing_url": "/homedetails/75-Wall-St-APT-19M-New-York-NY-10005/89334546_zpid/"
+                      },
+                      {
+                        "zpid": 2081522353,
+                        "home_type": "condo",
+                        "address": {
+                          "line1": "130 Lenox Ave APT 310",
+                          "line2": "New York, NY 10026",
+                          "city": "New York",
+                          "stateOrProvince": "NY",
+                          "postalCode": "10026"
+                        },
+                        "bedrooms": 2,
+                        "bathrooms": 1,
+                        "openHouses": "",
+                        "hasOpenHouse": false,
+                        "primary_photo_url": "https://photos.zillowstatic.com/fp/68a62b90ab5c3a3eecde21a5c51cb683-a_a.jpg",
+                        "price": 499000,
+                        "price_currency": "usd",
+                        "status": "fsba",
+                        "latitude": 40.8021,
+                        "longitude": -73.9488,
+                        "brokerage_name": "Platinum Properties",
+                        "home_marketing_status": "active",
+                        "home_marketing_type": "forSale",
+                        "has_vr_model": false,
+                        "listing_url": "/homedetails/130-Lenox-Ave-APT-310-New-York-NY-10026/2081522353_zpid/"
+                      },
+                      {
+                        "zpid": 79978853,
+                        "home_type": "condo",
+                        "address": {
+                          "line1": "635 W 42nd St APT 8C",
+                          "line2": "New York, NY 10036",
+                          "city": "New York",
+                          "stateOrProvince": "NY",
+                          "postalCode": "10036"
+                        },
+                        "bedrooms": 1,
+                        "bathrooms": 1,
+                        "openHouses": "",
+                        "hasOpenHouse": false,
+                        "primary_photo_url": "https://photos.zillowstatic.com/fp/cde5345b46e67588edf617f4f161be56-a_a.jpg",
+                        "price": 899000,
+                        "price_currency": "usd",
+                        "status": "fsba",
+                        "latitude": 40.76178,
+                        "longitude": -73.99965,
+                        "brokerage_name": "Platinum Properties",
+                        "home_marketing_status": "active",
+                        "home_marketing_type": "forSale",
+                        "has_vr_model": false,
+                        "listing_url": "/homedetails/635-W-42nd-St-APT-8C-New-York-NY-10036/79978853_zpid/"
+                      }
+                    ],
+                    "meta": {
+                      "currentPage": 1,
+                      "limit": 5,
+                      "totalRecords": 19,
+                      "totalPage": 4
+                    },
+                    "status": true,
+                    "message": "Successful"
+                }
+
 components:
   securitySchemes:
     X-API-Key:
