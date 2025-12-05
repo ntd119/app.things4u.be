@@ -411,14 +411,14 @@ paths:
             example: 2
             default: 1
           description: |
-           - The page index, for paging purpose
-            - Ex: `2`
-            - Default: `1`
+            - The page index, for paging purpose
+             - Ex: `2`
+             - Default: `1`
         - name: status
           in: query
           schema:
             type: string
-            enum: [forSale,forRent,sold]
+            enum: [forSale, forRent, sold]
             default: "forSale"
           description: |
             - Status type of the properties
@@ -431,7 +431,19 @@ paths:
           in: query
           schema:
             type: string
-            enum: [relevance,recentlyChanged,daysOn,price,beds,baths,livingArea,lotArea,yearBuilt,rentalPriorityScore]
+            enum:
+              [
+                relevance,
+                recentlyChanged,
+                daysOn,
+                price,
+                beds,
+                baths,
+                livingArea,
+                lotArea,
+                yearBuilt,
+                rentalPriorityScore,
+              ]
             default: "relevance"
           description: |
             - Sort by
@@ -452,7 +464,7 @@ paths:
           in: query
           schema:
             type: string
-            enum: [asc,desc]
+            enum: [asc, desc]
             default: "desc"
           description: |
             - Order type
@@ -464,6 +476,7 @@ paths:
           in: query
           schema:
             type: string
+            example: "160000,1500000"
           description: |
             - Price range
             - Min and max prices should be separated by commas
@@ -475,7 +488,7 @@ paths:
           in: query
           schema:
             type: string
-            enum: [listPrice,monthlyPayment]
+            enum: [listPrice, monthlyPayment]
             default: "listPrice"
           description: |
             - Price type
@@ -487,6 +500,7 @@ paths:
           in: query
           schema:
             type: number
+            example: 200
           description: |
             - Hoa fees
             - Default : Any
@@ -508,7 +522,7 @@ paths:
           in: query
           schema:
             type: string
-            example: '0,5'
+            example: "0,5"
           description: |
             - Bedrooms
             - Default : Any
@@ -521,6 +535,302 @@ paths:
             - `1`: 1
             - ......
             - `5`: 5
+        - name: bathrooms
+          in: query
+          schema:
+            type: string
+            example: "1"
+          description: |
+            - Bathrooms
+            - Default : Any
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: 1+
+            - `1.5`: 1.5+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+        - name: homeType
+          in: query
+          schema:
+            type: string
+            example: "townhome,singleFamily"
+          description: |
+            - Home type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `townhome,singleFamily`
+            - `singleFamily`: Houses
+            - `townhome`: Townhomes
+            - `condo,apartment`: Condos/Co-ops/Apartments
+            - `land`: Lots/Land
+            - `multiFamily`: Multi-family
+            - `manufactured`: Manufactured
+        - name: homeSize
+          in: query
+          schema:
+            type: string
+            example: "500,7500"
+          description: |
+            - Home size
+            - Default : Any
+            - Min and max home size should be separated by commas
+            - Ex: `500,7500`
+            - In the case of only having the minimum home size: Ex: `500`
+            - In the case of only having the maximum home size: Ex: `,7500`
+            - In case of having both: Ex: `500,7500`
+            - `500`: 500 sqft
+            - `750`: 750 sqft
+            - ......
+            - `7500`: 7500 sqft
+        - name: lotSize
+          in: query
+          schema:
+            type: string
+            example: "1000,3000"
+          description: |
+            - Lot size
+            - Default : Any
+            - Min and max lot size should be separated by commas
+            - Ex: `1000,3000`
+            - In the case of only having the minimum lot size: Ex: `1000`
+            - In the case of only having the maximum lot size: Ex: `,3000`
+            - In case of having both: Ex: `1000,3000`
+            - `1000`: 1000 sqft
+            - `2000`: 2000 sqft
+            - ................
+            - `10890`: 1/4 acres
+            - `21780`: 1/2 acres
+            - `43560`: 1 acre
+            - `87120`: 2 acres
+            - ................
+            - `4356000`:100 acres
+        - name: yearBuilt
+          in: query
+          schema:
+            type: string
+            example: "2024"
+          description: |
+            - Year built
+            - Default : Any
+            - Min and max year built should be separated by commas
+            - Ex: `2008,2020`
+            - In the case of only having the minimum year built: Ex: `2008`
+            - In the case of only having the maximum year built: Ex: `,2020`
+            - In case of having both: Ex: `2008,2020`
+            - `2024`: 2024
+            - `2023`: 2023
+            - ............
+            - `1900`: 1900
+        - name: amenities
+          in: query
+          schema:
+            type: string
+            example: "haveAirConditioning,havePool"
+          description: |
+            - Amenities
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `haveAirConditioning,havePool`
+            - `haveAirConditioning`: Air conditioning (A/C)
+            - `havePool`: pool
+            - `onWaterfront`: On waterfront
+        - name: parkingSpots
+          in: query
+          schema:
+            type: number
+            example: "2"
+          description: |
+            - Parking spots
+            - Default : Any
+            - Ex: `3`
+            - `1`: 1+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+        - name: haveGarage
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: |
+            - Garage
+            - Default : `false`
+            - Ex: `true`
+        - name: haveSingleStory
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: |
+            - Single-story
+            - Default : `false`
+            - Ex: `true`
+        - name: basementTypes
+          in: query
+          schema:
+            type: string
+            example: "finished,unfinished,partial"
+          description: |
+            - Basement types
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `finished,unfinished,partial`
+            - `finished,unfinished,partial`: Finished and Unfinished
+            - `finished`: Finished
+            - `unfinished`: Unfinished
+        - name: keywords
+          in: query
+          schema:
+            type: string
+            example: "fireplace,horses"
+          description: |
+            - Keyword search: Backyard, fireplace, horses, MLS #, etc.
+            - Ex: `fireplace,horses`
+        - name: listing
+          in: query
+          schema:
+            type: string
+            example: "fsba,newConstruction"
+          description: |
+            - Listing
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `fsba,newConstruction`
+            - `fsba`: Agent listed
+            - `newConstruction`: New construction
+            - `foreclosure`: Foreclosure
+            - `auction`: Auctions
+            - `foreclosed`: Foreclosed
+            - `preforeclosure`: Pre-foreclosures
+            - `fsbo`: Owner posted
+        - name: listingType
+          in: query
+          schema:
+            type: string
+            enum: [agent, other]
+            default: "agent"
+          description: |
+            - Listing type
+            - Default : `agent`
+            - Choose one of the values below
+            - `agent`: By agent
+            - `other`: By other
+        - name: listingStatus
+          in: query
+          schema:
+            type: string
+            example: "comingSoon,priceReduction"
+          description: |
+            - Listing status
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `comingSoon,priceReduction`
+            - `comingSoon`: Coming soon
+            - `priceReduction`: Price drop
+            - `acceptingBackupOffers`: Accepting backup offers
+            - `pending`: Pending & under contract
+        - name: touring
+          in: query
+          schema:
+            type: string
+            example: "openHouses,approvedVirtualTour"
+          description: |
+            - Touring
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `openHouses,approvedVirtualTour`
+            - `openHouses`:Open house
+            - `approvedVirtualTour`: 3D tour
+        - name: timeOnZillow
+          in: query
+          schema:
+            type: number
+            example: "90"
+          description: |
+            - Time on Zillow
+            - It is `sold in last` item in case status=sold
+            - Ex: `1`
+            - `1`: 1 day
+            - `7`: 1 week
+            - `14`: 2 weeks
+            - `30`: 1 month
+            - `90`: 3 months
+            - `182`: 6 months
+            - `365`: 12 months
+            - `730`: 24 months
+            - `1095`: 36 months
+        - name: views
+          in: query
+          schema:
+            type: string
+            example: "city,mountain"
+          description: |
+            - Surrounding views (status=forSale)
+            - Views (status=forRent)
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `city,mountain`
+            - `city`: City
+            - `mountain`: Mountain
+            - `park`: Park
+            - `water`: Water
+        - name: seniorLiving
+          in: query
+          schema:
+            type: string
+            example: "seniorCommunity"
+          description: |
+            - Senior living
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `seniorCommunity`
+            - `seniorCommunity`: Hide 55+ communities
+        - name: space
+          in: query
+          schema:
+            type: string
+            example: "room"
+          description: |
+            - Space
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `room`
+            - `room`: Room
+        - name: rentalAvailabilityDate
+          in: query
+          schema:
+            type: string
+            example: "2024-03-16"
+          description: |
+            - Move-in date (only using in case status=forRent)
+            - Choose a move-in date to view listings available on or before this date
+            - Format: `YYYY-MM-DD`
+            - Ex: `2024-03-16`
+        - name: excludeNullRentalAvailabilityDates
+          in: query
+          schema:
+            type: boolean
+            example: true
+            default: false
+          description: |
+            - Hide listings with no date provided (only using in case status=forRent and the `rentalAvailabilityDate` is inputed)
+            - Ex: `true`
+            - Default : `false`
+        - name: rentalAmenities
+          in: query
+          schema:
+            type: string
+            default: 'largeDogs,smallDogs'
+          description: |
+            - Rental amenities(only using in case status=forRent)
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `largeDogs,smallDogs`
+            - `largeDogs`: Allows large dogs
+            - `smallDogs`: Allows small dogs
+            - `cats`: Allows cats
+            - `parkingAvailable`: On-site parking
+            - `laundryAvailable`: In-unit laundry
+            - `incomeRestricted`: Income restricted
+            - `isFeaturedListing`: Apartment community
+            - `areApplicationsAccepted`: Accepts Zillow Applications
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
       responses:
         "200":
           description: Successful Response
