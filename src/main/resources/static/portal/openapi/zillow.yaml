@@ -1515,6 +1515,816 @@ paths:
                 }
                 }
 
+  /properties/search-coordinates:
+    get:
+      summary: "properties/search"
+      tags:
+        - Property search
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Houston, TX"
+          description: |
+            - Required: true
+            - The `location` can be retrieved from /properties/auto-complete endpoint(data->display)
+            - Ex: `Houston, TX`
+        - name: eastLng
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "-94.517205"
+          description: |
+            - East longitude
+            - Required: true
+            - Ex: `-94.517205`
+        - name: westLng
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "-96.193233"
+          description: |
+            - West longitude
+            - Required: true
+            - Ex: `-96.193233`
+        - name: southLat
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "29.170258"
+          description: |
+            - South latitude
+            - Required: true
+            - Ex: `29.170258`
+        - name: northLat
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "29.657524"
+          description: |
+            - North latitude
+            - Required: true
+            - Ex: `29.657524`
+        - name: resultsPerPage
+          in: query
+          schema:
+            type: number
+            example: 2
+            default: 25
+          description: |
+            - Total number of record per api call
+            - Ex: `2`
+            - Default: `25`
+        - name: page
+          in: query
+          schema:
+            type: number
+            example: 2
+            default: 1
+          description: |
+            - The page index, for paging purpose
+             - Ex: `2`
+             - Default: `1`
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [forSale, forRent, sold]
+            default: "forSale"
+          description: |
+            - Status type of the properties
+            - Default : `forSale`
+            - Choose one of the values below
+            - `forSale`: For sale
+            - `forRent`: For rent
+            - `sold`: Sold
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum:
+              [
+                relevance,
+                recentlyChanged,
+                daysOn,
+                price,
+                beds,
+                baths,
+                livingArea,
+                lotArea,
+                yearBuilt,
+                rentalPriorityScore,
+              ]
+            default: "relevance"
+          description: |
+            - Sort by
+            - Default : `relevance`
+            - Choose one of the values below
+            - `relevance`: Homes for You (with sortType=desc)
+            - `recentlyChanged`: Recently Changed (with sortType=desc)
+            - `daysOn`: Newest (with sortType=asc)
+            - `price`: Price: High to Low (with sortType=desc)
+            - `price`: Price: Low to High (with sortType=asc)
+            - `beds`: Bedrooms (with sortType=desc)
+            - `baths`: Bathrooms (with sortType=desc)
+            - `livingArea`: Square Feet (with sortType=desc)
+            - `lotArea`: Lot Size (with sortType=desc)
+            - `yearBuilt`: Year Built (with sortType=desc)
+            - `rentalPriorityScore`: Default in case status=forRent (with sortType=desc)
+        - name: sortType
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: "desc"
+          description: |
+            - Order type
+            - Default : `desc`
+            - Choose one of the values below
+            - `asc`: Ascending (smallest value first)
+            - `desc`: Descending (largest value first)
+        - name: priceRange
+          in: query
+          schema:
+            type: string
+            example: "160000,1500000"
+          description: |
+            - Price range
+            - Min and max prices should be separated by commas
+            - Ex: `160000,1500000`
+            - In the case of only having the minimum price: Ex: `160000`
+            - In the case of only having the maximum price: Ex: `,1500000`
+            - In case of having both: Ex: `160000,1500000`
+        - name: priceType
+          in: query
+          schema:
+            type: string
+            enum: [listPrice, monthlyPayment]
+            default: "listPrice"
+          description: |
+            - Price type
+            - Default : `listPrice`
+            - Choose one of the values below
+            - `listPrice`: List price
+            - `monthlyPayment`: Monthly payment
+        - name: hoaFees
+          in: query
+          schema:
+            type: number
+            example: 200
+          description: |
+            - Hoa fees
+            - Default : Any
+            - Choose one of the values below
+            - `0`: No HOA Fee
+            - `100`: 100/month
+            - `200`: 200/month
+            - ................
+            - `2000`: 2000/month
+        - name: includeNoHoaDataHomes
+          in: query
+          schema:
+            type: boolean
+          description: |
+            - Include homes with no Hoa data
+            - The includeNoHoaDataHomes only takes effect when `hoaFees` is selected.
+            - Default : `true`
+        - name: bedrooms
+          in: query
+          schema:
+            type: string
+            example: "0,5"
+          description: |
+            - Bedrooms
+            - Default : Any
+            - Min and max bedrooms should be separated by commas
+            - Ex: `0,5`
+            - In the case of only having the minimum bedrooms: Ex: `0`
+            - In the case of only having the maximum bedrooms: Ex: `,5`
+            - In case of having both: Ex: `0,5`
+            - `0`: Studio
+            - `1`: 1
+            - ......
+            - `5`: 5
+        - name: bathrooms
+          in: query
+          schema:
+            type: string
+            example: "1"
+          description: |
+            - Bathrooms
+            - Default : Any
+            - Ex: `1`
+            - Choose one of the values below
+            - `1`: 1+
+            - `1.5`: 1.5+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+        - name: homeType
+          in: query
+          schema:
+            type: string
+            example: "townhome,singleFamily"
+          description: |
+            - Home type
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `townhome,singleFamily`
+            - `singleFamily`: Houses
+            - `townhome`: Townhomes
+            - `condo,apartment`: Condos/Co-ops/Apartments
+            - `land`: Lots/Land
+            - `multiFamily`: Multi-family
+            - `manufactured`: Manufactured
+        - name: homeSize
+          in: query
+          schema:
+            type: string
+            example: "500,7500"
+          description: |
+            - Home size
+            - Default : Any
+            - Min and max home size should be separated by commas
+            - Ex: `500,7500`
+            - In the case of only having the minimum home size: Ex: `500`
+            - In the case of only having the maximum home size: Ex: `,7500`
+            - In case of having both: Ex: `500,7500`
+            - `500`: 500 sqft
+            - `750`: 750 sqft
+            - ......
+            - `7500`: 7500 sqft
+        - name: lotSize
+          in: query
+          schema:
+            type: string
+            example: "1000,3000"
+          description: |
+            - Lot size
+            - Default : Any
+            - Min and max lot size should be separated by commas
+            - Ex: `1000,3000`
+            - In the case of only having the minimum lot size: Ex: `1000`
+            - In the case of only having the maximum lot size: Ex: `,3000`
+            - In case of having both: Ex: `1000,3000`
+            - `1000`: 1000 sqft
+            - `2000`: 2000 sqft
+            - ................
+            - `10890`: 1/4 acres
+            - `21780`: 1/2 acres
+            - `43560`: 1 acre
+            - `87120`: 2 acres
+            - ................
+            - `4356000`:100 acres
+        - name: yearBuilt
+          in: query
+          schema:
+            type: string
+            example: "2024"
+          description: |
+            - Year built
+            - Default : Any
+            - Min and max year built should be separated by commas
+            - Ex: `2008,2020`
+            - In the case of only having the minimum year built: Ex: `2008`
+            - In the case of only having the maximum year built: Ex: `,2020`
+            - In case of having both: Ex: `2008,2020`
+            - `2024`: 2024
+            - `2023`: 2023
+            - ............
+            - `1900`: 1900
+        - name: amenities
+          in: query
+          schema:
+            type: string
+            example: "haveAirConditioning,havePool"
+          description: |
+            - Amenities
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `haveAirConditioning,havePool`
+            - `haveAirConditioning`: Air conditioning (A/C)
+            - `havePool`: pool
+            - `onWaterfront`: On waterfront
+        - name: parkingSpots
+          in: query
+          schema:
+            type: number
+            example: "2"
+          description: |
+            - Parking spots
+            - Default : Any
+            - Ex: `3`
+            - `1`: 1+
+            - `2`: 2+
+            - `3`: 3+
+            - `4`: 4+
+        - name: haveGarage
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: |
+            - Garage
+            - Default : `false`
+            - Ex: `true`
+        - name: haveSingleStory
+          in: query
+          schema:
+            type: boolean
+            default: false
+          description: |
+            - Single-story
+            - Default : `false`
+            - Ex: `true`
+        - name: basementTypes
+          in: query
+          schema:
+            type: string
+            example: "finished,unfinished,partial"
+          description: |
+            - Basement types
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `finished,unfinished,partial`
+            - `finished,unfinished,partial`: Finished and Unfinished
+            - `finished`: Finished
+            - `unfinished`: Unfinished
+        - name: keywords
+          in: query
+          schema:
+            type: string
+            example: "fireplace,horses"
+          description: |
+            - Keyword search: Backyard, fireplace, horses, MLS #, etc.
+            - Ex: `fireplace,horses`
+        - name: listing
+          in: query
+          schema:
+            type: string
+            example: "fsba,newConstruction"
+          description: |
+            - Listing
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `fsba,newConstruction`
+            - `fsba`: Agent listed
+            - `newConstruction`: New construction
+            - `foreclosure`: Foreclosure
+            - `auction`: Auctions
+            - `foreclosed`: Foreclosed
+            - `preforeclosure`: Pre-foreclosures
+            - `fsbo`: Owner posted
+        - name: listingType
+          in: query
+          schema:
+            type: string
+            enum: [agent, other]
+            default: "agent"
+          description: |
+            - Listing type
+            - Default : `agent`
+            - Choose one of the values below
+            - `agent`: By agent
+            - `other`: By other
+        - name: listingStatus
+          in: query
+          schema:
+            type: string
+            example: "comingSoon,priceReduction"
+          description: |
+            - Listing status
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `comingSoon,priceReduction`
+            - `comingSoon`: Coming soon
+            - `priceReduction`: Price drop
+            - `acceptingBackupOffers`: Accepting backup offers
+            - `pending`: Pending & under contract
+        - name: touring
+          in: query
+          schema:
+            type: string
+            example: "openHouses,approvedVirtualTour"
+          description: |
+            - Touring
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `openHouses,approvedVirtualTour`
+            - `openHouses`:Open house
+            - `approvedVirtualTour`: 3D tour
+        - name: timeOnZillow
+          in: query
+          schema:
+            type: number
+            example: "90"
+          description: |
+            - Time on Zillow
+            - It is `sold in last` item in case status=sold
+            - Ex: `1`
+            - `1`: 1 day
+            - `7`: 1 week
+            - `14`: 2 weeks
+            - `30`: 1 month
+            - `90`: 3 months
+            - `182`: 6 months
+            - `365`: 12 months
+            - `730`: 24 months
+            - `1095`: 36 months
+        - name: views
+          in: query
+          schema:
+            type: string
+            example: "city,mountain"
+          description: |
+            - Surrounding views (status=forSale)
+            - Views (status=forRent)
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `city,mountain`
+            - `city`: City
+            - `mountain`: Mountain
+            - `park`: Park
+            - `water`: Water
+        - name: seniorLiving
+          in: query
+          schema:
+            type: string
+            example: "seniorCommunity"
+          description: |
+            - Senior living
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `seniorCommunity`
+            - `seniorCommunity`: Hide 55+ communities
+        - name: space
+          in: query
+          schema:
+            type: string
+            example: "room"
+          description: |
+            - Space
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `room`
+            - `room`: Room
+        - name: rentalAvailabilityDate
+          in: query
+          schema:
+            type: string
+            example: "2024-03-16"
+          description: |
+            - Move-in date (only using in case status=forRent)
+            - Choose a move-in date to view listings available on or before this date
+            - Format: `YYYY-MM-DD`
+            - Ex: `2024-03-16`
+        - name: excludeNullRentalAvailabilityDates
+          in: query
+          schema:
+            type: boolean
+            example: true
+            default: false
+          description: |
+            - Hide listings with no date provided (only using in case status=forRent and the `rentalAvailabilityDate` is inputed)
+            - Ex: `true`
+            - Default : `false`
+        - name: rentalAmenities
+          in: query
+          schema:
+            type: string
+            default: "largeDogs,smallDogs"
+          description: |
+            - Rental amenities(only using in case status=forRent)
+            - It can input multiple values, and the values should be separated by commas
+            - Ex: `largeDogs,smallDogs`
+            - `largeDogs`: Allows large dogs
+            - `smallDogs`: Allows small dogs
+            - `cats`: Allows cats
+            - `parkingAvailable`: On-site parking
+            - `laundryAvailable`: In-unit laundry
+            - `incomeRestricted`: Income restricted
+            - `isFeaturedListing`: Apartment community
+            - `areApplicationsAccepted`: Accepts Zillow Applications
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                   "data": [
+                      {
+                        "zpid": 27763346,
+                        "location": {
+                          "latitude": 29.81441,
+                          "longitude": -95.3968
+                        },
+                        "address": {
+                          "streetAddress": "216 E 31st St",
+                          "zipcode": "77018",
+                          "city": "Houston",
+                          "state": "TX"
+                        },
+                        "media": {
+                          "propertyPhotoLinks": {
+                            "highResolutionLink": "https://photos.zillowstatic.com/fp/5a68c961c34e17b92c23659ae250ff13-p_f.jpg"
+                          },
+                          "thirdPartyPhotoLinks": {
+                            "streetViewLink": "https://maps.googleapis.com/maps/api/streetview?size=1600x240&location=29.814409255981445,-95.39679718017578&key=AIzaSyBJsNQO5ZeG-XAbqqWLKwG08fWITSxg33w&signature=kJ_jKMBnwtEz-9OiuiWsT9AYl1M=",
+                            "satelliteLink": "https://maps.googleapis.com/maps/api/staticmap?mobile=false&sensor=true&maptype=satellite&size=1600x480&zoom=19&center=29.814409255981445,-95.39679718017578&key=AIzaSyBJsNQO5ZeG-XAbqqWLKwG08fWITSxg33w&signature=P_M_XvVJwjjF5OVwR6MoeVQvF7U=",
+                            "streetViewMetadataLink": "https://maps.googleapis.com/maps/api/streetview/metadata?location=29.814409255981445,-95.39679718017578&key=AIzaSyBJsNQO5ZeG-XAbqqWLKwG08fWITSxg33w&signature=pgUkFsoSZYi2F3UabpVYwLSiovw="
+                          },
+                          "hasVRModel": true,
+                          "hasVideos": false,
+                          "hasApprovedThirdPartyVirtualTour": false,
+                          "allPropertyPhotos": {
+                            "highResolution": [
+                              "https://photos.zillowstatic.com/fp/5a68c961c34e17b92c23659ae250ff13-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/f0a0811ef6cfbcc1fa6e5bdab74aaf03-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/963318ee619802c61ee8e9ab4f260702-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/200abdc9fb5cc31e886b3afe31dde159-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/c69644a4c84d7b01e37f80e7aa024009-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/feaaf1c913ae15868df30cb063ba8abe-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/91f4907f5cce21f6cc5bfc7293f50918-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/472198e1a0b834bd23798d5319cc24f5-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/b5b77b49ceb50ad2b14c26cbdac8891b-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/46260cd76f0bf30057e5bc1af7af85e5-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/7d8bcc03fb8d14d5bd0b8b41f49cc48e-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/088e35348dd914c9a0eaae99e16a7ca7-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/64e5cf3404c262040dbb5fc7397ff6c6-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/4e67ea7b4ed2956fdcb946162c8d4246-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/3d8539825ca44b08152a6353a21aa9b1-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/570189649d6e3d2340eb771f5234842a-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/474744f4d8d4a66ee9b06de401ce5821-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/09996112da647963b697763794cfa156-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/4f00926d1dc805194d4293bd3fb585f2-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/9298699df0a65dd441afcd25a9041e1e-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/1d38b494c38dc0e5f33a6ad710f63e2b-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/25bf75e3a74461bceafa9fce4befe17d-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/b12303f6fbcd23bdd9c469dfea00d3b5-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/feb5d4ea562c4167ec51ddcc340592f5-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/b88238d3351973a19aa444a43720099c-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/a552e93983c693d0f0f71910dc3ee69f-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/9075a2fd7edb8722bebdb4788122c112-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/b8efa246bb7606e1084a68d7b61d781e-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/3a36fc1193e0eaf3a741b70cba1ba6f9-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/a07494c32ec78e721332d01f58f8dc04-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/563b005127f6d34334c3ce0e1b669571-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/dfc352e1b628f62e933090dc1417baf5-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/93d3b43cf20b65e1d6b86731db385579-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/f7a261077bcd60f9e5f45adb63b6ffc3-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/009f2cc3aa1e50ef91a479ad973edb1b-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/93a67e9a6a03561478ccedb2571306c1-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/34c1054e98f2f8801b2781b43a0c0e82-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/263b22ea65ff9e4855a44f73b16ec385-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/103011b0371728ca13628501931020d8-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/a2c314f19ae96e4d2af4df0eabeb104f-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/9847009f0535082c3502e2e81735ab49-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/571803c4786cf0e099ffb8315a4f9294-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/9e96ac8e9b1b36b55db63076ec41a672-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/4bc58747babefd662f05e7f57eb9eb05-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/80b74c8cdb916418c2163f11f9d6bfa1-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/a1bbbf2d6ab8bed4f8d427c0af1af695-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/5592276ecb72c303aeba056fdfec10ef-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/dd3c52d8110c6e7fd87bb065e4fcbb46-p_f.jpg"
+                            ]
+                          }
+                        },
+                        "isFeatured": false,
+                        "isShowcaseListing": true,
+                        "mapDotTag": {
+                          "name": "showcase"
+                        },
+                        "rental": {
+                          "areApplicationsAccepted": false
+                        },
+                        "currency": "usd",
+                        "country": "usa",
+                        "listingDateTimeOnZillow": 1709597704545,
+                        "bestGuessTimeZone": "America/Chicago",
+                        "isUnmappable": false,
+                        "bathrooms": 3,
+                        "bedrooms": 3,
+                        "livingArea": 2146,
+                        "yearBuilt": 2024,
+                        "lotSizeWithUnit": {
+                          "lotSize": 5998.212,
+                          "lotSizeUnit": "squareFeet"
+                        },
+                        "propertyType": "singleFamily",
+                        "listing": {
+                          "listingStatus": "forSale",
+                          "listingSubType": {
+                            "isNewConstruction": true,
+                            "isFSBA": true
+                          }
+                        },
+                        "daysOnZillow": 6,
+                        "isPreforeclosureAuction": false,
+                        "price": {
+                          "value": 529000,
+                          "pricePerSquareFoot": 247
+                        },
+                        "newConstruction": {
+                          "isPremierBuilder": false,
+                          "newConstructionType": "builderSpec"
+                        },
+                        "estimates": {
+                          "zestimate": 525900,
+                          "rentZestimate": 2464
+                        },
+                        "zillowOwnedProperty": {
+                          "isZillowOwned": false
+                        },
+                        "taxAssessment": {
+                          "taxAssessedValue": 168000,
+                          "taxAssessmentYear": "2023"
+                        },
+                        "hdpView": {
+                          "listingStatus": "forSale",
+                          "price": 529000,
+                          "hdpUrl": "/homedetail/MobileAppHDPShopperPlatformServicePage.htm?fromApp=true&p=android&variant=SHOWCASE#zpid=27763346&homeDetailsVariant=SHOWCASE&webviewLayout=doubleScroll&showFactsAndFeatures=true&fromApp=true&gmaps=true&streetview=true"
+                        },
+                        "region": {},
+                        "personalizedResult": {
+                          "isViewed": false,
+                          "userRecommendation": {
+                            "isRecommendedForYou": false
+                          }
+                        },
+                        "propertyDisplayRules": {
+                          "canShowAddress": true,
+                          "canShowOnMap": true,
+                          "agent": {},
+                          "mls": {
+                            "brokerName": "Corcoran Prestige Realty"
+                          },
+                          "builder": {
+                            "name": "Olav Construction LLC"
+                          },
+                          "soldByOffice": {},
+                          "listingCategory": "category1"
+                        },
+                        "ssid": 63
+                      },
+                      {
+                        "zpid": 97671782,
+                        "location": {
+                          "latitude": 29.612164,
+                          "longitude": -95.27575
+                        },
+                        "address": {
+                          "streetAddress": "10522 Randolph St",
+                          "zipcode": "77075",
+                          "city": "Houston",
+                          "state": "TX"
+                        },
+                        "media": {
+                          "propertyPhotoLinks": {
+                            "highResolutionLink": "https://photos.zillowstatic.com/fp/71b740a4d144320a15aeb893a526aad9-p_f.jpg"
+                          },
+                          "thirdPartyPhotoLinks": {
+                            "streetViewLink": "https://maps.googleapis.com/maps/api/streetview?size=1600x240&location=29.612163543701172,-95.27574920654297&key=AIzaSyBJsNQO5ZeG-XAbqqWLKwG08fWITSxg33w&signature=S4Dr8bfYZBHYyAK7xJyKnz6v8Oc=",
+                            "satelliteLink": "https://maps.googleapis.com/maps/api/staticmap?mobile=false&sensor=true&maptype=satellite&size=1600x480&zoom=19&center=29.612163543701172,-95.27574920654297&key=AIzaSyBJsNQO5ZeG-XAbqqWLKwG08fWITSxg33w&signature=rEStD_c1QPSaDBV8SY5yNnSwelk=",
+                            "streetViewMetadataLink": "https://maps.googleapis.com/maps/api/streetview/metadata?location=29.612163543701172,-95.27574920654297&key=AIzaSyBJsNQO5ZeG-XAbqqWLKwG08fWITSxg33w&signature=1P1V8xK7GoLpIz-MqUcWD3YBZec="
+                          },
+                          "hasVRModel": false,
+                          "hasVideos": false,
+                          "hasApprovedThirdPartyVirtualTour": false,
+                          "allPropertyPhotos": {
+                            "highResolution": [
+                              "https://photos.zillowstatic.com/fp/71b740a4d144320a15aeb893a526aad9-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/e0bd36cf31010dec5225506ad6fdb6a7-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/461a9f7d8c497e869f54c8fa67c14ca1-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/1f95a0ee52db8af70032900c5890db29-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/85f28710991481ca304f65d56e676eaf-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/644c97c1c2b76d49f1eddb8bfd1f1326-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/735dd8c56220443af763861dbf8970c3-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/2b35825d113ad157b409b423affec092-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/822146dea837dfe25d41c6948dea2857-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/15e3bed3a75918041f919fd03879bfb9-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/3bb1a72b0195828fa207d854fb31758f-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/32a76aa4523b7ccc990171424312b2b5-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/ef6cb367ddfde71c7d50ece7fe522a41-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/25738246d80487c6acafeff232f5c4db-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/212ce4644c07a8e66bad5d1a14ef57fa-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/2814a8ff442baa370f308c42ebbe2652-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/f129bd6544ed99aa2588524ad679a509-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/e26e9ac9e241ec286d2e19be50885759-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/70f1d4c4802e6cdb4e80098112546f6b-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/55a35a6e2cda044a9d726784e34ab66e-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/10739674a2f23c14e9a3841f2d0ca9d0-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/e03927ebac5256166be25f2c18a91626-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/edd36bfe0f08cf89e7529a3ce42e6fd9-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/e08dc6295fbcce1795ec9bd68a060300-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/2dd9d02d3fe6d9de5ae7212c7e362748-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/388bb20b631e64fb32ece8bd10a95d07-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/675fc37e2467eec0a448ebf2daa0c226-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/7b1f39eae76dffd8d563263d1b9bae58-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/c9bddf9ef879b583f7494a4b23c185a6-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/7a902bd751892252cb1a4187f35e324f-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/f776229c9e0a04e72c910de6bd85d77e-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/caba9ed60ade715d064db45c1e67f331-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/caba9ed60ade715d064db45c1e67f331-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/cb21f2aeb70a33b9a87e721cece9a2f6-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/cb21f2aeb70a33b9a87e721cece9a2f6-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/40c881d9f9485a581f6b5a352e48e704-p_f.jpg",
+                              "https://photos.zillowstatic.com/fp/34bd2af829fe67128ad70662099dcce8-p_f.jpg"
+                            ]
+                          }
+                        },
+                        "isFeatured": false,
+                        "isShowcaseListing": false,
+                        "rental": {
+                          "areApplicationsAccepted": false
+                        },
+                        "currency": "usd",
+                        "country": "usa",
+                        "listingDateTimeOnZillow": 1704483311290,
+                        "bestGuessTimeZone": "America/Chicago",
+                        "isUnmappable": false,
+                        "bathrooms": 4,
+                        "bedrooms": 4,
+                        "livingArea": 3040,
+                        "yearBuilt": 2019,
+                        "lotSizeWithUnit": {
+                          "lotSize": 3598.056,
+                          "lotSizeUnit": "squareFeet"
+                        },
+                        "propertyType": "singleFamily",
+                        "listing": {
+                          "listingStatus": "forSale",
+                          "listingSubType": {
+                            "isNewConstruction": true,
+                            "isFSBA": true
+                          }
+                        },
+                        "daysOnZillow": 65,
+                        "isPreforeclosureAuction": false,
+                        "price": {
+                          "value": 332900,
+                          "changedDate": 1709100000000,
+                          "priceChange": -1600,
+                          "pricePerSquareFoot": 110
+                        },
+                        "newConstruction": {
+                          "isPremierBuilder": false,
+                          "newConstructionType": "builderSpec"
+                        },
+                        "estimates": {
+                          "zestimate": 319600,
+                          "rentZestimate": 2999
+                        },
+                        "zillowOwnedProperty": {
+                          "isZillowOwned": false
+                        },
+                        "taxAssessment": {
+                          "taxAssessedValue": 313027,
+                          "taxAssessmentYear": "2023"
+                        },
+                        "hdpView": {
+                          "listingStatus": "forSale",
+                          "price": 332900,
+                          "hdpUrl": "/homedetail/MobileAppHDPShopperPlatformServicePage.htm?fromApp=true&p=android&variant=FOR_SALE#zpid=97671782&homeDetailsVariant=FOR_SALE&webviewLayout=doubleScroll&showFactsAndFeatures=true&fromApp=true&gmaps=true&streetview=true"
+                        },
+                        "region": {},
+                        "personalizedResult": {
+                          "isViewed": false,
+                          "userRecommendation": {
+                            "isRecommendedForYou": false
+                          }
+                        },
+                        "propertyDisplayRules": {
+                          "canShowAddress": true,
+                          "canShowOnMap": true,
+                          "agent": {},
+                          "mls": {
+                            "brokerName": "Coldwell Banker Realty - Houston Bay Area"
+                          },
+                          "builder": {
+                            "name": "Silver Construction"
+                          },
+                          "soldByOffice": {},
+                          "listingCategory": "category1"
+                        },
+                        "ssid": 63
+                      }
+                    ],
+                    "meta": {
+                      "currentPage": 1,
+                      "limit": 2,
+                      "totalRecords": 9789,
+                      "totalPage": 4895
+                    },
+                    "status": true,
+                    "message": "Successful"
+                }
+
 components:
   securitySchemes:
     X-API-Key:
