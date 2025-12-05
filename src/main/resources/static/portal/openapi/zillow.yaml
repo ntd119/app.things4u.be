@@ -2325,6 +2325,1250 @@ paths:
                     "message": "Successful"
                 }
 
+  /properties/search-address:
+    get:
+      summary: "properties/search-address"
+      tags:
+        - Property search
+      parameters:
+        - name: address
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "104 Meir Ln College Station, TX 77845"
+          description: |
+            - Required: true
+            - The `address` can be retrieved from /properties/auto-complete endpoint(data->display with resultType=Address)
+            - Ex: `104 Meir Ln College Station, TX 77845`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                   "data": {
+                      "description": "This 1675 square foot single family home has 3 bedrooms and 2.0 bathrooms. This home is located at 104 Meir Ln, College Station, TX 77845.",
+                      "rentalApplicationsAcceptedType": "REQUEST_TO_APPLY",
+                      "providerListingID": null,
+                      "whatILove": null,
+                      "showDescriptionDisclaimer": false,
+                      "postingUrl": null,
+                      "moveInReady": false,
+                      "imageLink": "https://photos.zillowstatic.com/fp/081a91cd33272c1968b4e7411f40b498-p_b.jpg",
+                      "streetViewImageUrl": "https://maps.googleapis.com/maps/api/streetview?location=104+Meir+Ln%2C+College+Station%2C+TX+77845&size=316x234&key=AIzaSyARFMLB1na-BBWf7_R3-5YOQQaHqEJf6RQ&source=outdoor&signature=4FQDlVPHZ_Lvo36ZInBkS3lrUo4=",
+                      "timeZone": "America/Chicago",
+                      "virtualTourUrl": null,
+                      "longitude": -96.29828,
+                      "latitude": 30.561914,
+                      "homeType": "SINGLE_FAMILY",
+                      "homeStatus": "OTHER",
+                      "isZillowOwned": false,
+                      "isIncomeRestricted": null,
+                      "isHousingConnector": false,
+                      "price": 296400,
+                      "zestimate": 296400,
+                      "zestimateLowPercent": "5",
+                      "zestimateHighPercent": "5",
+                      "zestimateMinus30": "299303",
+                      "livingAreaValue": 1675,
+                      "lotAreaValue": 7187,
+                      "lotAreaUnits": "Square Feet",
+                      "hoaFee": 10,
+                      "hoaFeeFrequency": "Monthly",
+                      "monthlyHoaFee": 10,
+                      "listingDataSource": "Legacy",
+                      "timeOnZillow": null,
+                      "daysOnZillow": null,
+                      "favoriteCount": 0,
+                      "pageViewCount": 4,
+                      "rentalDateAvailable": null,
+                      "listing_sub_type": {
+                        "is_roomForRent": false
+                      },
+                      "rentalListingOwnerReputation": {
+                        "contactCount": null,
+                        "applicationCount": null
+                      },
+                      "rentalListingOwnerContact": {
+                        "displayName": null,
+                        "phoneNumber": null,
+                        "photoUrl": ""
+                      },
+                      "roomForRent": null,
+                      "unassistedShowing": null,
+                      "primaryPublicVideo": null,
+                      "photoUrls": [
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/081a91cd33272c1968b4e7411f40b498-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/625a98c796811bdca3b7550357eb1862-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/4a8b61be2b968af76dffbc35669e12b9-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/a131406fc2892550ad19d84329631cbe-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/c13155a7e60cf1e1c147ba61e3779bbf-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/facc179547cfbf05df36d33a36c051db-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/56f193a3d68cac4e57c12856966e6945-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/1d29ce4f5a5b394bd5a5f3eb136a3547-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/dc0a08d18932dd1184df487168329435-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/c0b7954e936befa6d622a9b5fdfa5cee-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/c7f8eee79289c0f9afef2a794ce11d70-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/cafb199b5d85aa434734f0bad0ae1b27-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/57b50acf97c3778b2ef27e004af7bc62-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/e7f88d26a4efa2483c70bcbc32387882-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/deafc2f6d666c70cbe0406d64f337606-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ffb344d15a0cb9e712af630bf4e8e281-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ccc24474aea04c5130e1bda67e6bb96f-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/24d36b751284ddb274acc4ea8a98c363-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/758325fe474d913363f45a873809e0d2-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/11835d9a15afdf0e058b340a446a214c-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/e33daa9d5ac3e758f1d0917a2f74839c-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/57880b659ba67fc5e7caca214a7caad6-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ced6e165929129228483116152c48c02-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/14b9a5d067b9a8d0d6e96e4ad215cd26-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/8d247cd407f5a8f106a3b56cb385c7b5-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/91ec8ef9b41cdf04d8936614275af38a-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/283c95c0e9000c6172b3b6566db187df-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/f84a8e048bd5931ac89b6840dce1ba75-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/43516e193b4e15004774e8e78499fafb-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/19193e80bd798ce6e1e3c635b4d499c5-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/af98687724f99b24504a1a4b28b44253-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/77d72120d4e201b85724657881e0b5e5-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/170f57f851e961fe9524d341ad80b1e4-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/41f931d2a13987213cb25ab3085dc296-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/254058211f8a44187c33a5dfdfea2d66-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/74b9de8877b7b30de2db61b44bb5f86a-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/80f4096c40488c7cf5f7c162837fd476-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/1036d1b3552cd0b0a5f34cfa18d44592-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/818d598836095274d7c1c7f95a287234-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/6a1e653f177705105be97d6e2eab4d15-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/3cf813df9f7cc5d41a43bc64a293ef24-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/11446128fa75023dd4e0d35d5273bae0-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/8ebc8bc00eeaf9b020c179d5aa9e8c41-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/9475dad304018ba15ab6c097cf3690f2-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/beffe08e7d3e119c99b568980e733682-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ee4a846664c236e19d4bf95ddc6fb2cb-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ebc034c245893567a5057502bd1ae865-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/9525eb00da9fecd5c4c237c5802d40a8-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/c89b1e34cff8ad00073759e300cdd96b-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/5715b8a1e66caea3f64dfab780d5390d-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/7c1a61640d672a0ff403e025106a0b7d-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/f76536bd371288c4caa034e75aff6d5a-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/bba9cd5d80e683de3e7d68a71cf50a0b-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/98a4bbc8ba07ac89fa38bbebae173de1-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/02d5c7d0f3bc49661c275590edd40b29-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/767e03e24af1848a2061499057bfab7d-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/17c58046bd5fbca7e39b529cdca98c6f-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/aaa0eedb8bfc4a303108ba3fd33035e4-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/3946b0fb8d188f48138cebb16a31e8e0-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/232c897d844b37493a4803e60aa87ce9-p_c.jpg",
+                          "subjectType": null
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/7230968db6884cbf500f5383744f6de1-p_c.jpg",
+                          "subjectType": null
+                        }
+                      ],
+                      "photoUrlsHighRes": [
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/081a91cd33272c1968b4e7411f40b498-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/625a98c796811bdca3b7550357eb1862-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/4a8b61be2b968af76dffbc35669e12b9-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/a131406fc2892550ad19d84329631cbe-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/c13155a7e60cf1e1c147ba61e3779bbf-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/facc179547cfbf05df36d33a36c051db-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/56f193a3d68cac4e57c12856966e6945-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/1d29ce4f5a5b394bd5a5f3eb136a3547-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/dc0a08d18932dd1184df487168329435-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/c0b7954e936befa6d622a9b5fdfa5cee-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/c7f8eee79289c0f9afef2a794ce11d70-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/cafb199b5d85aa434734f0bad0ae1b27-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/57b50acf97c3778b2ef27e004af7bc62-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/e7f88d26a4efa2483c70bcbc32387882-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/deafc2f6d666c70cbe0406d64f337606-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ffb344d15a0cb9e712af630bf4e8e281-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ccc24474aea04c5130e1bda67e6bb96f-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/24d36b751284ddb274acc4ea8a98c363-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/758325fe474d913363f45a873809e0d2-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/11835d9a15afdf0e058b340a446a214c-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/e33daa9d5ac3e758f1d0917a2f74839c-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/57880b659ba67fc5e7caca214a7caad6-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ced6e165929129228483116152c48c02-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/14b9a5d067b9a8d0d6e96e4ad215cd26-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/8d247cd407f5a8f106a3b56cb385c7b5-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/91ec8ef9b41cdf04d8936614275af38a-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/283c95c0e9000c6172b3b6566db187df-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/f84a8e048bd5931ac89b6840dce1ba75-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/43516e193b4e15004774e8e78499fafb-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/19193e80bd798ce6e1e3c635b4d499c5-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/af98687724f99b24504a1a4b28b44253-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/77d72120d4e201b85724657881e0b5e5-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/170f57f851e961fe9524d341ad80b1e4-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/41f931d2a13987213cb25ab3085dc296-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/254058211f8a44187c33a5dfdfea2d66-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/74b9de8877b7b30de2db61b44bb5f86a-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/80f4096c40488c7cf5f7c162837fd476-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/1036d1b3552cd0b0a5f34cfa18d44592-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/818d598836095274d7c1c7f95a287234-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/6a1e653f177705105be97d6e2eab4d15-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/3cf813df9f7cc5d41a43bc64a293ef24-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/11446128fa75023dd4e0d35d5273bae0-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/8ebc8bc00eeaf9b020c179d5aa9e8c41-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/9475dad304018ba15ab6c097cf3690f2-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/beffe08e7d3e119c99b568980e733682-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ee4a846664c236e19d4bf95ddc6fb2cb-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/ebc034c245893567a5057502bd1ae865-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/9525eb00da9fecd5c4c237c5802d40a8-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/c89b1e34cff8ad00073759e300cdd96b-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/5715b8a1e66caea3f64dfab780d5390d-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/7c1a61640d672a0ff403e025106a0b7d-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/f76536bd371288c4caa034e75aff6d5a-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/bba9cd5d80e683de3e7d68a71cf50a0b-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/98a4bbc8ba07ac89fa38bbebae173de1-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/02d5c7d0f3bc49661c275590edd40b29-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/767e03e24af1848a2061499057bfab7d-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/17c58046bd5fbca7e39b529cdca98c6f-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/aaa0eedb8bfc4a303108ba3fd33035e4-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/3946b0fb8d188f48138cebb16a31e8e0-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/232c897d844b37493a4803e60aa87ce9-p_f.jpg"
+                        },
+                        {
+                          "url": "https://photos.zillowstatic.com/fp/7230968db6884cbf500f5383744f6de1-p_f.jpg"
+                        }
+                      ],
+                      "resoFacts": {
+                        "homeType": "SingleFamily",
+                        "propertySubType": null,
+                        "lotSize": "7,187 sqft",
+                        "yearBuilt": 2005,
+                        "parkingFeatures": [
+                          "Garage - Detached"
+                        ],
+                        "parkingCapacity": 2,
+                        "carportParkingCapacity": null,
+                        "garageParkingCapacity": null,
+                        "coveredParkingCapacity": null,
+                        "openParkingCapacity": null,
+                        "hasAttachedGarage": null,
+                        "hasCarport": null,
+                        "hasGarage": false,
+                        "hasOpenParking": null,
+                        "cooling": [
+                          "Other"
+                        ],
+                        "hasCooling": true,
+                        "heating": [
+                          "Forced air",
+                          "Electric",
+                          "Gas"
+                        ],
+                        "leaseTerm": null,
+                        "depositsAndFees": null,
+                        "laundryFeatures": [
+                          "Hookups"
+                        ],
+                        "flooring": [
+                          "Carpet"
+                        ],
+                        "appliances": [
+                          "Dishwasher",
+                          "Dryer",
+                          "Garbage disposal",
+                          "Microwave",
+                          "Refrigerator",
+                          "Washer"
+                        ],
+                        "hasPrivatePool": null,
+                        "exteriorFeatures": [
+                          "Brick"
+                        ],
+                        "accessibilityFeatures": null,
+                        "patioAndPorchFeatures": null,
+                        "furnished": false,
+                        "hoaFee": "$10 monthly",
+                        "pricePerSquareFoot": 177,
+                        "communityFeatures": [],
+                        "otherFacts": [
+                          {
+                            "name": "Cooling System",
+                            "value": "Air Conditioning"
+                          },
+                          {
+                            "name": null,
+                            "value": "Garageparking"
+                          },
+                          {
+                            "name": "Laundry",
+                            "value": "Hookups"
+                          },
+                          {
+                            "name": "Laundry",
+                            "value": "In Unit"
+                          },
+                          {
+                            "name": "Parking Type",
+                            "value": "Garage"
+                          },
+                          {
+                            "name": null,
+                            "value": "WD Hookup"
+                          },
+                          {
+                            "name": null,
+                            "value": "Window Coverings"
+                          }
+                        ],
+                        "atAGlanceFacts": [
+                          {
+                            "factLabel": "Type",
+                            "factValue": "SingleFamily"
+                          },
+                          {
+                            "factLabel": "Year Built",
+                            "factValue": "2005"
+                          },
+                          {
+                            "factLabel": "Heating",
+                            "factValue": "Forced air, Electric, Gas"
+                          },
+                          {
+                            "factLabel": "Cooling",
+                            "factValue": "Other"
+                          },
+                          {
+                            "factLabel": "Parking",
+                            "factValue": "2 Parking spaces"
+                          },
+                          {
+                            "factLabel": "HOA",
+                            "factValue": "$10 monthly"
+                          },
+                          {
+                            "factLabel": "Lot",
+                            "factValue": "7,187 sqft"
+                          },
+                          {
+                            "factLabel": "Offer Review Date",
+                            "factValue": null
+                          }
+                        ]
+                      },
+                      "homeInsights": [],
+                      "scheduleTourUrl": {
+                        "path": "/mobile/schedule-tour/"
+                      },
+                      "richMediaVideos": null,
+                      "richMedia": null,
+                      "contactAgentUrl": {
+                        "path": "/mobile/contact-agent/"
+                      },
+                      "startOfferUrl": {
+                        "path": "/mobile/start-offer/?zpid=69171152"
+                      },
+                      "zoResaleStartAnOfferEnabled": null,
+                      "zoUpsellDisplayInfo": {
+                        "eligibleLeadTypes": [
+                          "NONE"
+                        ],
+                        "entryActionLinks": null
+                      },
+                      "formattedChip": {
+                        "mainPrice": null,
+                        "priceChange": null,
+                        "location": [
+                          {
+                            "fullValue": "104 Meir Ln",
+                            "abbreviatedValue": null
+                          },
+                          {
+                            "fullValue": "College Station, TX 77845",
+                            "abbreviatedValue": null
+                          }
+                        ],
+                        "status": {
+                          "fullValue": "Off market",
+                          "abbreviatedValue": "Off market"
+                        },
+                        "quickFacts": [
+                          {
+                            "elementType": "beds",
+                            "prefixLabel": null,
+                            "value": {
+                              "fullValue": "3",
+                              "abbreviatedValue": null
+                            },
+                            "suffixLabel": {
+                              "fullValue": " beds",
+                              "abbreviatedValue": " bds"
+                            },
+                            "contentDescription": "3 beds",
+                            "jsMessage": null
+                          },
+                          {
+                            "elementType": "baths",
+                            "prefixLabel": null,
+                            "value": {
+                              "fullValue": "2",
+                              "abbreviatedValue": null
+                            },
+                            "suffixLabel": {
+                              "fullValue": " baths",
+                              "abbreviatedValue": " ba"
+                            },
+                            "contentDescription": "2 baths",
+                            "jsMessage": null
+                          },
+                          {
+                            "elementType": "livingArea",
+                            "prefixLabel": null,
+                            "value": {
+                              "fullValue": "1,675",
+                              "abbreviatedValue": null
+                            },
+                            "suffixLabel": {
+                              "fullValue": " sqft",
+                              "abbreviatedValue": " sqft"
+                            },
+                            "contentDescription": "1,675 Square Feet",
+                            "jsMessage": null
+                          }
+                        ],
+                        "additionalFacts": [
+                          {
+                            "elementType": "zestimate",
+                            "prefixLabel": {
+                              "fullValue": "Zestimate®: ",
+                              "abbreviatedValue": null
+                            },
+                            "value": {
+                              "fullValue": "$296,400",
+                              "abbreviatedValue": null
+                            },
+                            "suffixLabel": null,
+                            "contentDescription": "This Property's Zestimate® is $296,400",
+                            "jsMessage": null
+                          },
+                          {
+                            "elementType": "rentZestimate",
+                            "prefixLabel": {
+                              "fullValue": "Rent Zestimate®: ",
+                              "abbreviatedValue": null
+                            },
+                            "value": {
+                              "fullValue": "$1,923",
+                              "abbreviatedValue": null
+                            },
+                            "suffixLabel": {
+                              "fullValue": "/mo",
+                              "abbreviatedValue": null
+                            },
+                            "contentDescription": "This Property's Rent Zestimate® is $1,923",
+                            "jsMessage": null
+                          }
+                        ]
+                      },
+                      "listingMetadata": {
+                        "isAdsRestricted": false
+                      },
+                      "homeValueChartData": [
+                        {
+                          "name": "This home",
+                          "points": [
+                            {
+                              "x": 1422691200000,
+                              "y": 185402
+                            },
+                            {
+                              "x": 1425110400000,
+                              "y": 187002
+                            },
+                            {
+                              "x": 1427785200000,
+                              "y": 187741
+                            },
+                            {
+                              "x": 1430377200000,
+                              "y": 187830
+                            },
+                            {
+                              "x": 1433055600000,
+                              "y": 189461
+                            },
+                            {
+                              "x": 1435647600000,
+                              "y": 191320
+                            },
+                            {
+                              "x": 1438326000000,
+                              "y": 195716
+                            },
+                            {
+                              "x": 1441004400000,
+                              "y": 197962
+                            },
+                            {
+                              "x": 1443596400000,
+                              "y": 198860
+                            },
+                            {
+                              "x": 1446274800000,
+                              "y": 199205
+                            },
+                            {
+                              "x": 1448870400000,
+                              "y": 199609
+                            },
+                            {
+                              "x": 1451548800000,
+                              "y": 200821
+                            },
+                            {
+                              "x": 1454227200000,
+                              "y": 202209
+                            },
+                            {
+                              "x": 1456732800000,
+                              "y": 203524
+                            },
+                            {
+                              "x": 1459407600000,
+                              "y": 208178
+                            },
+                            {
+                              "x": 1461999600000,
+                              "y": 207851
+                            },
+                            {
+                              "x": 1464678000000,
+                              "y": 210119
+                            },
+                            {
+                              "x": 1467270000000,
+                              "y": 210321
+                            },
+                            {
+                              "x": 1469948400000,
+                              "y": 215117
+                            },
+                            {
+                              "x": 1472626800000,
+                              "y": 217758
+                            },
+                            {
+                              "x": 1475218800000,
+                              "y": 215369
+                            },
+                            {
+                              "x": 1477897200000,
+                              "y": 218432
+                            },
+                            {
+                              "x": 1480492800000,
+                              "y": 219572
+                            },
+                            {
+                              "x": 1483171200000,
+                              "y": 219773
+                            },
+                            {
+                              "x": 1485849600000,
+                              "y": 222436
+                            },
+                            {
+                              "x": 1488268800000,
+                              "y": 221711
+                            },
+                            {
+                              "x": 1490943600000,
+                              "y": 226552
+                            },
+                            {
+                              "x": 1493535600000,
+                              "y": 220974
+                            },
+                            {
+                              "x": 1496214000000,
+                              "y": 228774
+                            },
+                            {
+                              "x": 1498806000000,
+                              "y": 228789
+                            },
+                            {
+                              "x": 1501484400000,
+                              "y": 227291
+                            },
+                            {
+                              "x": 1504162800000,
+                              "y": 225000
+                            },
+                            {
+                              "x": 1506754800000,
+                              "y": 228010
+                            },
+                            {
+                              "x": 1509433200000,
+                              "y": 230292
+                            },
+                            {
+                              "x": 1512028800000,
+                              "y": 230175
+                            },
+                            {
+                              "x": 1514707200000,
+                              "y": 228212
+                            },
+                            {
+                              "x": 1517385600000,
+                              "y": 230568
+                            },
+                            {
+                              "x": 1519804800000,
+                              "y": 233061
+                            },
+                            {
+                              "x": 1522479600000,
+                              "y": 239159
+                            },
+                            {
+                              "x": 1525071600000,
+                              "y": 237596
+                            },
+                            {
+                              "x": 1527750000000,
+                              "y": 238009
+                            },
+                            {
+                              "x": 1530342000000,
+                              "y": 236430
+                            },
+                            {
+                              "x": 1533020400000,
+                              "y": 236696
+                            },
+                            {
+                              "x": 1535698800000,
+                              "y": 235755
+                            },
+                            {
+                              "x": 1538290800000,
+                              "y": 237629
+                            },
+                            {
+                              "x": 1540969200000,
+                              "y": 238596
+                            },
+                            {
+                              "x": 1543564800000,
+                              "y": 237290
+                            },
+                            {
+                              "x": 1546243200000,
+                              "y": 240337
+                            },
+                            {
+                              "x": 1548921600000,
+                              "y": 241859
+                            },
+                            {
+                              "x": 1551340800000,
+                              "y": 238889
+                            },
+                            {
+                              "x": 1554015600000,
+                              "y": 240859
+                            },
+                            {
+                              "x": 1556607600000,
+                              "y": 242557
+                            },
+                            {
+                              "x": 1559286000000,
+                              "y": 245423
+                            },
+                            {
+                              "x": 1561878000000,
+                              "y": 243701
+                            },
+                            {
+                              "x": 1564556400000,
+                              "y": 243699
+                            },
+                            {
+                              "x": 1567234800000,
+                              "y": 247991
+                            },
+                            {
+                              "x": 1569826800000,
+                              "y": 247920
+                            },
+                            {
+                              "x": 1572505200000,
+                              "y": 244036
+                            },
+                            {
+                              "x": 1575100800000,
+                              "y": 226534
+                            },
+                            {
+                              "x": 1577779200000,
+                              "y": 225538
+                            },
+                            {
+                              "x": 1580457600000,
+                              "y": 226357
+                            },
+                            {
+                              "x": 1582963200000,
+                              "y": 226994
+                            },
+                            {
+                              "x": 1585638000000,
+                              "y": 229918
+                            },
+                            {
+                              "x": 1588230000000,
+                              "y": 234678
+                            },
+                            {
+                              "x": 1590908400000,
+                              "y": 239496
+                            },
+                            {
+                              "x": 1593500400000,
+                              "y": 237038
+                            },
+                            {
+                              "x": 1596178800000,
+                              "y": 234240
+                            },
+                            {
+                              "x": 1598857200000,
+                              "y": 232137
+                            },
+                            {
+                              "x": 1601449200000,
+                              "y": 232094
+                            },
+                            {
+                              "x": 1604127600000,
+                              "y": 231982
+                            },
+                            {
+                              "x": 1606723200000,
+                              "y": 232249
+                            },
+                            {
+                              "x": 1609401600000,
+                              "y": 234378
+                            },
+                            {
+                              "x": 1612080000000,
+                              "y": 234728
+                            },
+                            {
+                              "x": 1614499200000,
+                              "y": 234926
+                            },
+                            {
+                              "x": 1617174000000,
+                              "y": 236536
+                            },
+                            {
+                              "x": 1619766000000,
+                              "y": 246784
+                            },
+                            {
+                              "x": 1622444400000,
+                              "y": 250165
+                            },
+                            {
+                              "x": 1625036400000,
+                              "y": 248900
+                            },
+                            {
+                              "x": 1627714800000,
+                              "y": 248900
+                            },
+                            {
+                              "x": 1630393200000,
+                              "y": 248700
+                            },
+                            {
+                              "x": 1632985200000,
+                              "y": 250400
+                            },
+                            {
+                              "x": 1635663600000,
+                              "y": 251100
+                            },
+                            {
+                              "x": 1638259200000,
+                              "y": 253300
+                            },
+                            {
+                              "x": 1640937600000,
+                              "y": 254500
+                            },
+                            {
+                              "x": 1643616000000,
+                              "y": 259200
+                            },
+                            {
+                              "x": 1646035200000,
+                              "y": 262500
+                            },
+                            {
+                              "x": 1648710000000,
+                              "y": 271700
+                            },
+                            {
+                              "x": 1651302000000,
+                              "y": 275900
+                            },
+                            {
+                              "x": 1653980400000,
+                              "y": 279700
+                            },
+                            {
+                              "x": 1656572400000,
+                              "y": 279700
+                            },
+                            {
+                              "x": 1659250800000,
+                              "y": 278800
+                            },
+                            {
+                              "x": 1661929200000,
+                              "y": 277200
+                            },
+                            {
+                              "x": 1664521200000,
+                              "y": 279100
+                            },
+                            {
+                              "x": 1667199600000,
+                              "y": 279800
+                            },
+                            {
+                              "x": 1669795200000,
+                              "y": 283000
+                            },
+                            {
+                              "x": 1672473600000,
+                              "y": 282400
+                            },
+                            {
+                              "x": 1675152000000,
+                              "y": 282000
+                            },
+                            {
+                              "x": 1677571200000,
+                              "y": 286400
+                            },
+                            {
+                              "x": 1680246000000,
+                              "y": 293500
+                            },
+                            {
+                              "x": 1682838000000,
+                              "y": 295700
+                            },
+                            {
+                              "x": 1685516400000,
+                              "y": 299200
+                            },
+                            {
+                              "x": 1688108400000,
+                              "y": 306600
+                            },
+                            {
+                              "x": 1690786800000,
+                              "y": 312300
+                            },
+                            {
+                              "x": 1693465200000,
+                              "y": 293600
+                            },
+                            {
+                              "x": 1696057200000,
+                              "y": 288200
+                            },
+                            {
+                              "x": 1698735600000,
+                              "y": 286700
+                            },
+                            {
+                              "x": 1701331200000,
+                              "y": 293000
+                            },
+                            {
+                              "x": 1704009600000,
+                              "y": 291200
+                            },
+                            {
+                              "x": 1706688000000,
+                              "y": 288000
+                            },
+                            {
+                              "x": 1709193600000,
+                              "y": 294800
+                            },
+                            {
+                              "x": 1711868400000,
+                              "y": 296600
+                            },
+                            {
+                              "x": 1714460400000,
+                              "y": 298300
+                            },
+                            {
+                              "x": 1717138800000,
+                              "y": 299700
+                            },
+                            {
+                              "x": 1719730800000,
+                              "y": 300100
+                            },
+                            {
+                              "x": 1722409200000,
+                              "y": 298300
+                            },
+                            {
+                              "x": 1725087600000,
+                              "y": 295300
+                            },
+                            {
+                              "x": 1727679600000,
+                              "y": 300200
+                            },
+                            {
+                              "x": 1730358000000,
+                              "y": 295400
+                            },
+                            {
+                              "x": 1732953600000,
+                              "y": 299200
+                            },
+                            {
+                              "x": 1735632000000,
+                              "y": 299400
+                            },
+                            {
+                              "x": 1737360000000,
+                              "y": 296100
+                            }
+                          ]
+                        }
+                      ],
+                      "zpid": 69171152
+                    },
+                    "status": true,
+                    "message": "Successful"
+                }
+
 components:
   securitySchemes:
     X-API-Key:
