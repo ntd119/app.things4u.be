@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
-  title: "Copilot API Documentation"
-  description: "Complete reference documentation for the OpenWeb Ninja JSearch API. Includes code examples, data samples, and usage guides for delivering real-time job listings and salary data from public sources and Google for Jobs."
+  title: "Zillow API Documentation"
+  description: "Real-time data, unofficial zillow.com API, realty in US, search for-sale and rental listings. unofficial API real-time data from zillow.com API provide information on buying, selling, renting such as homes, apartments, and condos."
   version: 1.0.0
 servers:
   - url: http://localhost:8080/zillow
