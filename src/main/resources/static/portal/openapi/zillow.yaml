@@ -36402,6 +36402,1539 @@ paths:
                     "message": "Successful"
                 }
 
+  /agents/search:
+    get:
+      summary: "agents/search"
+      tags:
+        - Agents
+      parameters:
+        - name: location
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "Houston, TX"
+          description: |
+            - Required: true
+            - `location` can be retrieved from /properties/auto-complete endpoint(data->display)
+            - Ex: `Houston, TX`
+        - name: page
+          in: query
+          schema:
+            type: number
+            default: 1
+          description: |
+            - The page index, for paging purpose
+            - Ex: `2`
+            - Default: `1`
+        - name: name
+          in: query
+          schema:
+            type: string
+            example: "Louis Adler"
+          description: |
+            - Agent name
+            - Ex: `Louis Adler`
+        - name: specialty
+          in: query
+          schema:
+            type: string
+            enum: [Any,BuyersAgent,ListingAgent,Relocation,Foreclosure,ShortSale,Consulting,Other]
+            default: 'Any'
+          description: |
+            - Specialties
+            - Default : `Any`
+            - Choose one of the values below
+            - `Any`: Any
+            - `BuyersAgent`: Buyer's Agent
+            - `ListingAgent`: Listing Agent
+            - `Relocation`: Relocation
+            - `Foreclosure`: Foreclosure
+            - `ShortSale`: Short-Sale
+            - `Consulting`: Consulting
+            - `Other`: Other
+        - name: language
+          in: query
+          schema:
+            type: string
+            default: 'English'
+          description: |
+            - Languages
+            - Default : `English`
+            - Choose one of the values below
+            - `English`: English
+            - `Arabic`: Arabic
+            - `Bengali`: Bengali
+            - `Cantonese`: Cantonese
+            - `Farsi`: Farsi
+            - `French`: French
+            - `German`: German
+            - `Greek`: Greek
+            - `Hebrew`: Hebrew
+            - `Hindi`: Hindi
+            - `Hungarian`: Hungarian
+            - `Italian`: Italian
+            - `Japanese`: Japanese
+            - `Korean`: Korean
+            - `Mandarin`: Mandarin
+            - `Polish`: Polish
+            - `Portuguese`: Portuguese
+            - `Russian`: Russian
+            - `Spanish`: Spanish
+            - `Tagalog (Filipino)`: Tagalog (Filipino)
+            - `Thai`: Thai
+            - `Turkish`: Turkish
+            - `Vietnamese`: Vietnamese
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                  "data": {
+                      "breadcrumbs": [
+                        {
+                          "text": "Texas",
+                          "url": "/professionals/real-estate-agent-reviews/tx/"
+                        },
+                        {
+                          "text": "Houston",
+                          "url": null
+                        }
+                      ],
+                      "search": {
+                        "userInput": {
+                          "profileType": "2",
+                          "locationText": "Houston, TX",
+                          "specialty": "Any",
+                          "language": "null",
+                          "page": 1
+                        },
+                        "region": {
+                          "regionId": 39051,
+                          "name": "Houston",
+                          "regionType": "CITY",
+                          "parentage": [
+                            {
+                              "regionId": 102001,
+                              "locationId": null,
+                              "name": "United States",
+                              "regionType": "COUNTRY"
+                            },
+                            {
+                              "regionId": 54,
+                              "locationId": null,
+                              "name": "TX",
+                              "regionType": "STATE"
+                            },
+                            {
+                              "regionId": 822295,
+                              "locationId": null,
+                              "name": "Houston, TX",
+                              "regionType": "DMA"
+                            },
+                            {
+                              "regionId": 394692,
+                              "locationId": null,
+                              "name": "Houston-The Woodlands-Sugar Land",
+                              "regionType": "CBSA"
+                            },
+                            {
+                              "regionId": 1090,
+                              "locationId": null,
+                              "name": "Harris County",
+                              "regionType": "COUNTY"
+                            },
+                            {
+                              "regionId": 91733,
+                              "locationId": null,
+                              "name": "77084",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91732,
+                              "locationId": null,
+                              "name": "77083",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91744,
+                              "locationId": null,
+                              "name": "77095",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91941,
+                              "locationId": null,
+                              "name": "77450",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91685,
+                              "locationId": null,
+                              "name": "77036",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91721,
+                              "locationId": null,
+                              "name": "77072",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91902,
+                              "locationId": null,
+                              "name": "77396",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91726,
+                              "locationId": null,
+                              "name": "77077",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91664,
+                              "locationId": null,
+                              "name": "77015",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91719,
+                              "locationId": null,
+                              "name": "77070",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91731,
+                              "locationId": null,
+                              "name": "77082",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91693,
+                              "locationId": null,
+                              "name": "77044",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91737,
+                              "locationId": null,
+                              "name": "77088",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 92017,
+                              "locationId": null,
+                              "name": "77546",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91738,
+                              "locationId": null,
+                              "name": "77089",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91689,
+                              "locationId": null,
+                              "name": "77040",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91713,
+                              "locationId": null,
+                              "name": "77064",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91748,
+                              "locationId": null,
+                              "name": "77099",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91852,
+                              "locationId": null,
+                              "name": "77338",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91742,
+                              "locationId": null,
+                              "name": "77093",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91730,
+                              "locationId": null,
+                              "name": "77081",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91729,
+                              "locationId": null,
+                              "name": "77080",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91709,
+                              "locationId": null,
+                              "name": "77060",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91706,
+                              "locationId": null,
+                              "name": "77057",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91704,
+                              "locationId": null,
+                              "name": "77055",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91724,
+                              "locationId": null,
+                              "name": "77075",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91723,
+                              "locationId": null,
+                              "name": "77074",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91691,
+                              "locationId": null,
+                              "name": "77042",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91853,
+                              "locationId": null,
+                              "name": "77339",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91656,
+                              "locationId": null,
+                              "name": "77007",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91714,
+                              "locationId": null,
+                              "name": "77065",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91673,
+                              "locationId": null,
+                              "name": "77024",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91739,
+                              "locationId": null,
+                              "name": "77090",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91698,
+                              "locationId": null,
+                              "name": "77049",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91712,
+                              "locationId": null,
+                              "name": "77063",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91715,
+                              "locationId": null,
+                              "name": "77066",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91683,
+                              "locationId": null,
+                              "name": "77034",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91722,
+                              "locationId": null,
+                              "name": "77073",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91736,
+                              "locationId": null,
+                              "name": "77087",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91658,
+                              "locationId": null,
+                              "name": "77009",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91657,
+                              "locationId": null,
+                              "name": "77008",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91684,
+                              "locationId": null,
+                              "name": "77035",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91663,
+                              "locationId": null,
+                              "name": "77014",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91653,
+                              "locationId": null,
+                              "name": "77004",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91745,
+                              "locationId": null,
+                              "name": "77096",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91687,
+                              "locationId": null,
+                              "name": "77038",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91666,
+                              "locationId": null,
+                              "name": "77017",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91741,
+                              "locationId": null,
+                              "name": "77092",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91694,
+                              "locationId": null,
+                              "name": "77045",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91696,
+                              "locationId": null,
+                              "name": "77047",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91725,
+                              "locationId": null,
+                              "name": "77076",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91716,
+                              "locationId": null,
+                              "name": "77067",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91728,
+                              "locationId": null,
+                              "name": "77079",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91702,
+                              "locationId": null,
+                              "name": "77053",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91690,
+                              "locationId": null,
+                              "name": "77041",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91665,
+                              "locationId": null,
+                              "name": "77016",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91669,
+                              "locationId": null,
+                              "name": "77020",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91740,
+                              "locationId": null,
+                              "name": "77091",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91735,
+                              "locationId": null,
+                              "name": "77086",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91682,
+                              "locationId": null,
+                              "name": "77033",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91688,
+                              "locationId": null,
+                              "name": "77039",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 92054,
+                              "locationId": null,
+                              "name": "77598",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91674,
+                              "locationId": null,
+                              "name": "77025",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91667,
+                              "locationId": null,
+                              "name": "77018",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91671,
+                              "locationId": null,
+                              "name": "77022",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91672,
+                              "locationId": null,
+                              "name": "77023",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91654,
+                              "locationId": null,
+                              "name": "77005",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91670,
+                              "locationId": null,
+                              "name": "77021",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91710,
+                              "locationId": null,
+                              "name": "77061",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91859,
+                              "locationId": null,
+                              "name": "77345",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91720,
+                              "locationId": null,
+                              "name": "77071",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91711,
+                              "locationId": null,
+                              "name": "77062",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91988,
+                              "locationId": null,
+                              "name": "77504",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91692,
+                              "locationId": null,
+                              "name": "77043",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91668,
+                              "locationId": null,
+                              "name": "77019",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91703,
+                              "locationId": null,
+                              "name": "77054",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91655,
+                              "locationId": null,
+                              "name": "77006",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91705,
+                              "locationId": null,
+                              "name": "77056",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91686,
+                              "locationId": null,
+                              "name": "77037",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91676,
+                              "locationId": null,
+                              "name": "77027",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91675,
+                              "locationId": null,
+                              "name": "77026",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91677,
+                              "locationId": null,
+                              "name": "77028",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91697,
+                              "locationId": null,
+                              "name": "77048",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91678,
+                              "locationId": null,
+                              "name": "77029",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91718,
+                              "locationId": null,
+                              "name": "77069",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91734,
+                              "locationId": null,
+                              "name": "77085",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91700,
+                              "locationId": null,
+                              "name": "77051",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91662,
+                              "locationId": null,
+                              "name": "77013",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91661,
+                              "locationId": null,
+                              "name": "77012",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91707,
+                              "locationId": null,
+                              "name": "77058",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91660,
+                              "locationId": null,
+                              "name": "77011",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91680,
+                              "locationId": null,
+                              "name": "77031",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91708,
+                              "locationId": null,
+                              "name": "77059",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91747,
+                              "locationId": null,
+                              "name": "77098",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91651,
+                              "locationId": null,
+                              "name": "77002",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91681,
+                              "locationId": null,
+                              "name": "77032",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91727,
+                              "locationId": null,
+                              "name": "77078",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91679,
+                              "locationId": null,
+                              "name": "77030",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91850,
+                              "locationId": null,
+                              "name": "77336",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91717,
+                              "locationId": null,
+                              "name": "77068",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91743,
+                              "locationId": null,
+                              "name": "77094",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91652,
+                              "locationId": null,
+                              "name": "77003",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91699,
+                              "locationId": null,
+                              "name": "77050",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91752,
+                              "locationId": null,
+                              "name": "77204",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91695,
+                              "locationId": null,
+                              "name": "77046",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91659,
+                              "locationId": null,
+                              "name": "77010",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91837,
+                              "locationId": null,
+                              "name": "77315",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91769,
+                              "locationId": null,
+                              "name": "77223",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91777,
+                              "locationId": null,
+                              "name": "77231",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91786,
+                              "locationId": null,
+                              "name": "77242",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91791,
+                              "locationId": null,
+                              "name": "77249",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91979,
+                              "locationId": null,
+                              "name": "77491",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91909,
+                              "locationId": null,
+                              "name": "77411",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91792,
+                              "locationId": null,
+                              "name": "77251",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91793,
+                              "locationId": null,
+                              "name": "77252",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91794,
+                              "locationId": null,
+                              "name": "77253",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91787,
+                              "locationId": null,
+                              "name": "77243",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91788,
+                              "locationId": null,
+                              "name": "77244",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91789,
+                              "locationId": null,
+                              "name": "77245",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91790,
+                              "locationId": null,
+                              "name": "77248",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91795,
+                              "locationId": null,
+                              "name": "77254",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91796,
+                              "locationId": null,
+                              "name": "77255",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91797,
+                              "locationId": null,
+                              "name": "77256",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91798,
+                              "locationId": null,
+                              "name": "77257",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91799,
+                              "locationId": null,
+                              "name": "77258",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91800,
+                              "locationId": null,
+                              "name": "77259",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91801,
+                              "locationId": null,
+                              "name": "77261",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91802,
+                              "locationId": null,
+                              "name": "77262",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91784,
+                              "locationId": null,
+                              "name": "77240",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91782,
+                              "locationId": null,
+                              "name": "77237",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91783,
+                              "locationId": null,
+                              "name": "77238",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91778,
+                              "locationId": null,
+                              "name": "77233",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91779,
+                              "locationId": null,
+                              "name": "77234",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91780,
+                              "locationId": null,
+                              "name": "77235",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91781,
+                              "locationId": null,
+                              "name": "77236",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91776,
+                              "locationId": null,
+                              "name": "77230",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91774,
+                              "locationId": null,
+                              "name": "77228",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91775,
+                              "locationId": null,
+                              "name": "77229",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91770,
+                              "locationId": null,
+                              "name": "77224",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91771,
+                              "locationId": null,
+                              "name": "77225",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91772,
+                              "locationId": null,
+                              "name": "77226",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91773,
+                              "locationId": null,
+                              "name": "77227",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91768,
+                              "locationId": null,
+                              "name": "77222",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91766,
+                              "locationId": null,
+                              "name": "77220",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91767,
+                              "locationId": null,
+                              "name": "77221",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91762,
+                              "locationId": null,
+                              "name": "77216",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91763,
+                              "locationId": null,
+                              "name": "77217",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91764,
+                              "locationId": null,
+                              "name": "77218",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91765,
+                              "locationId": null,
+                              "name": "77219",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91754,
+                              "locationId": null,
+                              "name": "77206",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91755,
+                              "locationId": null,
+                              "name": "77207",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91756,
+                              "locationId": null,
+                              "name": "77208",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91757,
+                              "locationId": null,
+                              "name": "77209",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91758,
+                              "locationId": null,
+                              "name": "77210",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91759,
+                              "locationId": null,
+                              "name": "77212",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91760,
+                              "locationId": null,
+                              "name": "77213",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91761,
+                              "locationId": null,
+                              "name": "77215",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91753,
+                              "locationId": null,
+                              "name": "77205",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91750,
+                              "locationId": null,
+                              "name": "77202",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91751,
+                              "locationId": null,
+                              "name": "77203",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91749,
+                              "locationId": null,
+                              "name": "77201",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91701,
+                              "locationId": null,
+                              "name": "77052",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91828,
+                              "locationId": null,
+                              "name": "77297",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91830,
+                              "locationId": null,
+                              "name": "77299",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91841,
+                              "locationId": null,
+                              "name": "77325",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91785,
+                              "locationId": null,
+                              "name": "77241",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91811,
+                              "locationId": null,
+                              "name": "77272",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91812,
+                              "locationId": null,
+                              "name": "77273",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91813,
+                              "locationId": null,
+                              "name": "77274",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91807,
+                              "locationId": null,
+                              "name": "77268",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91808,
+                              "locationId": null,
+                              "name": "77269",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91809,
+                              "locationId": null,
+                              "name": "77270",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91803,
+                              "locationId": null,
+                              "name": "77263",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91804,
+                              "locationId": null,
+                              "name": "77265",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91805,
+                              "locationId": null,
+                              "name": "77266",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91806,
+                              "locationId": null,
+                              "name": "77267",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91810,
+                              "locationId": null,
+                              "name": "77271",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91814,
+                              "locationId": null,
+                              "name": "77275",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91815,
+                              "locationId": null,
+                              "name": "77277",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91816,
+                              "locationId": null,
+                              "name": "77279",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91817,
+                              "locationId": null,
+                              "name": "77280",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91819,
+                              "locationId": null,
+                              "name": "77282",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91820,
+                              "locationId": null,
+                              "name": "77284",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91821,
+                              "locationId": null,
+                              "name": "77287",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91822,
+                              "locationId": null,
+                              "name": "77288",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91823,
+                              "locationId": null,
+                              "name": "77289",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91824,
+                              "locationId": null,
+                              "name": "77290",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91825,
+                              "locationId": null,
+                              "name": "77291",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91826,
+                              "locationId": null,
+                              "name": "77292",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91827,
+                              "locationId": null,
+                              "name": "77293",
+                              "regionType": "ZIPCODE"
+                            },
+                            {
+                              "regionId": 91650,
+                              "locationId": null,
+                              "name": "77001",
+                              "regionType": "ZIPCODE"
+                            }
+                          ]
+                        }
+                      },
+                      "featuredAgents": [
+                        {
+                          "fullName": "Jamie McMartin",
+                          "profileLink": "/profile/TheJMG/",
+                          "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/ISbd0ybz7uwv3w1000000000.jpg",
+                          "phoneNumber": "(281) 771-0479",
+                          "reviewRating": 5,
+                          "numReviews": 152,
+                          "reviewLink": "/profile/TheJMG/#reviews",
+                          "isTopAgent": true,
+                          "id": "TheJMG"
+                        },
+                        {
+                          "fullName": "Marie Gilbert",
+                          "profileLink": "/profile/MarieNGilbert/",
+                          "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/IS3b5ezasp0ixi1000000000.jpg",
+                          "phoneNumber": "(281) 730-8856",
+                          "reviewRating": 5,
+                          "numReviews": 90,
+                          "reviewLink": "/profile/MarieNGilbert/#reviews",
+                          "isTopAgent": true,
+                          "id": "MarieNGilbert"
+                        },
+                        {
+                          "fullName": "Bryan Lillis",
+                          "profileLink": "/profile/LuxeRealtyHouston/",
+                          "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/ISjvvch4xm6gej1000000000.jpg",
+                          "phoneNumber": "(832) 735-5984",
+                          "reviewRating": 5,
+                          "numReviews": 8,
+                          "reviewLink": "/profile/LuxeRealtyHouston/#reviews",
+                          "isTopAgent": true,
+                          "id": "LuxeRealtyHouston"
+                        }
+                      ],
+                      "mapUrl": "https://maps.googleapis.com/maps/api/staticmap?center=29.806593,-95.392486&zoom=9&size=400x160&maptype=roadmap&key=AIzaSyCadFmqeT-wY9jYJ9TJi5x8J1GzggZ5oFQ&style=feature%3Aadministrative.land_parcel%7Celement%3Aall%7Cvisibility%3Aoff%7C&style=feature%3Aadministrative.locality%7Celement%3Alabels.text.fill%7Ccolor%3A0x666666%7C&style=feature%3Aadministrative.neighborhood%7Celement%3Alabels.text.fill%7Ccolor%3A0x666666%7C&style=feature%3Aadministrative.province%7Celement%3Alabels.text.fill%7Ccolor%3A0x666666%7C&style=feature%3Alandscape%7Celement%3Alabels.text.fill%7Ccolor%3A0x666666%7C&style=feature%3Alandscape.man_made%7Celement%3Ageometry%7Csaturation%3A-100%7C&style=feature%3Alandscape.man_made%7Celement%3Ageometry.stroke%7Ccolor%3A0xdcdcdc%7C&style=feature%3Alandscape.natural%7Celement%3Aall%7Ccolor%3A0xe6e6e6%7C&style=feature%3Alandscape.natural%7Celement%3Alabels.text.fill%7Ccolor%3A0x7f7f7f%7C&style=feature%3Alandscape.natural.landcover%7Celement%3Aall%7Ccolor%3A0xe6e6e6%7C&style=feature%3Alandscape.natural.terrain%7Celement%3Aall%7Ccolor%3A0xe6e6e6%7C&style=feature%3Apoi%7Celement%3Ageometry.fill%7Ccolor%3A0xd6d6d6%7C&style=feature%3Apoi%7Celement%3Alabels.text%7Cvisibility%3Aoff%7C&style=feature%3Apoi.attraction%7Celement%3Aall%7Cvisibility%3Aoff%7C&style=feature%3Apoi.business%7Celement%3Aall%7Cvisibility%3Aoff%7C&style=feature%3Apoi.government%7Celement%3Alabels.icon%7Cvisibility%3Aoff%7C&style=feature%3Apoi.medical%7Celement%3Alabels.icon%7Cvisibility%3Aoff%7C&style=feature%3Apoi.medical%7Celement%3Alabels.text%7Cvisibility%3Aon%7C&style=feature%3Apoi.park%7Celement%3Aall%7Ccolor%3A0xb0d896%7C&style=feature%3Apoi.park%7Celement%3Alabels%7Cvisibility%3Aon%7Cweight%3A2.5%7C&style=feature%3Apoi.park%7Celement%3Alabels.text.fill%7Ccolor%3A0x787878%7Cinvert_lightness%3Atrue%7C&style=feature%3Apoi.park%7Celement%3Alabels.text.stroke%7Ccolor%3A0xffffff%7C&style=feature%3Apoi.place_of_worship%7Celement%3Alabels.icon%7Cvisibility%3Aoff%7C&style=feature%3Apoi.school%7Celement%3Alabels.icon%7Cvisibility%3Aoff%7C&style=feature%3Apoi.sports_complex%7Celement%3Alabels.icon%7Cvisibility%3Aoff%7C&style=feature%3Aroad%7Celement%3Ageometry%7Ccolor%3A0xf8f8f8%7C&style=feature%3Aroad%7Celement%3Alabels.text.fill%7Ccolor%3A0x666666%7C&style=feature%3Atransit%7Celement%3Alabels.text%7Cvisibility%3Aoff%7C&style=feature%3Awater%7Celement%3Ageometry%7Ccolor%3A0xb1bdd7%7C&style=feature%3Awater%7Celement%3Alabels.text.fill%7Ccolor%3A0xffffff%7C&style=feature%3Awater%7Celement%3Alabels.text.stroke%7Ccolor%3A0xa0aecc%7C&signature=i-L28fQzjSJKaEohoWtp5i_LLNI=",
+                      "results": {
+                        "professionals": [
+                          {
+                            "agentLicense": "573025",
+                            "businessName": "Corcoran Prestige Realty",
+                            "encodedZuid": "X1-ZUz3fc6ch3xp8p_10irz",
+                            "fullName": "James Krueger",
+                            "location": "Houston, TX",
+                            "phoneNumber": "(713) 230-8620",
+                            "profileLink": "/profile/JamesKrueger/",
+                            "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/IS3bphf19l5u7h0000000000.jpg",
+                            "reviewExcerpt": "She is an expert on the Greater Houston market, and she made sure to find ...",
+                            "reviewExcerptDate": "2024-03-05 20:09:00",
+                            "reviewLink": "/profile/JamesKrueger/#reviews",
+                            "numTotalReviews": 2231,
+                            "reviews": "2231 reviews",
+                            "reviewStarsRating": 4.970705244122966,
+                            "isTopAgent": true,
+                            "id": "JamesKrueger"
+                          },
+                          {
+                            "agentLicense": "609745",
+                            "businessName": "The Parodi Group | Powered by Realty Associates | \"Hablo Español\" ",
+                            "encodedZuid": "X1-ZUydhl1y0gev49_2avjk",
+                            "fullName": "Alfonso Parodi",
+                            "location": "Katy, TX",
+                            "phoneNumber": "(832) 664-7967",
+                            "profileLink": "/profile/tparodi/",
+                            "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/IS7idozkxj18qm0000000000.jpg",
+                            "reviewExcerpt": "Fue el mejor agente inmobiliario me ayudó con el proceso de compra, todo ...",
+                            "reviewExcerptDate": "2024-03-01 06:07:00",
+                            "reviewLink": "/profile/tparodi/#reviews",
+                            "numTotalReviews": 843,
+                            "reviews": "843 reviews",
+                            "reviewStarsRating": 4.968013468013468,
+                            "isTopAgent": true,
+                            "id": "tparodi"
+                          },
+                          {
+                            "agentLicense": "331008",
+                            "businessName": "Camelot Realty Group",
+                            "encodedZuid": "X1-ZUzabm46rbiv49_9abc3",
+                            "fullName": "Tom Cervone",
+                            "location": "Houston, TX",
+                            "phoneNumber": "(713) 766-4892",
+                            "profileLink": "/profile/Tom-Cervone/",
+                            "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/ISy7ozcjq79fie1000000000.jpg",
+                            "reviewExcerpt": "His enthusiasm, market knowledge, and dedication truly stood out, making ...",
+                            "reviewExcerptDate": "2024-02-26 08:10:00",
+                            "reviewLink": "/profile/Tom-Cervone/#reviews",
+                            "numTotalReviews": 413,
+                            "reviews": "413 reviews",
+                            "reviewStarsRating": 4.974769529354682,
+                            "isTopAgent": true,
+                            "id": "Tom-Cervone"
+                          },
+                          {
+                            "agentLicense": "588746",
+                            "businessName": "Zillow Team - Houston ",
+                            "encodedZuid": "X1-ZU10btlf9s1phc9_2t4xp",
+                            "fullName": "Madison Fine Properties",
+                            "location": "Houston, TX",
+                            "phoneNumber": "(713) 489-5601",
+                            "profileLink": "/profile/Shahin-Naghavi/",
+                            "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/ISzrb7eql4aynx0000000000.jpg",
+                            "reviewExcerpt": "Always answered my calls or got back to me very fast .",
+                            "reviewExcerptDate": "2024-03-01 09:16:00",
+                            "reviewLink": "/profile/Shahin-Naghavi/#reviews",
+                            "numTotalReviews": 300,
+                            "reviews": "300 reviews",
+                            "reviewStarsRating": 4.976478494623656,
+                            "isTopAgent": true,
+                            "id": "Shahin-Naghavi"
+                          },
+                          {
+                            "agentLicense": "526821",
+                            "businessName": "Monica Foster Team - eXp Realty",
+                            "encodedZuid": "X1-ZUz87ibursn5s9_29gz3",
+                            "fullName": "Monica Foster Homes and Lifestyles",
+                            "location": "League City, TX",
+                            "phoneNumber": "(281) 843-9397",
+                            "profileLink": "/profile/RealtyByMonica/",
+                            "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/ISi7tqbnc2pj8s0000000000.jpg",
+                            "reviewExcerpt": "Her dedication, expertise, and exceptional service have made a lasting ...",
+                            "reviewExcerptDate": "2024-01-26 06:38:00",
+                            "reviewLink": "/profile/RealtyByMonica/#reviews",
+                            "numTotalReviews": 973,
+                            "reviews": "973 reviews",
+                            "reviewStarsRating": 4.967968588551353,
+                            "isTopAgent": true,
+                            "id": "RealtyByMonica"
+                          },
+                          {
+                            "agentLicense": "617251",
+                            "businessName": "The Realty",
+                            "encodedZuid": "X1-ZUzvg20f6gjwuh_5rw5l",
+                            "fullName": "Trinh Nguyen",
+                            "location": "Houston, TX",
+                            "phoneNumber": "(832) 356-8746",
+                            "profileLink": "/profile/TheTrinhNguyen/",
+                            "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/ISj32fduyjam150000000000.jpg",
+                            "reviewExcerpt": "Anytime we made a request or reached out to him, he always responded right ...",
+                            "reviewExcerptDate": "2023-05-11 07:49:00",
+                            "reviewLink": "/profile/TheTrinhNguyen/#reviews",
+                            "numTotalReviews": 305,
+                            "reviews": "305 reviews",
+                            "reviewStarsRating": 4.94574681848627,
+                            "isTopAgent": false,
+                            "id": "TheTrinhNguyen"
+                          },
+                          {
+                            "agentLicense": "479838",
+                            "businessName": "Christy Buck Team, Infinity Real Estate Group",
+                            "encodedZuid": "X1-ZUy3x5ja7vc64p_77v72",
+                            "fullName": "Christy Buck Team",
+                            "location": "Pearland, TX",
+                            "phoneNumber": "(832) 789-1275",
+                            "profileLink": "/profile/ChristyBuck/",
+                            "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/ISbpd4r1w9ksg50000000000.jpg",
+                            "reviewExcerpt": "She supported us every step of the way and kept us on track with the many ...",
+                            "reviewExcerptDate": "2024-01-31 09:24:00",
+                            "reviewLink": "/profile/ChristyBuck/#reviews",
+                            "numTotalReviews": 775,
+                            "reviews": "775 reviews",
+                            "reviewStarsRating": 4.949505465903176,
+                            "isTopAgent": true,
+                            "id": "ChristyBuck"
+                          },
+                          {
+                            "agentLicense": "642449",
+                            "businessName": "Corcoran Prestige Realty",
+                            "encodedZuid": "X1-ZUx8yemfta80zt_9y704",
+                            "fullName": "Erin McKie",
+                            "location": "Houston, TX",
+                            "phoneNumber": "(832) 462-7606",
+                            "profileLink": "/profile/erin484/",
+                            "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/ISrp0zrts5t7ue1000000000.jpg",
+                            "reviewExcerpt": "She is very knowledgeable, organized, efficient, helpful and she is fantastic ...",
+                            "reviewExcerptDate": "2024-02-02 06:12:00",
+                            "reviewLink": "/profile/erin484/#reviews",
+                            "numTotalReviews": 202,
+                            "reviews": "202 reviews",
+                            "reviewStarsRating": 4.975,
+                            "isTopAgent": true,
+                            "id": "erin484"
+                          },
+                          {
+                            "agentLicense": "",
+                            "businessName": "IndyQuest Properties",
+                            "encodedZuid": "X1-ZUyu9w57ngygp5_3jtqo",
+                            "fullName": "Creston Inderrieden",
+                            "location": "Houston, TX",
+                            "phoneNumber": "(713) 301-4054",
+                            "profileLink": "/profile/crestonindy/",
+                            "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/IS37euen915rs60000000000.jpg",
+                            "reviewExcerpt": "We met Teena when she represented the buyer on a property we were selling ...",
+                            "reviewExcerptDate": "2023-02-24 02:40:00",
+                            "reviewLink": "/profile/crestonindy/#reviews",
+                            "numTotalReviews": 173,
+                            "reviews": "173 reviews",
+                            "reviewStarsRating": 4.9837209302325585,
+                            "isTopAgent": false,
+                            "id": "crestonindy"
+                          },
+                          {
+                            "agentLicense": "",
+                            "businessName": "CB Realty",
+                            "encodedZuid": "X1-ZUzfom331s86x5_97i75",
+                            "fullName": "Chris Boyles",
+                            "location": "Houston, TX",
+                            "phoneNumber": "(832) 581-3661",
+                            "profileLink": "/profile/Chris-Boyles/",
+                            "profilePhotoSrc": "https://photos.zillowstatic.com/h_g/IS7m8bdgl55wwi0000000000.jpg",
+                            "reviewExcerpt": "It was our first time buying a house and Chris, along with his team at CB Realty,...",
+                            "reviewExcerptDate": "2018-12-28 13:01:00",
+                            "reviewLink": "/profile/Chris-Boyles/#reviews",
+                            "numTotalReviews": 194,
+                            "reviews": "194 reviews",
+                            "reviewStarsRating": 4.962732919254658,
+                            "isTopAgent": false,
+                            "id": "Chris-Boyles"
+                          }
+                        ],
+                        "total": 23448
+                      }
+                    },
+                    "meta": {
+                      "currentPage": 1,
+                      "limit": 10,
+                      "totalRecords": 23448,
+                      "totalPage": 2345
+                    },
+                    "status": true,
+                    "message": "Successful"
+                }
+
 components:
   securitySchemes:
     X-API-Key:
@@ -36416,3 +37949,4 @@ tags:
   - name: Property details
   - name: Similar homes
   - name: Stats and History
+  - name: Agents
