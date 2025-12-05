@@ -34236,6 +34236,408 @@ paths:
                       "status": true,
                       "message": "Successful"
                 }
+  /properties/get-available-times:
+    get:
+      summary: "properties/get-available-times"
+      tags:
+        - Property details
+      parameters:
+        - name: zpid
+          in: query
+          required: true
+          schema:
+            type: string
+            example: "84020947"
+          description: |
+            - Required: true
+            - The `zpid` can be retrieved from /properties/search endpoint(data->zpid)
+            - Ex: `84020947`
+        - name: cookie
+          in: query
+          schema:
+            type: string
+          description: |
+            - The `cookie` can be copied from browser
+      responses:
+        "200":
+          description: Successful Response
+          content:
+            application/json:
+              schema:
+                type: object
+              example: |
+                {
+                    "data": {
+                      "__typename": "Property",
+                      "ouid": "M00000599",
+                      "tourEligibility": {
+                        "propertyTourOptions": {
+                          "tourType": "STANDARD",
+                          "tourAvailability": [
+                            {
+                              "date": "2024-03-11",
+                              "status": "AVAILABLE",
+                              "times": [
+                                "11:00:00",
+                                "11:30:00",
+                                "12:00:00",
+                                "12:30:00",
+                                "13:00:00",
+                                "13:30:00",
+                                "14:00:00",
+                                "14:30:00",
+                                "15:00:00",
+                                "15:30:00",
+                                "16:00:00",
+                                "16:30:00",
+                                "17:00:00",
+                                "17:30:00",
+                                "18:00:00",
+                                "18:30:00",
+                                "19:00:00"
+                              ]
+                            },
+                            {
+                              "date": "2024-03-12",
+                              "status": "AVAILABLE",
+                              "times": [
+                                "09:00:00",
+                                "09:30:00",
+                                "10:00:00",
+                                "10:30:00",
+                                "11:00:00",
+                                "11:30:00",
+                                "12:00:00",
+                                "12:30:00",
+                                "13:00:00",
+                                "13:30:00",
+                                "14:00:00",
+                                "14:30:00",
+                                "15:00:00",
+                                "15:30:00",
+                                "16:00:00",
+                                "16:30:00",
+                                "17:00:00",
+                                "17:30:00",
+                                "18:00:00",
+                                "18:30:00",
+                                "19:00:00"
+                              ]
+                            },
+                            {
+                              "date": "2024-03-13",
+                              "status": "AVAILABLE",
+                              "times": [
+                                "09:00:00",
+                                "09:30:00",
+                                "10:00:00",
+                                "10:30:00",
+                                "11:00:00",
+                                "11:30:00",
+                                "12:00:00",
+                                "12:30:00",
+                                "13:00:00",
+                                "13:30:00",
+                                "14:00:00",
+                                "14:30:00",
+                                "15:00:00",
+                                "15:30:00",
+                                "16:00:00",
+                                "16:30:00",
+                                "17:00:00",
+                                "17:30:00",
+                                "18:00:00",
+                                "18:30:00",
+                                "19:00:00"
+                              ]
+                            },
+                            {
+                              "date": "2024-03-14",
+                              "status": "AVAILABLE",
+                              "times": [
+                                "09:00:00",
+                                "09:30:00",
+                                "10:00:00",
+                                "10:30:00",
+                                "11:00:00",
+                                "11:30:00",
+                                "12:00:00",
+                                "12:30:00",
+                                "13:00:00",
+                                "13:30:00",
+                                "14:00:00",
+                                "14:30:00",
+                                "15:00:00",
+                                "15:30:00",
+                                "16:00:00",
+                                "16:30:00",
+                                "17:00:00",
+                                "17:30:00",
+                                "18:00:00",
+                                "18:30:00",
+                                "19:00:00"
+                              ]
+                            },
+                            {
+                              "date": "2024-03-15",
+                              "status": "AVAILABLE",
+                              "times": [
+                                "09:00:00",
+                                "09:30:00",
+                                "10:00:00",
+                                "10:30:00",
+                                "11:00:00",
+                                "11:30:00",
+                                "12:00:00",
+                                "12:30:00",
+                                "13:00:00",
+                                "13:30:00",
+                                "14:00:00",
+                                "14:30:00",
+                                "15:00:00",
+                                "15:30:00",
+                                "16:00:00",
+                                "16:30:00",
+                                "17:00:00",
+                                "17:30:00",
+                                "18:00:00",
+                                "18:30:00",
+                                "19:00:00"
+                              ]
+                            },
+                            {
+                              "date": "2024-03-16",
+                              "status": "AVAILABLE",
+                              "times": [
+                                "09:00:00",
+                                "09:30:00",
+                                "10:00:00",
+                                "10:30:00",
+                                "11:00:00",
+                                "11:30:00",
+                                "12:00:00",
+                                "12:30:00",
+                                "13:00:00",
+                                "13:30:00",
+                                "14:00:00",
+                                "14:30:00",
+                                "15:00:00",
+                                "15:30:00",
+                                "16:00:00",
+                                "16:30:00",
+                                "17:00:00",
+                                "17:30:00",
+                                "18:00:00",
+                                "18:30:00",
+                                "19:00:00"
+                              ]
+                            },
+                            {
+                              "date": "2024-03-17",
+                              "status": "AVAILABLE",
+                              "times": [
+                                "09:00:00",
+                                "09:30:00",
+                                "10:00:00",
+                                "10:30:00",
+                                "11:00:00",
+                                "11:30:00",
+                                "12:00:00",
+                                "12:30:00",
+                                "13:00:00",
+                                "13:30:00",
+                                "14:00:00",
+                                "14:30:00",
+                                "15:00:00",
+                                "15:30:00",
+                                "16:00:00",
+                                "16:30:00",
+                                "17:00:00",
+                                "17:30:00",
+                                "18:00:00",
+                                "18:30:00",
+                                "19:00:00"
+                              ]
+                            },
+                            {
+                              "date": "2024-03-18",
+                              "status": "AVAILABLE",
+                              "times": [
+                                "09:00:00",
+                                "09:30:00",
+                                "10:00:00",
+                                "10:30:00",
+                                "11:00:00",
+                                "11:30:00",
+                                "12:00:00",
+                                "12:30:00",
+                                "13:00:00",
+                                "13:30:00",
+                                "14:00:00",
+                                "14:30:00",
+                                "15:00:00",
+                                "15:30:00",
+                                "16:00:00",
+                                "16:30:00",
+                                "17:00:00",
+                                "17:30:00",
+                                "18:00:00",
+                                "18:30:00",
+                                "19:00:00"
+                              ]
+                            },
+                            {
+                              "date": "2024-03-19",
+                              "status": "AVAILABLE",
+                              "times": [
+                                "09:00:00",
+                                "09:30:00",
+                                "10:00:00",
+                                "10:30:00",
+                                "11:00:00",
+                                "11:30:00",
+                                "12:00:00",
+                                "12:30:00",
+                                "13:00:00",
+                                "13:30:00",
+                                "14:00:00",
+                                "14:30:00",
+                                "15:00:00",
+                                "15:30:00",
+                                "16:00:00",
+                                "16:30:00",
+                                "17:00:00",
+                                "17:30:00",
+                                "18:00:00",
+                                "18:30:00",
+                                "19:00:00"
+                              ]
+                            }
+                          ]
+                        },
+                        "isPropertyTourEligible": true
+                      },
+                      "submitFlow": [
+                        {
+                          "__typename": "PropertyLeadSubmitForm",
+                          "title": "Contact Agent",
+                          "heading": null,
+                          "subheading": null,
+                          "headingIcon": null,
+                          "buttonText": "Contact agent",
+                          "disclosure": null,
+                          "telephoneConsumerProtectionActDisclaimer": null,
+                          "inputFields": [
+                            {
+                              "label": "Name",
+                              "placeholder": null,
+                              "validationRegex": null,
+                              "isRequired": true,
+                              "inputName": "name",
+                              "inputType": "NAME",
+                              "clientSideValidationErrorMessage": "Please enter your name.",
+                              "isUserInputDisabled": false,
+                              "value": null,
+                              "defaultSubmitValue": null,
+                              "numberOfLines": 1,
+                              "maxCharacters": null
+                            },
+                            {
+                              "label": "Email",
+                              "placeholder": null,
+                              "validationRegex": "/^[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-zA-Z]{2,63}$/i",
+                              "isRequired": true,
+                              "inputName": "emailAddress",
+                              "inputType": "EMAIL",
+                              "clientSideValidationErrorMessage": "Please enter a valid email address.",
+                              "isUserInputDisabled": false,
+                              "value": null,
+                              "defaultSubmitValue": null,
+                              "numberOfLines": 1,
+                              "maxCharacters": 320
+                            },
+                            {
+                              "label": "Phone",
+                              "placeholder": null,
+                              "validationRegex": "/^\\(?([2-9][0-8][0-9])\\)?[\\-. ]?([2-9][0-9]{2})[\\-. ]?([0-9]{4})(?: x(\\d{1,4}))?$/",
+                              "isRequired": true,
+                              "inputName": "phoneNumber",
+                              "inputType": "PHONE_NUMBER",
+                              "clientSideValidationErrorMessage": "Please enter a valid US or Canadian phone number.",
+                              "isUserInputDisabled": false,
+                              "value": null,
+                              "defaultSubmitValue": null,
+                              "numberOfLines": 1,
+                              "maxCharacters": null
+                            },
+                            {
+                              "label": "Message",
+                              "placeholder": "Add details or questions about what you’re looking for",
+                              "validationRegex": null,
+                              "isRequired": false,
+                              "inputName": "message",
+                              "inputType": "MESSAGE",
+                              "clientSideValidationErrorMessage": null,
+                              "isUserInputDisabled": false,
+                              "value": "I am interested in 15415 Liberty Prairie Ct, Houston, TX 77049.",
+                              "defaultSubmitValue": null,
+                              "numberOfLines": 2,
+                              "maxCharacters": null
+                            }
+                          ],
+                          "financingCheckbox": {
+                            "financingType": "ZGMI",
+                            "isCheckedInitialState": true,
+                            "label": "I want financing information",
+                            "leadFieldName": "wantsFinancing"
+                          }
+                        },
+                        {
+                          "__typename": "ABAD"
+                        },
+                        {
+                          "__typename": "FormQuestionnaire"
+                        }
+                      ],
+                      "state": "TX",
+                      "homeStatus": "FOR_SALE",
+                      "homeType": "SINGLE_FAMILY",
+                      "hdpTypeDimension": "ForSale",
+                      "providerListingID": null,
+                      "livingAreaValue": 3242,
+                      "hdpUrl": "/homedetails/15415-Liberty-Prairie-Ct-Houston-TX-77049/84020947_zpid/",
+                      "streetAddress": "15415 Liberty Prairie Ct",
+                      "city": "Houston",
+                      "zipcode": "77049",
+                      "price": 389000,
+                      "mlsid": "22981612",
+                      "zestimate": 375200,
+                      "propertyTypeDimension": "Single Family",
+                      "bathrooms": 4,
+                      "bedrooms": 5,
+                      "timeZone": "America/Chicago",
+                      "zpid": 84020947,
+                      "hiResImageLink": "https://photos.zillowstatic.com/fp/94a9802edf8a0b6323df6f3d41619ddd-p_f.jpg",
+                      "isZillowOwned": false,
+                      "isPremierBuilder": false,
+                      "enhancedBrokerImageUrl": "https://photos.zillowstatic.com/fp/c762e8317c35d5634ce97b86029da54d-zillow_web_95_35.jpg",
+                      "listingAccountUserId": null,
+                      "ssid": 63,
+                      "brokerId": null,
+                      "listing_sub_type": {
+                        "is_FSBA": true,
+                        "is_FSBO": false,
+                        "is_pending": false,
+                        "is_newHome": false,
+                        "is_foreclosure": false,
+                        "is_comingSoon": false,
+                        "is_bankOwned": false,
+                        "is_forAuction": false
+                      }
+                    },
+                    "status": true,
+                    "message": "Successful"
+                }
 
 components:
   securitySchemes:
