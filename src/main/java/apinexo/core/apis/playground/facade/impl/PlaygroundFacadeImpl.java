@@ -1,4 +1,4 @@
-package apinexo.core.apis.testing.facade.impl;
+package apinexo.core.apis.playground.facade.impl;
 
 import java.util.Objects;
 
@@ -13,12 +13,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
-import apinexo.core.apis.testing.facade.CommonFacade;
+import apinexo.core.apis.playground.facade.PlaygroundFacade;
 import lombok.RequiredArgsConstructor;
 
 @Component
 @RequiredArgsConstructor
-public class CommonFacadeImpl extends AbstractService implements CommonFacade {
+public class PlaygroundFacadeImpl extends AbstractService implements PlaygroundFacade {
 
     private final ApinexoUtils utils;
 
