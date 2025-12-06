@@ -12,19 +12,17 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/zillow")
 public class ZillowController {
 
     private final CommonFacade facade;
 
-    private final String BASE_URL = "http://45.63.16.213:8080/rapidapi/zillow/com";
-
-    @RequestMapping(value = "/**", method = { RequestMethod.GET, RequestMethod.POST })
+    @RequestMapping(value = "/zillow/**", method = { RequestMethod.GET, RequestMethod.POST })
     public ResponseEntity<?> handleDynamicApi(HttpServletRequest request, @RequestBody(required = false) String body) {
+        String baseUrl = "http://45.63.16.213:8080/rapidapi/zillow/com";
         String path = request.getRequestURI();
         String method = request.getMethod();
         String query = request.getQueryString();
-        String url = BASE_URL + path.replace("/zillow", "");
+        String url = baseUrl + path.replace("/zillow", "");
         if (query != null) {
             url += "?" + query;
         }
