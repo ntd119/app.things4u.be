@@ -162,6 +162,8 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
         // endpoint
         String endpoint = request.getRequestURI();
+        String[] parts = endpoint.split("/", 3);
+        endpoint = "/" + parts[2];
 
         // method
         String method = request.getMethod();
