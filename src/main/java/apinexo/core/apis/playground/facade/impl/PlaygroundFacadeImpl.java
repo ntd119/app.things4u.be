@@ -1,5 +1,6 @@
 package apinexo.core.apis.playground.facade.impl;
 
+import java.net.URI;
 import java.util.Objects;
 
 import org.springframework.http.HttpHeaders;
@@ -14,6 +15,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.apis.playground.facade.PlaygroundFacade;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -21,6 +23,48 @@ import lombok.RequiredArgsConstructor;
 public class PlaygroundFacadeImpl extends AbstractService implements PlaygroundFacade {
 
     private final ApinexoUtils utils;
+
+    public ResponseEntity<?> dynamicProxy(HttpServletRequest request, String body) {
+        try {
+
+            String fullPath = request.getRequestURI();
+            String method = request.getMethod();
+            String query = request.getQueryString();
+
+            String prefix = null;
+            URI uri = new URI(fullPath);
+            String path = uri.getPath();
+            String[] parts = path.split("/");
+            if (parts.length > 1) {
+                prefix = parts[1];
+            }
+
+            JsonNode apis = utils.readJsonFile("/data_static/api-config.json", JsonNode.class);
+            JsonNode apiItem = utils.getJsonInList(apis, "id", prefix);
+            if (apiItem == null || apiItem.isEmpty()) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("API config not found for: " + fullPath);
+            }
+            JsonNode urls =  utils.jsonNodeAt(apiItem, "/urls");
+            int index = utils.getRandom().nextInt(urls.size());
+            JsonNode randomItem = urls.get(index);
+            String baseUrl = randomItem.asText();
+            String forwardPath = fullPath.replace(prefix, "");
+            String finalUrl = baseUrl + forwardPath;
+            if (query != null) {
+                finalUrl += "?" + query;
+            }
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            return this.forwardToThirdParty(headers, finalUrl, method, query, body);
+
+        } catch (HttpClientErrorException ex) {
+            JsonNode error = utils.convertStrToJson(ex.getResponseBodyAsString());
+            return ResponseEntity.status(ex.getStatusCode()).contentType(MediaType.APPLICATION_JSON)
+                    .body((Objects.nonNull(error) && !error.isEmpty()) ? error.toString() : ex.getMessage());
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
+        }
+    }
 
     public ResponseEntity<?> forwardToThirdParty(HttpHeaders headers, String url, String method, String query,
             String body) {
