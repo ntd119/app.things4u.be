@@ -13,6 +13,8 @@ import jakarta.transaction.Transactional;
 
 public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity, String> {
 
+    Optional<SubscriptionEntity> findByUser_IdAndApi_Id(String userId, String apiId);
+
     Optional<SubscriptionEntity> findByUser_IdAndApi_IdAndActiveTrue(String userId, String apiId);
 
     List<SubscriptionEntity> findByUser_IdAndActiveTrue(String userId);

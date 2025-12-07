@@ -101,15 +101,14 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             }
             PlansEntity plansEntity = plansOptional.get();
             if (plansEntity.getIsFree()) {
-                String subscriptionId = utils.generateRandomHexString(24);
-                // delete old subscribe
-                Optional<SubscriptionEntity> subscriptionOptional = subscriptionService
-                        .findByUserIdAndApiIdAndActiveTrue(userEntity.getId(), apiEntity.getId());
-                if (subscriptionOptional.isPresent()) {
-                    subscriptionService.delete(subscriptionOptional.get());
-                }
-                SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity,
-                        null);
+                SubscriptionEntity entity = subscriptionService
+                        .findByUserIdAndApiId(userEntity.getId(), apiEntity.getId()).map(sub -> {
+                            sub.setActive(true);
+                            return sub;
+                        }).orElseGet(() -> {
+                            String subscriptionId = utils.generateRandomHexString(24);
+                            return subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity, null);
+                        });
                 ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
                 SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
                         .builder().id(entity.getId()).plan(plans).build();
