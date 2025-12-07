@@ -50,15 +50,15 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     @Override
     public ResponseEntity<Object> createApi(AdminCreateApiRequest request) {
         try {
-            Optional<ApiEntity> optional = apiService.findbyId(request.getId());
-            ApiEntity apiEntity = null;
-            if (optional.isPresent()) {
-                apiEntity = optional.get();
-            } else {
-                apiEntity = ApiEntity.builder().id(request.getId()).name(request.getName())
-                        .shortDescription(request.getShortDescription()).longDescription(request.getLongDescription())
-                        .image(request.getImage()).build();
-            }
+            ApiEntity apiEntity = apiService.findbyId(request.getId())
+                    .orElseGet(() -> ApiEntity.builder().id(request.getId()).build());
+            apiEntity.setName(request.getName());
+            apiEntity.setShortDescription(request.getShortDescription());
+            apiEntity.setLongDescription(request.getLongDescription());
+            apiEntity.setImage(request.getImage());
+            apiEntity.setYamlFile(request.getYamlFile());
+            apiEntity.setRapidLink(request.getRapidLink());
+
             List<PlanDTO> planDTOs = request.getPlans();
             List<PlansEntity> plans = apiEntity.getPlans();
             if (CollectionUtils.isEmpty(plans)) {

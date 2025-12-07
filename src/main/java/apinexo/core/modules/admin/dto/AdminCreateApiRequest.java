@@ -27,6 +27,12 @@ public class AdminCreateApiRequest {
     @JsonProperty("image")
     private String image;
 
+    @JsonProperty("yaml_file")
+    private String yamlFile;
+
+    @JsonProperty("rapid_link")
+    private String rapidLink;
+
     private List<PlanDTO> plans;
 
     @Data

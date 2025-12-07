@@ -41,6 +41,12 @@ public class ApiEntity extends EntityCommon {
     @Column(name = "image")
     private String image;
 
+    @Column(name = "yaml_file")
+    private String yamlFile;
+
+    @Column(name = "rapid_link")
+    private String rapidLink;
+
     @OneToMany(mappedBy = "api", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PlansEntity> plans;
 
