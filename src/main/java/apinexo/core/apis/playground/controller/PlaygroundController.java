@@ -16,7 +16,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("/proxy")
 @RequiredArgsConstructor
 public class PlaygroundController {
 
@@ -24,28 +23,26 @@ public class PlaygroundController {
     private final PlaygroundFacade facade;
 
     @RequestMapping(value = "/**", method = { RequestMethod.GET, RequestMethod.POST })
-    public ResponseEntity<?> dynamicProxy(
-            HttpServletRequest request,
-            @RequestBody(required = false) String body) {
+    public ResponseEntity<?> dynamicProxy(HttpServletRequest request, @RequestBody(required = false) String body) {
 
-        String requestPath = request.getRequestURI();          // /proxy/zillow/search
-        String dynamicPath = requestPath.replace("/proxy", ""); // /zillow/search
+        String fullPath = request.getRequestURI(); // /zillow/search
+        String method = request.getMethod();
+        String query = request.getQueryString();
 
-        // Tìm config matching prefix (/zillow, /redfin...)
-        ApiProxyConfig config = apiConfigService.findConfig(dynamicPath);
+        // Tìm API config phù hợp với prefix
+        ApiProxyConfig config = apiConfigService.findConfig(fullPath);
 
         if (config == null) {
-            return ResponseEntity.status(HttpStatus.SC_NOT_FOUND)
-                    .body("API config not found for: " + dynamicPath);
+            return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("API config not found for: " + fullPath);
         }
 
-        String baseUrl = config.getTargetBaseUrl();            // lấy từ DB
-        String prefix = config.getPrefix();                    // /zillow
-        String forwardPath = dynamicPath.replace(prefix, "");
+        String prefix = config.getPrefix(); // /zillow
+        String baseUrl = config.getTargetBaseUrl();
 
-        String query = request.getQueryString();
-        String method = request.getMethod();
+        // Xóa prefix để lấy phần path cần forward
+        String forwardPath = fullPath.replace(prefix, "");
 
+        // Tạo URL forward
         String finalUrl = baseUrl + forwardPath;
         if (query != null) {
             finalUrl += "?" + query;

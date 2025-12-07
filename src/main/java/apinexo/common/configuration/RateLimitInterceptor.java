@@ -253,7 +253,6 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
     private String resolveApiName(String url) {
         try {
-            url = url.replace("/proxy", "");
             URI uri = new URI(url);
             String path = uri.getPath();
             String[] parts = path.split("/");
