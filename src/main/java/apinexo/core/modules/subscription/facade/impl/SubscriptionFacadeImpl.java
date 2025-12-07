@@ -107,7 +107,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                             return sub;
                         }).orElseGet(() -> {
                             String subscriptionId = utils.generateRandomHexString(24);
-                            return subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity, null);
+                            return subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity, null, null);
                         });
                 ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
                 SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse

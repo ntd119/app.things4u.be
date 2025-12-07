@@ -140,9 +140,9 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                             }
                         }
                     }
-
+                    Subscription subscription = Subscription.retrieve(subscriptionId);
                     SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity,
-                            plansEntity, subscriptionItemId);
+                            plansEntity, subscriptionItemId, subscription);
                     ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
                     SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
                             .builder().id(entity.getId()).plan(plans).build();

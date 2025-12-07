@@ -10,6 +10,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.stripe.model.Subscription;
+import com.stripe.model.SubscriptionItem;
 
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.common.utils.ConstantUtils;
@@ -36,14 +38,28 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public SubscriptionEntity save(String subscriptionId, UserEntity userEntity, ApiEntity apiEntity,
-            PlansEntity plansEntity, String subscriptionItemId) {
-        LocalDateTime fromDate = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
-        LocalDateTime toDate = fromDate.plusMonths(1);
+            PlansEntity plansEntity, String subscriptionItemId, Subscription subscription) {
+        long fromDate;
+        long toDate;
+        if (subscription != null && !subscription.getItems().getData().isEmpty()) {
+            SubscriptionItem item = subscription.getItems().getData().get(0);
+            long start = item.getCurrentPeriodStart();
+            long end = item.getCurrentPeriodEnd();
+            fromDate = start > 0 ? start * 1000 : 0;
+            toDate = end > 0 ? end * 1000 : 0;
+        } else {
+            fromDate = 0;
+            toDate = 0;
+        }
+        if (fromDate == 0 || toDate == 0) {
+            LocalDateTime now = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
+            fromDate = now.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+            toDate = now.plusMonths(1).atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+        }
+
         JsonNode metadata = utils.convertStrToJson(plansEntity.getMetadata());
         SubscriptionEntity subscribe = SubscriptionEntity.builder().id(subscriptionId).user(userEntity).api(apiEntity)
-                .plan(plansEntity).subscribedAt(LocalDateTime.now())
-                .billingPeriodFrom(fromDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli())
-                .billingPeriodTo(toDate.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli())
+                .plan(plansEntity).subscribedAt(LocalDateTime.now()).billingPeriodFrom(fromDate).billingPeriodTo(toDate)
                 .currentPlan(plansEntity.getNickname()).quota(plansEntity.getUpTo()).period(plansEntity.getPeriod())
                 .rateLimit(utils.jsonNodeAt(metadata, "/rate_limit", Long.class))
                 .rateLimitPeriod(utils.jsonNodeAt(metadata, "/rate_limit_period", String.class))
