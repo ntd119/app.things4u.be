@@ -70,7 +70,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
         // check user subscribe
         UserEntity userEntity = optionalUser.get();
         String apiId = resolveApiName(request.getRequestURI());
-        Optional<SubscriptionEntity> optionalSubscription = subscriptionService.findByUserIdAndApiId(userEntity.getId(),
+        Optional<SubscriptionEntity> optionalSubscription = subscriptionService.findByUserIdAndApiIdAndActiveTrue(userEntity.getId(),
                 apiId);
         if (optionalSubscription.isEmpty()) {
             authenticationError(response);

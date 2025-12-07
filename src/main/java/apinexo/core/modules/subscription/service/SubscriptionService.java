@@ -17,7 +17,7 @@ public interface SubscriptionService {
 
     void delete(SubscriptionEntity entity);
 
-    Optional<SubscriptionEntity> findByUserIdAndApiId(String userId, String apiId);
+    Optional<SubscriptionEntity> findByUserIdAndApiIdAndActiveTrue(String userId, String apiId);
 
     List<SubscriptionEntity> findByUserId(String userId);
 

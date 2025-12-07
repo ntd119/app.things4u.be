@@ -104,7 +104,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 String subscriptionId = utils.generateRandomHexString(24);
                 // delete old subscribe
                 Optional<SubscriptionEntity> subscriptionOptional = subscriptionService
-                        .findByUserIdAndApiId(userEntity.getId(), apiEntity.getId());
+                        .findByUserIdAndApiIdAndActiveTrue(userEntity.getId(), apiEntity.getId());
                 if (subscriptionOptional.isPresent()) {
                     subscriptionService.delete(subscriptionOptional.get());
                 }
