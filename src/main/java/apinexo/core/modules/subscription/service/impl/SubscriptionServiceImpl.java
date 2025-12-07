@@ -66,12 +66,12 @@ public class SubscriptionServiceImpl implements SubscriptionService {
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(apiId)) {
             return Optional.empty();
         }
-        return subscriptionRepository.findByUser_IdAndApi_Id(userId, apiId.toLowerCase());
+        return subscriptionRepository.findByUser_IdAndApi_IdAndActiveTrue(userId, apiId.toLowerCase());
     }
 
     @Override
     public List<SubscriptionEntity> findByUserId(String userId) {
-        return subscriptionRepository.findByUser_Id(userId);
+        return subscriptionRepository.findByUser_IdAndActiveTrue(userId);
     }
 
     @Override
