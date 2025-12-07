@@ -20,37 +20,28 @@ import lombok.RequiredArgsConstructor;
 public class PlaygroundController {
 
     private final ApiConfigService apiConfigService;
+
     private final PlaygroundFacade facade;
 
     @RequestMapping(value = "/**", method = { RequestMethod.GET, RequestMethod.POST })
     public ResponseEntity<?> dynamicProxy(HttpServletRequest request, @RequestBody(required = false) String body) {
 
-        String fullPath = request.getRequestURI(); // /zillow/search
+        String fullPath = request.getRequestURI();
         String method = request.getMethod();
         String query = request.getQueryString();
-
-        // Tìm API config phù hợp với prefix
         ApiProxyConfig config = apiConfigService.findConfig(fullPath);
-
         if (config == null) {
             return ResponseEntity.status(HttpStatus.SC_NOT_FOUND).body("API config not found for: " + fullPath);
         }
-
-        String prefix = config.getPrefix(); // /zillow
+        String prefix = config.getPrefix();
         String baseUrl = config.getTargetBaseUrl();
-
-        // Xóa prefix để lấy phần path cần forward
         String forwardPath = fullPath.replace(prefix, "");
-
-        // Tạo URL forward
         String finalUrl = baseUrl + forwardPath;
         if (query != null) {
             finalUrl += "?" + query;
         }
-
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
-
         return facade.forwardToThirdParty(headers, finalUrl, method, query, body);
     }
 }
