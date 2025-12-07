@@ -3,10 +3,12 @@ package apinexo.core.modules.admin.facade.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -40,8 +42,14 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     private final ApiService apiService;
 
     @Override
-    public ResponseEntity<Object> createApi(AdminCreateApiRequest request) {
+    public ResponseEntity<Object> createApi(Jwt jwt, AdminCreateApiRequest request) {
         try {
+            String email = jwt.getClaimAsString("email");
+            if (!"ntd119@gmail.com".equals(email)) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("message", "The user does not have permission to access this"));
+            }
+
             ApiEntity apiEntity = apiService.findbyId(request.getId())
                     .orElseGet(() -> ApiEntity.builder().id(request.getId()).build());
             apiEntity.setName(request.getName());
