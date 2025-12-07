@@ -3,12 +3,9 @@ package apinexo.core.modules.admin.facade.impl;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
@@ -22,14 +19,11 @@ import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest.PlanDTO;
-import apinexo.core.modules.admin.dto.AdminCreatePriceAdditionalRequest;
 import apinexo.core.modules.admin.facade.AdminFacade;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.plans.service.PlansService;
-import apinexo.core.modules.softlimit.entity.SoftLimitEntity;
-import apinexo.core.modules.softlimit.service.SoftLimitService;
 import apinexo.core.modules.stripe.service.StripeService;
 import lombok.RequiredArgsConstructor;
 
@@ -44,8 +38,6 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     private final PlansService apiPlansService;
 
     private final ApiService apiService;
-
-    private final SoftLimitService softLimitService;
 
     @Override
     public ResponseEntity<Object> createApi(AdminCreateApiRequest request) {
@@ -101,36 +93,6 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             apiEntity.setPlans(plans);
             apiService.save(apiEntity);
             return ResponseEntity.ok("Successful!");
-        } catch (HttpClientErrorException ex) {
-            return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
-        } catch (Exception ex) {
-            return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
-        }
-    }
-
-    @Override
-    public ResponseEntity<Object> createPriceAdditional(AdminCreatePriceAdditionalRequest request) {
-        try {
-            String apiId = request.getApiId();
-            String apiName = request.getApiName();
-            String upTo = request.getUpTo();
-            String price = request.getPrice();
-
-            if (StringUtils.isBlank(apiId) || StringUtils.isBlank(apiName) || StringUtils.isBlank(upTo)
-                    || StringUtils.isBlank(price)) {
-                return ResponseEntity.badRequest().body(Map.of("message", "Input api_id, api_name, up_to and price"));
-            }
-            String id = String.format("%s_%s_%s", apiId, upTo, price);
-            Optional<SoftLimitEntity> optional = softLimitService.findByid(id);
-            if (optional.isEmpty()) {
-                JsonNode result = stripeService.createPriceSoftLimit(apiName, request.getUpTo(), request.getPrice());
-                SoftLimitEntity entity = SoftLimitEntity.builder().id(id).upTo(Long.valueOf(upTo))
-                        .pricePerRequest(Double.valueOf(price)).priceId(utils.jsonNodeAt(result, "/id", String.class))
-                        .build();
-                softLimitService.save(entity);
-                return ResponseEntity.ok(result);
-            }
-            return ResponseEntity.ok(Map.of("message", "The price already exists"));
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {
