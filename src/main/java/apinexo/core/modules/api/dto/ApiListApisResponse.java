@@ -26,4 +26,10 @@ public class ApiListApisResponse {
     @JsonProperty("image")
     private String image;
 
+    @JsonProperty("yaml_file")
+    private String yamlFile;
+
+    @JsonProperty("rapid_link")
+    private String rapidLink;
+
 }

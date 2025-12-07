@@ -28,7 +28,8 @@ public class ApiFacadeImpl implements ApiFacade {
             List<ApiListApisResponse> response = Optional.ofNullable(apiEntities).orElse(Collections.emptyList())
                     .stream()
                     .map(api -> ApiListApisResponse.builder().id(api.getId()).name(api.getName())
-                            .shortDescription(api.getShortDescription()).image(api.getImage()).build())
+                            .shortDescription(api.getShortDescription()).image(api.getImage())
+                            .yamlFile(api.getYamlFile()).rapidLink(api.getRapidLink()).build())
                     .collect(Collectors.toList());
             return ResponseEntity.ok(response);
         } catch (Exception ex) {
