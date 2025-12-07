@@ -44,11 +44,11 @@ public class PlaygroundFacadeImpl extends AbstractService implements PlaygroundF
             if (apiItem == null || apiItem.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body("API config not found for: " + fullPath);
             }
-            JsonNode urls =  utils.jsonNodeAt(apiItem, "/urls");
+            JsonNode urls = utils.jsonNodeAt(apiItem, "/urls");
             int index = utils.getRandom().nextInt(urls.size());
             JsonNode randomItem = urls.get(index);
             String baseUrl = randomItem.asText();
-            String forwardPath = fullPath.replace(prefix, "");
+            String forwardPath = fullPath.replace("/" + prefix, "");
             String finalUrl = baseUrl + forwardPath;
             if (query != null) {
                 finalUrl += "?" + query;

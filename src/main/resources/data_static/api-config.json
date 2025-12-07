@@ -2,8 +2,7 @@
 	{
 		"id": "zillow",
 		"urls": [
-			"http://45.63.16.213:8080/rapidapi/zillow/com",
-			"http://backup1:8080/zillow"
+			"http://45.63.16.213:8080/rapidapi/zillow/com"
 		]
 	}
 ]
