@@ -99,8 +99,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                 }
             }
             apiEntity.setPlans(plans);
-            ApiEntity apiSaved = apiService.save(apiEntity);
-            return ResponseEntity.ok(apiSaved);
+            apiService.save(apiEntity);
+            return ResponseEntity.ok("Successful!");
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {
