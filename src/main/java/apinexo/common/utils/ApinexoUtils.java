@@ -3,6 +3,7 @@ package apinexo.common.utils;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
@@ -55,7 +56,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpEntity;
@@ -99,9 +102,10 @@ public class ApinexoUtils {
     @Autowired
     protected Random random;
 
-    private static final String HEX_CHARACTERS = "0123456789abcdef";
+    @Value("${is.server}")
+    private boolean server;
 
-    private final String OS = System.getProperty("os.name");
+    private static final String HEX_CHARACTERS = "0123456789abcdef";
 
     public <T> ResponseEntity<T> callApi(String endpoint, HttpMethod method, Map<String, Object> requestBody,
             Class<T> responseType, HttpHeaders headers) {
@@ -598,19 +602,20 @@ public class ApinexoUtils {
     }
 
     public <T> T readJsonFile(String filePath, Class<T> clazz) throws IOException {
-        if (!isLinux()) {
+        if (!isServer()) {
             File currentDirectory = ResourceUtils.getFile("src/main/resources");
             filePath = currentDirectory.getAbsolutePath() + File.separator + filePath;
             return objectMapper.readValue(new File(filePath), clazz);
         } else {
-            File currentDirectory = ResourceUtils.getFile("classpath:");
-            filePath = currentDirectory.getAbsolutePath() + File.separator + filePath;
-            return objectMapper.readValue(new File(filePath), clazz);
+            ClassPathResource resource = new ClassPathResource(filePath);
+            try (InputStream inputStream = resource.getInputStream()) {
+                return objectMapper.readValue(inputStream, clazz);
+            }
         }
     }
 
     public String readTextFile(String filePath) throws IOException {
-        if (!isLinux()) {
+        if (!isServer()) {
             Path pathToFile = Paths.get("src/main/resources", filePath);
             byte[] bytes = Files.readAllBytes(pathToFile);
             String rawContent = new String(bytes, StandardCharsets.UTF_8);
@@ -625,7 +630,7 @@ public class ApinexoUtils {
 
     public void saveToFile(String data, String pathFile) throws IOException {
         Path filePath;
-        if (!isLinux()) {
+        if (!isServer()) {
             filePath = Paths.get("src/main/resources", pathFile);
         } else {
             filePath = Paths.get(resourceLoader.getResource("classpath:" + pathFile).getURI());
@@ -1018,11 +1023,8 @@ public class ApinexoUtils {
         return numbers;
     }
 
-    public boolean isLinux() {
-        if (StringUtils.isNotBlank(OS) && OS.toLowerCase().startsWith("linux")) {
-            return true;
-        }
-        return false;
+    public boolean isServer() {
+        return server;
     }
 
     public JsonNode getJsonInList(JsonNode list, String key, String value) {
