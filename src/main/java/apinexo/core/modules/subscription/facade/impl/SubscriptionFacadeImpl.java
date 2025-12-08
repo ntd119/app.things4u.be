@@ -2,6 +2,7 @@ package apinexo.core.modules.subscription.facade.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.apache.commons.collections4.CollectionUtils;
@@ -107,7 +108,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                             return sub;
                         }).orElseGet(() -> {
                             String subscriptionId = utils.generateRandomHexString(24);
-                            return subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity, null, null);
+                            return subscriptionService.save(subscriptionId, userEntity, apiEntity, plansEntity, null,
+                                    null);
                         });
                 ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());
                 SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
@@ -172,7 +174,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
                 return ResponseEntity.ok(subscriptionResponse);
             }
         } catch (Exception ex) {
-            return ResponseEntity.badRequest().body(ex.getMessage());
+            return ResponseEntity.badRequest().body(Map.of("message", ex.getMessage()));
         }
     }
 
