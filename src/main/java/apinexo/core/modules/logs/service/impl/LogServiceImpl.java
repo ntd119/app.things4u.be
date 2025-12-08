@@ -39,4 +39,10 @@ public class LogServiceImpl implements LogService {
     public long countRequests(String subscriptionId, Long startTime) {
         return logRepository.countRequests(subscriptionId, startTime);
     }
+
+    @Override
+    public long countRequests(String apiId, Long from, Long to) {
+        // TODO Auto-generated method stub
+        return 0;
+    }
 }

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import apinexo.core.modules.logs.dto.DayLogResponse;
 import apinexo.core.modules.logs.facade.LogFacade;
 import apinexo.core.modules.logs.service.LogService;
+import apinexo.core.modules.subscription.dto.SubscriptionGetQuotaUsedResponse;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -40,13 +41,9 @@ public class LogFacadeImpl implements LogFacade {
             }
 
             // convert from/to epoch ms -> LocalDate
-            LocalDate fromDate = Instant.ofEpochMilli(from)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
+            LocalDate fromDate = Instant.ofEpochMilli(from).atZone(ZoneId.systemDefault()).toLocalDate();
 
-            LocalDate toDate = Instant.ofEpochMilli(to)
-                    .atZone(ZoneId.systemDefault())
-                    .toLocalDate();
+            LocalDate toDate = Instant.ofEpochMilli(to).atZone(ZoneId.systemDefault()).toLocalDate();
 
             List<String> days = new ArrayList<>();
             List<Long> values = new ArrayList<>();
@@ -58,6 +55,16 @@ public class LogFacadeImpl implements LogFacade {
                 errors.add(errorMap.getOrDefault(d, 0L));
             }
             return ResponseEntity.ok(new DayLogResponse(days, values, errors));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> countRequest(Long from, Long to) {
+        try {
+            long count = logService.countRequests("", from, to);
+            return ResponseEntity.ok(SubscriptionGetQuotaUsedResponse.builder().total(count).build());
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }

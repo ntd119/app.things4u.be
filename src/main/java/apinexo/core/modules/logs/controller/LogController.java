@@ -19,4 +19,9 @@ public class LogController {
     public ResponseEntity<Object> getChart(String subscriptionId, Long from, Long to) {
         return logFacade.getChart(subscriptionId, from, to);
     }
+
+    @GetMapping("/count-request")
+    public ResponseEntity<Object> countRequest(Long from, Long to) {
+        return logFacade.countRequest(from, to);
+    }
 }
