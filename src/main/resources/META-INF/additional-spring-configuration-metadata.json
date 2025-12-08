@@ -43,5 +43,10 @@
     "name": "be.server",
     "type": "java.lang.String",
     "description": "A description for 'be.server'"
+  },
+  {
+    "name": "is.server",
+    "type": "java.lang.String",
+    "description": "A description for 'is.server'"
   }
 ]}
