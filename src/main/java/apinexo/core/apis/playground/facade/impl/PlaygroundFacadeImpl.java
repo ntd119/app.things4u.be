@@ -71,10 +71,14 @@ public class PlaygroundFacadeImpl extends AbstractService implements PlaygroundF
         try {
 
             if (method.equals("GET")) {
-                return executeGetRequest(String.class, url, headers);
+                ResponseEntity<String> resq = executeGetRequest(String.class, url, headers);
+                return ResponseEntity.status(resq.getStatusCode()).contentType(MediaType.APPLICATION_JSON)
+                        .body(resq.getBody());
             }
             if (method.equals("POST")) {
-                return executePostRequest(String.class, url, body, headers);
+                ResponseEntity<String> resq = executePostRequest(String.class, url, body, headers);
+                return ResponseEntity.status(resq.getStatusCode()).contentType(MediaType.APPLICATION_JSON)
+                        .body(resq.getBody());
             }
             return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).build();
         } catch (HttpClientErrorException ex) {
