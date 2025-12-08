@@ -3,6 +3,7 @@ package apinexo.core.modules.subscription.service;
 import java.util.List;
 import java.util.Optional;
 
+import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;
 
 import apinexo.core.modules.api.entity.ApiEntity;
@@ -31,5 +32,5 @@ public interface SubscriptionService {
 
     Long getQuotaUsedById(String id);
 
-    void updateBillingPeriod(SubscriptionEntity subscriptionEntity);
+    void updateBillingPeriod(SubscriptionEntity subscriptionEntity) throws StripeException;
 }

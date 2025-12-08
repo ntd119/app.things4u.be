@@ -18,6 +18,7 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.stripe.exception.StripeException;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
@@ -191,7 +192,13 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
 
             List<SubscriptionEntity> subscriptionEntities = subscriptionService.findByUserId(userEntity.getId());
             if (CollectionUtils.isNotEmpty(subscriptionEntities)) {
-                subscriptionEntities.forEach(subscriptionService::updateBillingPeriod);
+                subscriptionEntities.forEach(subscription -> {
+                    try {
+                        subscriptionService.updateBillingPeriod(subscription);
+                    } catch (StripeException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
             }
             List<SubscriptionResponse> apiPlansResponses = new ArrayList<>();
             if (CollectionUtils.isNotEmpty(subscriptionEntities)) {

@@ -4,12 +4,14 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;
 import com.stripe.model.SubscriptionItem;
 
@@ -114,20 +116,41 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void updateBillingPeriod(SubscriptionEntity subscriptionEntity) {
+    public void updateBillingPeriod(SubscriptionEntity subscriptionEntity) throws StripeException {
         long currentDate = utils.milliseconds();
-        long billingPeriodTo = subscriptionEntity.getBillingPeriodTo();
-        if (currentDate > billingPeriodTo) {
-            long billingPeriodFrom = subscriptionEntity.getBillingPeriodFrom();
-            while (currentDate > billingPeriodTo) {
-                billingPeriodFrom = billingPeriodTo;
-                // +1 month
-                billingPeriodTo = addOneMonth(billingPeriodFrom);
+        long toDate = subscriptionEntity.getBillingPeriodTo();
+        if (currentDate > toDate) {
+            Boolean isFree = subscriptionEntity.isFree();
+            long fromDate;
+            if (Objects.isNull(isFree) || isFree.booleanValue()) {
+                fromDate = subscriptionEntity.getBillingPeriodFrom();
+                while (currentDate > toDate) {
+                    fromDate = toDate;
+                    // +1 month
+                    toDate = addOneMonth(fromDate);
+                }
+            } else {
+                Subscription subscription = Subscription.retrieve(subscriptionEntity.getId());
+                if (subscription != null && !subscription.getItems().getData().isEmpty()) {
+                    SubscriptionItem item = subscription.getItems().getData().get(0);
+                    long start = item.getCurrentPeriodStart();
+                    long end = item.getCurrentPeriodEnd();
+                    fromDate = start > 0 ? start * 1000 : 0;
+                    toDate = end > 0 ? end * 1000 : 0;
+                } else {
+                    fromDate = 0;
+                    toDate = 0;
+                }
+                if (fromDate == 0 || toDate == 0) {
+                    LocalDateTime now = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
+                    fromDate = now.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+                    toDate = now.plusMonths(1).atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+                }
             }
-            subscriptionEntity.setBillingPeriodFrom(billingPeriodFrom);
-            subscriptionEntity.setBillingPeriodTo(billingPeriodTo);
+            subscriptionEntity.setBillingPeriodFrom(fromDate);
+            subscriptionEntity.setBillingPeriodTo(toDate);
             subscriptionEntity.setQuota(0L);
-            subscriptionRepository.updateBillingPeriod(subscriptionEntity.getId(), billingPeriodFrom, billingPeriodTo);
+            subscriptionRepository.updateBillingPeriod(subscriptionEntity.getId(), fromDate, toDate);
         }
     }
 
