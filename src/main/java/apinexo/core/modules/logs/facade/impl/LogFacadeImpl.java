@@ -9,12 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
 import apinexo.core.modules.logs.dto.DayLogResponse;
 import apinexo.core.modules.logs.facade.LogFacade;
 import apinexo.core.modules.logs.service.LogService;
-import apinexo.core.modules.subscription.dto.SubscriptionGetQuotaUsedResponse;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -61,10 +61,11 @@ public class LogFacadeImpl implements LogFacade {
     }
 
     @Override
-    public ResponseEntity<Object> countRequest(Long from, Long to) {
+    public ResponseEntity<Object> countRequestByEmail(Jwt jwt, Long from, Long to) {
         try {
-            long count = logService.countRequests("", from, to);
-            return ResponseEntity.ok(SubscriptionGetQuotaUsedResponse.builder().total(count).build());
+            String email = jwt.getClaimAsString("email");
+            long count = logService.countRequestByEmail(email, from, to);
+            return ResponseEntity.ok(Map.of("count", count));
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }

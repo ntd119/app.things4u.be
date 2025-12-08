@@ -41,8 +41,7 @@ public class LogServiceImpl implements LogService {
     }
 
     @Override
-    public long countRequests(String apiId, Long from, Long to) {
-        // TODO Auto-generated method stub
-        return 0;
+    public long countRequestByEmail(String email, Long from, Long to) {
+        return logRepository.countRequestByEmail(email, from, to);
     }
 }

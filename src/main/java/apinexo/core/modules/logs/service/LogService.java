@@ -14,7 +14,7 @@ public interface LogService {
 
     public List<Object[]> getDailyLogs(String subscriptionId, Long from, Long to);
 
-    long countRequests(String apiId, Long from, Long to);
+    long countRequestByEmail(String email, Long from, Long to);
 
     long countRequests(String subscriptionId, Long startTime);
 }
