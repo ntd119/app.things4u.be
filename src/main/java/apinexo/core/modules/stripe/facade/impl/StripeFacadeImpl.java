@@ -140,6 +140,7 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                             }
                         }
                     }
+                    Stripe.apiKey = stripeSecret;
                     Subscription subscription = Subscription.retrieve(subscriptionId);
                     SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity,
                             plansEntity, subscriptionItemId, subscription);
