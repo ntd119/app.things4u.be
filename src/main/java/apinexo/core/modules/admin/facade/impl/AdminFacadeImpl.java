@@ -116,6 +116,27 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     }
 
     @Override
+    public ResponseEntity<Object> sitesGetAll(Jwt jwt) {
+        try {
+            String email = jwt.getClaimAsString("email");
+            if (!"ntd119@gmail.com".equals(email)) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("message", "The user does not have permission to access this"));
+            }
+
+            @SuppressWarnings("unchecked")
+            List<LinkedHashMap<String, Object>> rawList = utils.readJsonFile("/data_static/api-config.json",
+                    List.class);
+
+            return ResponseEntity.ok(rawList);
+        } catch (HttpClientErrorException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
+        }
+    }
+
+    @Override
     public ResponseEntity<Object> sitesUpsert(Jwt jwt, AdminSitesUpsertRequest newItem) {
         try {
             String email = jwt.getClaimAsString("email");
@@ -144,7 +165,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             }
             JsonNode json = utils.convertDtoToJson(list);
             utils.saveToFile(json.toPrettyString(), "/data_static/api-config.json");
-            return ResponseEntity.ok(json);
+            return ResponseEntity.ok(list);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {
