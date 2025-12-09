@@ -3,6 +3,8 @@ package apinexo.core.modules.admin.controller;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +23,19 @@ public class AdminController {
     private final AdminFacade adminFacade;
 
     @PostMapping("/create-api")
-    public ResponseEntity<Object> createApi(@AuthenticationPrincipal Jwt jwt, @RequestBody AdminCreateApiRequest request) {
+    public ResponseEntity<Object> createApi(@AuthenticationPrincipal Jwt jwt,
+            @RequestBody AdminCreateApiRequest request) {
         return adminFacade.createApi(jwt, request);
     }
 
     @PostMapping("/sites/upsert")
-    public ResponseEntity<Object> sitesUpsert(@AuthenticationPrincipal Jwt jwt, @RequestBody AdminSitesUpsertRequest request) {
+    public ResponseEntity<Object> sitesUpsert(@AuthenticationPrincipal Jwt jwt,
+            @RequestBody AdminSitesUpsertRequest request) {
         return adminFacade.sitesUpsert(jwt, request);
+    }
+
+    @DeleteMapping("/sites/{id}")
+    public ResponseEntity<Object> sitesDelete(@AuthenticationPrincipal Jwt jwt, @PathVariable String id) {
+        return adminFacade.sitesDelete(jwt, id);
     }
 }

@@ -11,4 +11,6 @@ public interface AdminFacade {
     public ResponseEntity<Object> createApi(Jwt jwt, AdminCreateApiRequest request);
 
     public ResponseEntity<Object> sitesUpsert(Jwt jwt, AdminSitesUpsertRequest request);
+
+    public ResponseEntity<Object> sitesDelete(Jwt jwt, String id);
 }
