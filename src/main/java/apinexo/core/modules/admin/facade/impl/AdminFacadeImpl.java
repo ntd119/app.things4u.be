@@ -198,7 +198,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
 
             JsonNode json = utils.convertDtoToJson(list);
             utils.saveToFile(json.toPrettyString(), "/data_static/api-config.json");
-            return ResponseEntity.ok(json);
+            return ResponseEntity.ok(list);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {
