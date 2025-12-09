@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
+import apinexo.core.modules.admin.dto.AdminSitesUpsertRequest;
 import apinexo.core.modules.admin.facade.AdminFacade;
 import lombok.RequiredArgsConstructor;
 
@@ -22,5 +23,10 @@ public class AdminController {
     @PostMapping("/create-api")
     public ResponseEntity<Object> createApi(@AuthenticationPrincipal Jwt jwt, @RequestBody AdminCreateApiRequest request) {
         return adminFacade.createApi(jwt, request);
+    }
+
+    @PostMapping("/sites/upsert")
+    public ResponseEntity<Object> sitesUpsert(@AuthenticationPrincipal Jwt jwt, @RequestBody AdminSitesUpsertRequest request) {
+        return adminFacade.sitesUpsert(jwt, request);
     }
 }

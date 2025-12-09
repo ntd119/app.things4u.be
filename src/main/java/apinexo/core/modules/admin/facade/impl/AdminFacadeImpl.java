@@ -2,9 +2,12 @@ package apinexo.core.modules.admin.facade.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.ResponseEntity;
@@ -15,12 +18,14 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest.PlanDTO;
+import apinexo.core.modules.admin.dto.AdminSitesUpsertRequest;
 import apinexo.core.modules.admin.facade.AdminFacade;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
@@ -40,6 +45,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     private final PlansService apiPlansService;
 
     private final ApiService apiService;
+
+    private final ObjectMapper objectMapper;
 
     @Override
     public ResponseEntity<Object> createApi(Jwt jwt, AdminCreateApiRequest request) {
@@ -101,6 +108,43 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             apiEntity.setPlans(plans);
             apiService.save(apiEntity);
             return ResponseEntity.ok("Successful!");
+        } catch (HttpClientErrorException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> sitesUpsert(Jwt jwt, AdminSitesUpsertRequest newItem) {
+        try {
+            String email = jwt.getClaimAsString("email");
+            if (!"ntd119@gmail.com".equals(email)) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("message", "The user does not have permission to access this"));
+            }
+
+            @SuppressWarnings("unchecked")
+            List<LinkedHashMap<String, Object>> rawList = utils.readJsonFile("/data_static/api-config.json",
+                    List.class);
+
+            List<AdminSitesUpsertRequest> list = rawList.stream()
+                    .map(item -> objectMapper.convertValue(item, AdminSitesUpsertRequest.class))
+                    .collect(Collectors.toList());
+
+            Optional<AdminSitesUpsertRequest> existing = list.stream()
+                    .filter(i -> i.getId().equalsIgnoreCase(newItem.getId())).findFirst();
+
+            if (existing.isPresent()) {
+                // Update
+                existing.get().setUrls(newItem.getUrls());
+            } else {
+                // Add new
+                list.add(newItem);
+            }
+            JsonNode json = utils.convertDtoToJson(list);
+            utils.saveToFile(json.toPrettyString(), "/data_static/api-config.json");
+            return ResponseEntity.ok(json);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {

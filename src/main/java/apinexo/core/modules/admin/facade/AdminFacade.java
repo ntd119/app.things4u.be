@@ -4,8 +4,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
+import apinexo.core.modules.admin.dto.AdminSitesUpsertRequest;
 
 public interface AdminFacade {
 
     public ResponseEntity<Object> createApi(Jwt jwt, AdminCreateApiRequest request);
+
+    public ResponseEntity<Object> sitesUpsert(Jwt jwt, AdminSitesUpsertRequest request);
 }
