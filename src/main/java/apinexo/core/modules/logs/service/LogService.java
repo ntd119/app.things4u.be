@@ -17,4 +17,6 @@ public interface LogService {
     long countRequestByEmail(String email, Long from, Long to);
 
     long countRequests(String subscriptionId, Long startTime);
+
+    void deleteByTimeBefore(Long expiredTime);
 }

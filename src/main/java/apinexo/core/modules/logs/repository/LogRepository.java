@@ -48,4 +48,9 @@ public interface LogRepository extends JpaRepository<LogEntity, String> {
                   AND l.time BETWEEN :from AND :to
             """)
     long countRequestByEmail(@Param("email") String email, @Param("from") Long from, @Param("to") Long to);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM LogEntity l WHERE l.time < :expiredTime")
+    void deleteByTimeBefore(@Param("expiredTime") Long expiredTime);
 }

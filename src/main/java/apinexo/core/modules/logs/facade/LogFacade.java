@@ -8,4 +8,6 @@ public interface LogFacade {
     public ResponseEntity<Object> getChart(String subscriptionId, Long from, Long to);
 
     public ResponseEntity<Object> countRequestByEmail(Jwt jwt, Long from, Long to);
+
+    void deleteByTimeBefore(Long expiredTime);
 }

@@ -35,11 +35,6 @@
     "description": "A description for 'auth0.audience'"
   },
   {
-    "name": "openmeter.secret-token",
-    "type": "java.lang.String",
-    "description": "A description for 'openmeter.secret-token'"
-  },
-  {
     "name": "be.server",
     "type": "java.lang.String",
     "description": "A description for 'be.server'"

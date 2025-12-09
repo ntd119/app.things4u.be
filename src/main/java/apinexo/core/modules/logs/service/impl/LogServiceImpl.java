@@ -44,4 +44,9 @@ public class LogServiceImpl implements LogService {
     public long countRequestByEmail(String email, Long from, Long to) {
         return logRepository.countRequestByEmail(email, from, to);
     }
+
+    @Override
+    public void deleteByTimeBefore(Long expiredTime) {
+        logRepository.deleteByTimeBefore(expiredTime);
+    }
 }

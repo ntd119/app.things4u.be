@@ -70,4 +70,9 @@ public class LogFacadeImpl implements LogFacade {
             return ResponseEntity.badRequest().body(ex.getMessage());
         }
     }
+
+    @Override
+    public void deleteByTimeBefore(Long expiredTime) {
+        logService.deleteByTimeBefore(expiredTime);
+    }
 }
