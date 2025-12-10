@@ -129,9 +129,9 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
 
                     boolean isSoftLimit = Boolean.valueOf(session.getMetadata().get("isSoftLimit"));
                     String subscriptionItemId = null;
+                    Stripe.apiKey = stripeSecret;
+                    Subscription subscription = Subscription.retrieve(subscriptionId);
                     if (isSoftLimit) {
-                        Stripe.apiKey = stripeSecret;
-                        Subscription subscription = Subscription.retrieve(subscriptionId);
                         SubscriptionItemCollection items = subscription.getItems();
                         for (SubscriptionItem item : items.getData()) {
                             String usageType = item.getPrice().getRecurring().getUsageType();
@@ -140,8 +140,6 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                             }
                         }
                     }
-                    Stripe.apiKey = stripeSecret;
-                    Subscription subscription = Subscription.retrieve(subscriptionId);
                     SubscriptionEntity entity = subscriptionService.save(subscriptionId, userEntity, apiEntity,
                             plansEntity, subscriptionItemId, subscription);
                     ApiPlansResponse plans = plansConverter.entity2Resposne(entity.getPlan());

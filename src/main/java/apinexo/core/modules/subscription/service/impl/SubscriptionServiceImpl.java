@@ -8,9 +8,11 @@ import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;
 import com.stripe.model.SubscriptionItem;
@@ -32,6 +34,9 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final ApinexoUtils utils;
 
     private final SubscriptionRepository subscriptionRepository;
+
+    @Value("${stripe.secret.key}")
+    private String stripeSecret;
 
     @Override
     public SubscriptionEntity save(SubscriptionEntity entity) {
@@ -130,6 +135,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     toDate = addOneMonth(fromDate);
                 }
             } else {
+                Stripe.apiKey = stripeSecret;
                 Subscription subscription = Subscription.retrieve(subscriptionEntity.getId());
                 if (subscription != null && !subscription.getItems().getData().isEmpty()) {
                     SubscriptionItem item = subscription.getItems().getData().get(0);
