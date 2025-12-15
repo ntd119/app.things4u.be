@@ -1,6 +1,7 @@
 package apinexo.core.apis.playground.facade.impl;
 
 import java.net.URI;
+import java.util.Map;
 import java.util.Objects;
 
 import org.springframework.http.HttpHeaders;
@@ -42,7 +43,8 @@ public class PlaygroundFacadeImpl extends AbstractService implements PlaygroundF
             JsonNode apis = utils.readJsonFile("/data_static/api-config.json", JsonNode.class);
             JsonNode apiItem = utils.getJsonInList(apis, "id", prefix);
             if (apiItem == null || apiItem.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("API config not found for: " + fullPath);
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON)
+                        .body(Map.of("message", "API config not found for: " + fullPath));
             }
             JsonNode urls = utils.jsonNodeAt(apiItem, "/urls");
             int index = utils.getRandom().nextInt(urls.size());
