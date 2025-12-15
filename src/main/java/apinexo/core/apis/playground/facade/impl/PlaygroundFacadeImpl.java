@@ -1,8 +1,10 @@
 package apinexo.core.apis.playground.facade.impl;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
@@ -31,7 +33,6 @@ public class PlaygroundFacadeImpl extends AbstractService implements PlaygroundF
 
             String fullPath = request.getRequestURI();
             String method = request.getMethod();
-            String query = request.getQueryString();
 
             String prefix = null;
             URI uri = new URI(fullPath);
@@ -53,7 +54,10 @@ public class PlaygroundFacadeImpl extends AbstractService implements PlaygroundF
             String baseUrl = randomItem.asText();
             String forwardPath = fullPath.replace("/" + prefix, "");
             String finalUrl = baseUrl + forwardPath;
-            if (query != null) {
+            String query = request.getParameterMap().entrySet().stream()
+                    .flatMap(e -> Arrays.stream(e.getValue()).map(v -> "%s=%s".formatted(e.getKey(), v)))
+                    .collect(Collectors.joining("&"));
+            if (StringUtils.isNotBlank(query)) {
                 finalUrl += "?" + query;
             }
 
