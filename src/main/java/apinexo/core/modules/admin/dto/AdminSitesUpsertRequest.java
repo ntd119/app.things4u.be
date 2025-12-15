@@ -20,4 +20,7 @@ public class AdminSitesUpsertRequest {
 
     @JsonProperty("urls")
     private List<String> urls;
+
+    @JsonProperty("secret-header")
+    private String secretHeader;
 }

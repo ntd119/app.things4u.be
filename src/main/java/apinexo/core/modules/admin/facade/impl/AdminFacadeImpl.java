@@ -159,6 +159,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             if (existing.isPresent()) {
                 // Update
                 existing.get().setUrls(newItem.getUrls());
+                existing.get().setSecretHeader(newItem.getSecretHeader());
             } else {
                 // Add new
                 list.add(newItem);

@@ -1,8 +1,9 @@
-[
-	{
-		"id": "zillow",
-		"urls": [
-			"http://45.63.16.213:8080/rapidapi/zillow/com"
-		]
-	}
-]
+[ {
+  "id" : "zillow",
+  "urls" : [ "http://45.63.16.213:8080/rapidapi/zillow/com" ],
+  "secret-header" : null
+}, {
+  "id" : "redfin-com-data",
+  "urls" : [ "http://45.63.16.213:8080/rapidapi/redfin/com" ],
+  "secret-header" : "1951a250-d6d2-11ed-a042-5d254cd0b4e1"
+} ]
