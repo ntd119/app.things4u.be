@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.Map;
 import java.util.Objects;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -55,7 +56,12 @@ public class PlaygroundFacadeImpl extends AbstractService implements PlaygroundF
             if (query != null) {
                 finalUrl += "?" + query;
             }
+
             HttpHeaders headers = new HttpHeaders();
+            String secretHeader = utils.jsonNodeAt(apiItem, "/secret-header", String.class);
+            if (StringUtils.isNotBlank(secretHeader)) {
+                headers.set("X-RapidAPI-Proxy-Secret", secretHeader);
+            }
             headers.setContentType(MediaType.APPLICATION_JSON);
             return this.forwardToThirdParty(headers, finalUrl, method, query, body);
 
