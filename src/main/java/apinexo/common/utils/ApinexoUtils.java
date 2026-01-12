@@ -1,7 +1,6 @@
 package apinexo.common.utils;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -628,17 +627,31 @@ public class ApinexoUtils {
         }
     }
 
+//    public void saveToFile(String data, String pathFile) throws IOException {
+//        Path filePath;
+//        if (!isServer()) {
+//            filePath = Paths.get("src/main/resources", pathFile);
+//        } else {
+//            filePath = Paths.get(resourceLoader.getResource("classpath:" + pathFile).getURI());
+//        }
+//        try (OutputStream os = new FileOutputStream(filePath.toFile())) {
+//            os.write(data.getBytes());
+//        } catch (IOException e) {
+//            throw new IOException(e.getMessage());
+//        }
+//    }
+
     public void saveToFile(String data, String pathFile) throws IOException {
         Path filePath;
         if (!isServer()) {
             filePath = Paths.get("src/main/resources", pathFile);
         } else {
-            filePath = Paths.get(resourceLoader.getResource("classpath:" + pathFile).getURI());
+            String baseDir = System.getProperty("user.dir");
+            filePath = Paths.get(baseDir, "data", pathFile);
         }
-        try (OutputStream os = new FileOutputStream(filePath.toFile())) {
-            os.write(data.getBytes());
-        } catch (IOException e) {
-            throw new IOException(e.getMessage());
+        Files.createDirectories(filePath.getParent());
+        try (OutputStream os = Files.newOutputStream(filePath)) {
+            os.write(data.getBytes(StandardCharsets.UTF_8));
         }
     }
 
