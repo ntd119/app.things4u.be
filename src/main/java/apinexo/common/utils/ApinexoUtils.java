@@ -68,7 +68,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.util.MultiValueMap;
-import org.springframework.util.ResourceUtils;
 import org.springframework.validation.FieldError;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -600,15 +599,29 @@ public class ApinexoUtils {
         }
     }
 
+//    public <T> T readJsonFile(String filePath, Class<T> clazz) throws IOException {
+//        if (!isServer()) {
+//            File currentDirectory = ResourceUtils.getFile("src/main/resources");
+//            filePath = currentDirectory.getAbsolutePath() + File.separator + filePath;
+//            return objectMapper.readValue(new File(filePath), clazz);
+//        } else {
+//            ClassPathResource resource = new ClassPathResource(filePath);
+//            try (InputStream inputStream = resource.getInputStream()) {
+//                return objectMapper.readValue(inputStream, clazz);
+//            }
+//        }
+//    }
+    
     public <T> T readJsonFile(String filePath, Class<T> clazz) throws IOException {
         if (!isServer()) {
-            File currentDirectory = ResourceUtils.getFile("src/main/resources");
-            filePath = currentDirectory.getAbsolutePath() + File.separator + filePath;
-            return objectMapper.readValue(new File(filePath), clazz);
-        } else {
             ClassPathResource resource = new ClassPathResource(filePath);
-            try (InputStream inputStream = resource.getInputStream()) {
-                return objectMapper.readValue(inputStream, clazz);
+            try (InputStream is = resource.getInputStream()) {
+                return objectMapper.readValue(is, clazz);
+            }
+        } else {
+            Path path = Paths.get(System.getProperty("user.dir"), "data", filePath);
+            try (InputStream is = Files.newInputStream(path)) {
+                return objectMapper.readValue(is, clazz);
             }
         }
     }
