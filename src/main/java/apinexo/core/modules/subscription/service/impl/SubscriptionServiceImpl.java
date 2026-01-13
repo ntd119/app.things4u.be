@@ -121,7 +121,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void updateBillingPeriod(SubscriptionEntity subscriptionEntity) throws StripeException {
+    public void updateBillingPeriodFree(SubscriptionEntity subscriptionEntity) throws StripeException {
         long currentDate = utils.milliseconds();
         long toDate = subscriptionEntity.getBillingPeriodTo();
         if (currentDate > toDate) {
@@ -134,30 +134,39 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                     // +1 month
                     toDate = addOneMonth(fromDate);
                 }
-            } else {
-                Stripe.apiKey = stripeSecret;
-                Subscription subscription = Subscription.retrieve(subscriptionEntity.getId());
-                if (subscription != null && !subscription.getItems().getData().isEmpty()) {
-                    SubscriptionItem item = subscription.getItems().getData().get(0);
-                    long start = item.getCurrentPeriodStart();
-                    long end = item.getCurrentPeriodEnd();
-                    fromDate = start > 0 ? start * 1000 : 0;
-                    toDate = end > 0 ? end * 1000 : 0;
-                } else {
-                    fromDate = 0;
-                    toDate = 0;
-                }
-                if (fromDate == 0 || toDate == 0) {
-                    LocalDateTime now = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
-                    fromDate = now.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
-                    toDate = now.plusMonths(1).atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
-                }
+                subscriptionEntity.setBillingPeriodFrom(fromDate);
+                subscriptionEntity.setBillingPeriodTo(toDate);
+                subscriptionEntity.setQuotaUsed(0);
+                subscriptionRepository.updateBillingPeriod(subscriptionEntity.getId(), fromDate, toDate);
             }
-            subscriptionEntity.setBillingPeriodFrom(fromDate);
-            subscriptionEntity.setBillingPeriodTo(toDate);
-            subscriptionEntity.setQuota(0L);
-            subscriptionRepository.updateBillingPeriod(subscriptionEntity.getId(), fromDate, toDate);
         }
+    }
+
+    @Override
+    public void updateBillingPeriod(SubscriptionEntity subscriptionEntity) throws StripeException {
+        long toDate = subscriptionEntity.getBillingPeriodTo();
+        long fromDate;
+        Stripe.apiKey = stripeSecret;
+        Subscription subscription = Subscription.retrieve(subscriptionEntity.getId());
+        if (subscription != null && !subscription.getItems().getData().isEmpty()) {
+            SubscriptionItem item = subscription.getItems().getData().get(0);
+            long start = item.getCurrentPeriodStart();
+            long end = item.getCurrentPeriodEnd();
+            fromDate = start > 0 ? start * 1000 : 0;
+            toDate = end > 0 ? end * 1000 : 0;
+        } else {
+            fromDate = 0;
+            toDate = 0;
+        }
+        if (fromDate == 0 || toDate == 0) {
+            LocalDateTime now = utils.getCurrentDateTime(ConstantUtils.TIME_ZONE_UCT);
+            fromDate = now.atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+            toDate = now.plusMonths(1).atZone(ZoneId.of("UTC")).toInstant().toEpochMilli();
+        }
+        subscriptionEntity.setBillingPeriodFrom(fromDate);
+        subscriptionEntity.setBillingPeriodTo(toDate);
+        subscriptionEntity.setQuotaUsed(0);
+        subscriptionRepository.updateBillingPeriod(subscriptionEntity.getId(), fromDate, toDate);
     }
 
     private long addOneMonth(long timestampMillis) {

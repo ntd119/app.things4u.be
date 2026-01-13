@@ -17,6 +17,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import com.stripe.Stripe;
 import com.stripe.model.Event;
 import com.stripe.model.EventDataObjectDeserializer;
+import com.stripe.model.Invoice;
 import com.stripe.model.Subscription;
 import com.stripe.model.SubscriptionItem;
 import com.stripe.model.SubscriptionItemCollection;
@@ -70,9 +71,9 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
         try {
             String payloadString = new String(payload, StandardCharsets.UTF_8);
             Event event = Webhook.constructEvent(payloadString, sigHeader, stripeSecretEndpoint);
+            EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
             switch (event.getType()) {
             case "checkout.session.completed":
-                EventDataObjectDeserializer deserializer = event.getDataObjectDeserializer();
                 Session session = null;
                 if (deserializer.getObject().isPresent()) {
                     session = (Session) deserializer.getObject().get();
@@ -146,6 +147,25 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                     SubscriptionChangeSubscriptionFreeResponse response = SubscriptionChangeSubscriptionFreeResponse
                             .builder().id(entity.getId()).plan(plans).build();
                     return ResponseEntity.ok(response);
+                }
+                break;
+            case "invoice.payment_succeeded":
+                Invoice invoice = null;
+                if (deserializer.getObject().isPresent()) {
+                    invoice = (Invoice) deserializer.getObject().get();
+                } else {
+                    String rawJson = deserializer.getRawJson();
+                    invoice = ApiResource.GSON.fromJson(rawJson, Invoice.class);
+                } // subscription_cycle
+                if (invoice != null && "subscription_update".equals(invoice.getBillingReason())) {
+                    // reset quota
+                    String subscriptionId =
+                            invoice.getLines().getData().get(0).getSubscription();
+                    Optional<SubscriptionEntity> optionalSubscription = subscriptionService.findById(subscriptionId);
+                    if (optionalSubscription.isPresent()) {
+                        SubscriptionEntity subscriptionEntity = optionalSubscription.get();
+                        subscriptionService.updateBillingPeriod(subscriptionEntity);
+                    }
                 }
                 break;
             }

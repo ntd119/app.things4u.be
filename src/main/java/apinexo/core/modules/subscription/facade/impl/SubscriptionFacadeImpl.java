@@ -194,7 +194,7 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
             if (CollectionUtils.isNotEmpty(subscriptionEntities)) {
                 subscriptionEntities.forEach(subscription -> {
                     try {
-                        subscriptionService.updateBillingPeriod(subscription);
+                        subscriptionService.updateBillingPeriodFree(subscription);
                     } catch (StripeException e) {
                         throw new RuntimeException(e);
                     }

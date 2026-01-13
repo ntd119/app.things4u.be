@@ -79,7 +79,7 @@ public class RateLimitInterceptor implements HandlerInterceptor {
 
         // reset quota
         SubscriptionEntity subscriptionEntity = optionalSubscription.get();
-        subscriptionService.updateBillingPeriod(subscriptionEntity);
+        subscriptionService.updateBillingPeriodFree(subscriptionEntity);
 
         // check quota
         boolean isSoftLimit = subscriptionEntity.getIsSoftLimit();
