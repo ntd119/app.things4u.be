@@ -159,13 +159,28 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                 } // subscription_cycle subscription_update
                 if (invoice != null && "subscription_cycle".equals(invoice.getBillingReason())) {
                     // reset quota
-                    String subscriptionId =
-                            invoice.getLines().getData().get(0).getSubscription();
+                    String subscriptionId = invoice.getLines().getData().get(0).getSubscription();
                     Optional<SubscriptionEntity> optionalSubscription = subscriptionService.findById(subscriptionId);
                     if (optionalSubscription.isPresent()) {
                         SubscriptionEntity subscriptionEntity = optionalSubscription.get();
                         subscriptionService.updateBillingPeriod(subscriptionEntity);
                     }
+                }
+                break;
+            case "invoice.payment_failed":
+                Invoice invoiceFailed = null;
+                if (deserializer.getObject().isPresent()) {
+                    invoiceFailed = (Invoice) deserializer.getObject().get();
+                } else {
+                    String rawJson = deserializer.getRawJson();
+                    invoiceFailed = ApiResource.GSON.fromJson(rawJson, Invoice.class);
+                }
+                String subscriptionId = invoiceFailed.getLines().getData().get(0).getSubscription();
+                Optional<SubscriptionEntity> optionalSubscription = subscriptionService.findById(subscriptionId);
+                if (optionalSubscription.isPresent()) {
+                    SubscriptionEntity subscriptionEntity = optionalSubscription.get();
+                    subscriptionEntity.setQuota(0L);
+                    subscriptionService.save(subscriptionEntity);
                 }
                 break;
             }
