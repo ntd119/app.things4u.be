@@ -156,8 +156,8 @@ public class StripeFacadeImpl extends AbstractService implements StripeFacade {
                 } else {
                     String rawJson = deserializer.getRawJson();
                     invoice = ApiResource.GSON.fromJson(rawJson, Invoice.class);
-                } // subscription_cycle
-                if (invoice != null && "subscription_update".equals(invoice.getBillingReason())) {
+                } // subscription_cycle subscription_update
+                if (invoice != null && "subscription_cycle".equals(invoice.getBillingReason())) {
                     // reset quota
                     String subscriptionId =
                             invoice.getLines().getData().get(0).getSubscription();
