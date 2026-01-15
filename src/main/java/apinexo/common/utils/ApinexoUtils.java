@@ -215,6 +215,12 @@ public class ApinexoUtils {
         return response;
     }
 
+    public JsonNode err(String message) {
+        ObjectNode node = objectMapper.createObjectNode();
+        node.put("message", message);
+        return node;
+    }
+
     public Object err2(Object errors, String... message) {
         Object errorsJson = convertStrToJson(Objects.nonNull(errors) ? errors.toString() : null);
         if (Objects.nonNull(errorsJson)) {
@@ -611,7 +617,7 @@ public class ApinexoUtils {
 //            }
 //        }
 //    }
-    
+
     public <T> T readJsonFile(String filePath, Class<T> clazz) throws IOException {
         if (!isServer()) {
             ClassPathResource resource = new ClassPathResource(filePath);

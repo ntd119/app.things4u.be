@@ -1,11 +1,12 @@
 package apinexo.core.apis.playground.facade;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 
-import jakarta.servlet.http.HttpServletRequest;
+import reactor.core.publisher.Mono;
 
 public interface PlaygroundFacade {
 
-    ResponseEntity<?> dynamicProxy(HttpServletRequest request, String body);
+    Mono<ResponseEntity<String>> dynamicProxy(ServerHttpRequest request, String body);
 
 }

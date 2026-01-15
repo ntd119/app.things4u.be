@@ -121,7 +121,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
-    public void updateBillingPeriodFree(SubscriptionEntity subscriptionEntity) throws StripeException {
+    public void updateBillingPeriodFree(SubscriptionEntity subscriptionEntity) {
         long currentDate = utils.milliseconds();
         long toDate = subscriptionEntity.getBillingPeriodTo();
         if (currentDate > toDate) {

@@ -32,7 +32,7 @@ public interface SubscriptionService {
 
     Long getQuotaUsedById(String id);
 
-    void updateBillingPeriodFree(SubscriptionEntity subscriptionEntity) throws StripeException;
+    void updateBillingPeriodFree(SubscriptionEntity subscriptionEntity);
 
     void updateBillingPeriod(SubscriptionEntity subscriptionEntity) throws StripeException;
 }
