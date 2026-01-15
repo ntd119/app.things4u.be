@@ -175,37 +175,36 @@ public class RateLimitWebFilter implements WebFilter {
         long start = (long) exchange.getAttribute("startTime");
         String latency = String.format("%,dms", (System.currentTimeMillis() - start));
 
-//        // request_headers
-//        Map<String, String> headers = Collections.list(request.getHeaderNames()).stream()
-//                .collect(Collectors.toMap(h -> h, request::getHeader));
-//        String requestHeaders = utils.convertDtoToJson(headers).toString();
-//
-//        // request_query_parameters
-//        String requestQueryParameters = request.getQueryString() != null ? request.getQueryString() : "";
-//
-//        // request_body
-//        String requestBody = "";
-//        if (request instanceof CachedBodyHttpServletRequest w) {
-//            requestBody = new String(w.getCachedBody(), request.getCharacterEncoding());
-//        }
-//
-//        // response_headers
-//        String responseHeaders = "";
-//
-//        // response_body
-//        String responseBody = "";
-//        if (response instanceof ContentCachingResponseWrapper w) {
-//            byte[] arr = w.getContentAsByteArray();
-//            responseBody = new String(arr, response.getCharacterEncoding());
-//            if (StringUtils.isNotBlank(responseBody) && responseBody.length() > 1000) {
-//                responseBody = responseBody.substring(0, 1000);
-//            }
-//        }
+        // request_headers
+        String requestHeaders = exchange.getRequest().getHeaders().toSingleValueMap().toString();
+
+        // request_query_parameters
+        String requestQueryParameters = exchange.getRequest().getQueryParams().toSingleValueMap().toString();
+
+        // request_body
+        MediaType contentType = exchange.getRequest().getHeaders().getContentType();
+        String requestBody = (String) exchange.getAttribute("request_body");
+        if (StringUtils.isNotBlank(requestBody) && requestBody.length() > 1000) {
+            requestBody = requestBody.substring(0, 1000);
+        }
+
+        // response_headers
+        String responseHeaders = exchange.getResponse().getHeaders().toSingleValueMap().toString();
+
+        // response_body
+        String responseBody = "";
+        if (MediaType.APPLICATION_JSON.equals(contentType)) {
+            responseBody = (String) exchange.getAttribute("response_body");
+            if (StringUtils.isNotBlank(responseBody) && responseBody.length() > 1000) {
+                responseBody = responseBody.substring(0, 1000);
+            }
+        }
 
         LogEntity entity = LogEntity.builder().id(utils.uuidRandom()).subscriptionId(subscriptionId)
                 .time(utils.milliseconds()).username(username).email(email).firstName(firstName).lastName(lastName)
                 .endpoint(endpoint).method(method).location(location).responseStatus(responseStatus).latency(latency)
-                .build();
+                .requestHeaders(requestHeaders).requestQueryParameters(requestQueryParameters).requestBody(requestBody)
+                .requestBody(responseHeaders).responseBody(responseBody).build();
 
         logService.save(entity);
         subscriptionService.increaseQuotaUsed(subscriptionId);
