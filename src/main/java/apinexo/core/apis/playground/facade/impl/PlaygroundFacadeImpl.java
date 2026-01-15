@@ -16,6 +16,7 @@ import org.springframework.web.client.HttpClientErrorException;
 
 import com.fasterxml.jackson.databind.JsonNode;
 
+import apinexo.common.configuration.ApiConfigCache;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.apis.playground.facade.PlaygroundFacade;
@@ -27,6 +28,8 @@ import lombok.RequiredArgsConstructor;
 public class PlaygroundFacadeImpl extends AbstractService implements PlaygroundFacade {
 
     private final ApinexoUtils utils;
+
+    private final ApiConfigCache apiConfigCache;
 
     public ResponseEntity<?> dynamicProxy(HttpServletRequest request, String body) {
         try {
@@ -42,8 +45,7 @@ public class PlaygroundFacadeImpl extends AbstractService implements PlaygroundF
                 prefix = parts[1];
             }
 
-            JsonNode apis = utils.readJsonFile("/data_static/api-config.json", JsonNode.class);
-            JsonNode apiItem = utils.getJsonInList(apis, "id", prefix);
+            JsonNode apiItem = apiConfigCache.getApiByPrefix(prefix);
             if (apiItem == null || apiItem.isEmpty()) {
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).contentType(MediaType.APPLICATION_JSON)
                         .body(Map.of("message", "API config not found for: " + fullPath));
