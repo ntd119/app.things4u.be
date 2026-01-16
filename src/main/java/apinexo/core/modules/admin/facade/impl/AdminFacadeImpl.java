@@ -2,12 +2,12 @@ package apinexo.core.modules.admin.facade.impl;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +21,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import apinexo.common.configuration.ApiConfigCache;
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.common.utils.ConstantUtils;
@@ -48,6 +49,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     private final ApiService apiService;
 
     private final ObjectMapper objectMapper;
+
+    private final ApiConfigCache apiConfigCache;
 
     @Override
     public ResponseEntity<Object> createApi(Jwt jwt, AdminCreateApiRequest request) {
@@ -124,12 +127,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                 return ResponseEntity.badRequest()
                         .body(Map.of("message", "The user does not have permission to access this"));
             }
-
-            @SuppressWarnings("unchecked")
-            List<LinkedHashMap<String, Object>> rawList = utils.readJsonFile("/data_static/api-config.json",
-                    List.class);
-
-            return ResponseEntity.ok(rawList);
+            return ResponseEntity.ok(apiConfigCache.getApiConfig());
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {
@@ -145,12 +143,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                 return ResponseEntity.badRequest()
                         .body(Map.of("message", "The user does not have permission to access this"));
             }
-
-            @SuppressWarnings("unchecked")
-            List<LinkedHashMap<String, Object>> rawList = utils.readJsonFile("/data_static/api-config.json",
-                    List.class);
-
-            List<AdminSitesUpsertRequest> list = rawList.stream()
+            JsonNode rawList = apiConfigCache.getApiConfig();
+            List<AdminSitesUpsertRequest> list = StreamSupport.stream(rawList.spliterator(), false)
                     .map(item -> objectMapper.convertValue(item, AdminSitesUpsertRequest.class))
                     .collect(Collectors.toList());
 
@@ -166,7 +160,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                 list.add(newItem);
             }
             JsonNode json = utils.convertDtoToJson(list);
-            utils.saveToFile(json.toPrettyString(), "/data_static/api-config.json");
+            utils.saveToFile(json.toPrettyString(), ConstantUtils.API_CONFIG_PATH);
+            apiConfigCache.setApiConfig(json);
             return ResponseEntity.ok(list);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
@@ -184,11 +179,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                         .body(Map.of("message", "The user does not have permission to access this"));
             }
 
-            @SuppressWarnings("unchecked")
-            List<LinkedHashMap<String, Object>> rawList = utils.readJsonFile("/data_static/api-config.json",
-                    List.class);
-
-            List<AdminSitesUpsertRequest> list = rawList.stream()
+            JsonNode rawList = apiConfigCache.getApiConfig();
+            List<AdminSitesUpsertRequest> list = StreamSupport.stream(rawList.spliterator(), false)
                     .map(item -> objectMapper.convertValue(item, AdminSitesUpsertRequest.class))
                     .collect(Collectors.toList());
 
@@ -199,7 +191,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             }
 
             JsonNode json = utils.convertDtoToJson(list);
-            utils.saveToFile(json.toPrettyString(), "/data_static/api-config.json");
+            utils.saveToFile(json.toPrettyString(), ConstantUtils.API_CONFIG_PATH);
+            apiConfigCache.setApiConfig(json);
             return ResponseEntity.ok(list);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));

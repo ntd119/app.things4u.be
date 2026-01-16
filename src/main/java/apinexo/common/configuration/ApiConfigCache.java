@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.common.utils.ConstantUtils;
 import jakarta.annotation.PostConstruct;
 
 @Component
@@ -21,13 +22,20 @@ public class ApiConfigCache {
     @PostConstruct
     public void init() {
         try {
-            this.apis = utils.readJsonFile("/data_static/api-config.json", JsonNode.class);
+            this.apis = utils.readJsonFile(ConstantUtils.API_CONFIG_PATH, JsonNode.class);
         } catch (IOException e) {
         }
+    }
+
+    public JsonNode getApiConfig() {
+        return this.apis;
+    }
+
+    public void setApiConfig(JsonNode api) {
+        this.apis = api;
     }
 
     public JsonNode getApiByPrefix(String prefix) {
         return utils.getJsonInList(apis, "id", prefix);
     }
-
 }
