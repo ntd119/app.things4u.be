@@ -137,8 +137,9 @@ public class AppConfig {
 
     @Bean
     SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
-        return http.csrf(ServerHttpSecurity.CsrfSpec::disable).cors(Customizer.withDefaults()).authorizeExchange(
-                ex -> ex.pathMatchers("/dev/**", "/dev/stripe/webhook").authenticated().anyExchange().permitAll())
+        return http.csrf(ServerHttpSecurity.CsrfSpec::disable).cors(Customizer.withDefaults())
+                .authorizeExchange(ex -> ex.pathMatchers("/dev/stripe/webhook").permitAll().pathMatchers("/dev/**")
+                        .authenticated().anyExchange().permitAll())
                 .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults())).build();
     }
 

@@ -12,8 +12,8 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class ApiServiceImpl  implements ApiService {
-    
+public class ApiServiceImpl implements ApiService {
+
     private final ApiRepository apiRepository;
 
     @Override
@@ -23,7 +23,7 @@ public class ApiServiceImpl  implements ApiService {
 
     @Override
     public Optional<ApiEntity> findbyId(String id) {
-        return apiRepository.findById(id);
+        return apiRepository.findByIdWithPlans(id);
     }
 
     @Override
