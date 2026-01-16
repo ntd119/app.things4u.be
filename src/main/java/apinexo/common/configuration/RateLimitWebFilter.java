@@ -125,6 +125,8 @@ public class RateLimitWebFilter implements WebFilter {
             exchange.getAttributes().put("startTime", System.currentTimeMillis());
             response.beforeCommit(() -> {
                 HttpHeaders headers = response.getHeaders();
+                headers.add("Access-Control-Expose-Headers",
+                        "X-Quota, X-Quota-Used, X-Quota-Remaining, X-Rate-Limit");
                 Long rateLimit = sub.getRateLimit();
                 String rateLimitPeriod = sub.getRateLimitPeriod();
                 if (rateLimit != null && StringUtils.isNotBlank(rateLimitPeriod)) {
