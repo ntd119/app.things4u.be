@@ -187,7 +187,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             boolean removed = list.removeIf(item -> item.getId().equalsIgnoreCase(id));
 
             if (!removed) {
-                throw new RuntimeException("ID not found: " + id);
+                return ResponseEntity.badRequest().body(Map.of("message", "ID not found: " + id));
             }
 
             JsonNode json = utils.convertDtoToJson(list);
