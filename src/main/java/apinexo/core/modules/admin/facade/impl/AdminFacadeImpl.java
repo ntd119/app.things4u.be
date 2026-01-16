@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
@@ -127,7 +128,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                 return ResponseEntity.badRequest()
                         .body(Map.of("message", "The user does not have permission to access this"));
             }
-            return ResponseEntity.ok(apiConfigCache.getApiConfig());
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON)
+                    .body(apiConfigCache.getApiConfig().toString());
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
         } catch (Exception ex) {
