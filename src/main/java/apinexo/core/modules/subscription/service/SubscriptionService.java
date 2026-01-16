@@ -40,5 +40,5 @@ public interface SubscriptionService {
 
     void updateBillingPeriod(SubscriptionEntity subscriptionEntity) throws StripeException;
 
-    Page<AdminSubscriptionPageResponse> getSubscriptions(Pageable pageable);
+    Page<AdminSubscriptionPageResponse> getSubscriptions(String keyword, Pageable pageable);
 }

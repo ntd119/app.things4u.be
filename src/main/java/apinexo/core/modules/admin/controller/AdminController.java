@@ -48,7 +48,8 @@ public class AdminController {
 
     @GetMapping("/subscriptions")
     public ResponseEntity<Object> getSubscriptions(@AuthenticationPrincipal Jwt jwt,
-            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        return adminFacade.getSubscriptions(jwt, page, size);
+            @RequestParam(required = false) String keyword, @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size) {
+        return adminFacade.getSubscriptions(jwt, keyword, page, size);
     }
 }

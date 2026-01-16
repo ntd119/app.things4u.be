@@ -179,7 +179,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<AdminSubscriptionPageResponse> getSubscriptions(Pageable pageable) {
-        return subscriptionRepository.findAllWithUser(pageable);
+    public Page<AdminSubscriptionPageResponse> getSubscriptions(String keyword, Pageable pageable) {
+        return subscriptionRepository.findAllWithUser(keyword, pageable);
     }
 }

@@ -16,5 +16,5 @@ public interface AdminFacade {
 
     public ResponseEntity<Object> sitesDelete(Jwt jwt, String id);
 
-    public ResponseEntity<Object> getSubscriptions(Jwt jwt, int page, int size);
+    public ResponseEntity<Object> getSubscriptions(Jwt jwt, String keyword, int page, int size);
 }

@@ -54,6 +54,7 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
                 )
                 FROM SubscriptionEntity s
                 JOIN s.user u
+                WHERE (:keyword IS NULL OR u.email LIKE %:keyword% OR u.userName LIKE %:keyword%)
             """)
-    Page<AdminSubscriptionPageResponse> findAllWithUser(Pageable pageable);
+    Page<AdminSubscriptionPageResponse> findAllWithUser(@Param("keyword") String keyword, Pageable pageable);
 }

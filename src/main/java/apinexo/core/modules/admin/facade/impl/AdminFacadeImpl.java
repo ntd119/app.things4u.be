@@ -212,7 +212,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     }
 
     @Override
-    public ResponseEntity<Object> getSubscriptions(Jwt jwt, int page, int size) {
+    public ResponseEntity<Object> getSubscriptions(Jwt jwt, String keyword, int page, int size) {
         try {
             String email = jwt.getClaimAsString("email");
             if (!ConstantUtils.EMAIL_ADMIN.equals(email)) {
@@ -220,7 +220,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                         .body(Map.of("message", "The user does not have permission to access this"));
             }
             Pageable pageable = PageRequest.of(page, size, Sort.by("subscribedAt").descending());
-            Page<AdminSubscriptionPageResponse> result = subscriptionService.getSubscriptions(pageable);
+            Page<AdminSubscriptionPageResponse> result = subscriptionService.getSubscriptions(keyword, pageable);
             return ResponseEntity.ok(result);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
