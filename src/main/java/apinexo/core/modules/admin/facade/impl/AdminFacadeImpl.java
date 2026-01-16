@@ -33,7 +33,7 @@ import apinexo.common.utils.ConstantUtils;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest.PlanDTO;
 import apinexo.core.modules.admin.dto.AdminSitesUpsertRequest;
-import apinexo.core.modules.admin.dto.SubscriptionPageResponse;
+import apinexo.core.modules.admin.dto.AdminSubscriptionPageResponse;
 import apinexo.core.modules.admin.facade.AdminFacade;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
@@ -220,7 +220,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
                         .body(Map.of("message", "The user does not have permission to access this"));
             }
             Pageable pageable = PageRequest.of(page, size, Sort.by("subscribedAt").descending());
-            Page<SubscriptionPageResponse> result = subscriptionService.getSubscriptions(pageable);
+            Page<AdminSubscriptionPageResponse> result = subscriptionService.getSubscriptions(pageable);
             return ResponseEntity.ok(result);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));

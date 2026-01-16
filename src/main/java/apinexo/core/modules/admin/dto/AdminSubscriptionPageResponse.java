@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SubscriptionPageResponse {
+public class AdminSubscriptionPageResponse {
 
     private String subscriptionId;
 

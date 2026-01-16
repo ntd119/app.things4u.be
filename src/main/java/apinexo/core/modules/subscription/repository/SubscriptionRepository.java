@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import apinexo.core.modules.admin.dto.SubscriptionPageResponse;
+import apinexo.core.modules.admin.dto.AdminSubscriptionPageResponse;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import jakarta.transaction.Transactional;
 
@@ -37,7 +37,7 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
             @Param("billingTo") Long billingTo);
 
     @Query("""
-                SELECT new apinexo.core.modules.admin.dto.SubscriptionPageResponse(
+                SELECT new apinexo.core.modules.admin.dto.AdminSubscriptionPageResponse(
                     s.id,
                     u.id,
                     u.userName,
@@ -55,5 +55,5 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
                 FROM SubscriptionEntity s
                 JOIN s.user u
             """)
-    Page<SubscriptionPageResponse> findAllWithUser(Pageable pageable);
+    Page<AdminSubscriptionPageResponse> findAllWithUser(Pageable pageable);
 }

@@ -22,7 +22,7 @@ import com.stripe.model.SubscriptionItem;
 
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.common.utils.ConstantUtils;
-import apinexo.core.modules.admin.dto.SubscriptionPageResponse;
+import apinexo.core.modules.admin.dto.AdminSubscriptionPageResponse;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -179,7 +179,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     @Transactional(readOnly = true)
-    public Page<SubscriptionPageResponse> getSubscriptions(Pageable pageable) {
+    public Page<AdminSubscriptionPageResponse> getSubscriptions(Pageable pageable) {
         return subscriptionRepository.findAllWithUser(pageable);
     }
 }
