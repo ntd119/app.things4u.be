@@ -6,6 +6,7 @@ public class ConstantUtils {
     public static final String DATE_FORMAT_YYYYMM = "yyyy-MM";
     public static final String TIME_ZONE_DEFAULT = "America/New_York";
     public static final String TIME_ZONE_UCT = "UCT";
+    public static final String EMAIL_ADMIN = "ntd119@gmail.com";
 
     public static class Pattern {
         public static final String PAGE_URL = "/(\\d+_p)/";

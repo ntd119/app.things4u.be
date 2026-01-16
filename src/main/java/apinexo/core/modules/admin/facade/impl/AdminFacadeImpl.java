@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
+import apinexo.common.utils.ConstantUtils;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest.PlanDTO;
 import apinexo.core.modules.admin.dto.AdminSitesUpsertRequest;
@@ -52,7 +53,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     public ResponseEntity<Object> createApi(Jwt jwt, AdminCreateApiRequest request) {
         try {
             String email = jwt.getClaimAsString("email");
-            if (!"ntd119@gmail.com".equals(email)) {
+            if (!ConstantUtils.EMAIL_ADMIN.equals(email)) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("message", "The user does not have permission to access this"));
             }
@@ -119,7 +120,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     public ResponseEntity<Object> sitesGetAll(Jwt jwt) {
         try {
             String email = jwt.getClaimAsString("email");
-            if (!"ntd119@gmail.com".equals(email)) {
+            if (!ConstantUtils.EMAIL_ADMIN.equals(email)) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("message", "The user does not have permission to access this"));
             }
@@ -140,7 +141,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     public ResponseEntity<Object> sitesUpsert(Jwt jwt, AdminSitesUpsertRequest newItem) {
         try {
             String email = jwt.getClaimAsString("email");
-            if (!"ntd119@gmail.com".equals(email)) {
+            if (!ConstantUtils.EMAIL_ADMIN.equals(email)) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("message", "The user does not have permission to access this"));
             }
@@ -178,7 +179,7 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     public ResponseEntity<Object> sitesDelete(Jwt jwt, String id) {
         try {
             String email = jwt.getClaimAsString("email");
-            if (!"ntd119@gmail.com".equals(email)) {
+            if (!ConstantUtils.EMAIL_ADMIN.equals(email)) {
                 return ResponseEntity.badRequest()
                         .body(Map.of("message", "The user does not have permission to access this"));
             }
