@@ -10,6 +10,10 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
@@ -29,12 +33,14 @@ import apinexo.common.utils.ConstantUtils;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest.PlanDTO;
 import apinexo.core.modules.admin.dto.AdminSitesUpsertRequest;
+import apinexo.core.modules.admin.dto.SubscriptionPageResponse;
 import apinexo.core.modules.admin.facade.AdminFacade;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.plans.service.PlansService;
 import apinexo.core.modules.stripe.service.StripeService;
+import apinexo.core.modules.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 
 @Component
@@ -48,6 +54,8 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
     private final PlansService apiPlansService;
 
     private final ApiService apiService;
+
+    private final SubscriptionService subscriptionService;
 
     private final ObjectMapper objectMapper;
 
@@ -198,6 +206,25 @@ public class AdminFacadeImpl extends AbstractService implements AdminFacade {
             return ResponseEntity.ok(list);
         } catch (HttpClientErrorException ex) {
             return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
+        } catch (Exception ex) {
+            return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
+        }
+    }
+
+    @Override
+    public ResponseEntity<Object> getSubscriptions(Jwt jwt, int page, int size) {
+        try {
+            String email = jwt.getClaimAsString("email");
+            if (!ConstantUtils.EMAIL_ADMIN.equals(email)) {
+                return ResponseEntity.badRequest()
+                        .body(Map.of("message", "The user does not have permission to access this"));
+            }
+            Pageable pageable = PageRequest.of(page, size, Sort.by("subscribedAt").descending());
+            Page<SubscriptionPageResponse> result = subscriptionService.getSubscriptions(pageable);
+            return ResponseEntity.ok(result);
+        } catch (HttpClientErrorException ex) {
+            return ResponseEntity.status(ex.getStatusCode()).body(utils.convertStrToJson(ex.getResponseBodyAsString()));
+
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(utils.err(ex.getMessage()));
         }

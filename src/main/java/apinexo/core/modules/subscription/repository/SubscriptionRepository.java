@@ -3,11 +3,14 @@ package apinexo.core.modules.subscription.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import apinexo.core.modules.admin.dto.SubscriptionPageResponse;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import jakarta.transaction.Transactional;
 
@@ -32,4 +35,25 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
     @Query("UPDATE SubscriptionEntity s SET s.quotaUsed = 0, s.billingPeriodFrom = :billingFrom, s.billingPeriodTo = :billingTo WHERE s.id = :id")
     void updateBillingPeriod(@Param("id") String id, @Param("billingFrom") Long billingFrom,
             @Param("billingTo") Long billingTo);
+
+    @Query("""
+                SELECT new apinexo.core.modules.admin.dto.SubscriptionPageResponse(
+                    s.id,
+                    u.id,
+                    u.userName,
+                    u.email,
+                    s.api.id,
+                    s.plan.id,
+                    s.active,
+                    s.isFree,
+                    s.quota,
+                    s.quotaUsed,
+                    s.price,
+                    s.period,
+                    s.subscribedAt
+                )
+                FROM SubscriptionEntity s
+                JOIN s.user u
+            """)
+    Page<SubscriptionPageResponse> findAllWithUser(Pageable pageable);
 }

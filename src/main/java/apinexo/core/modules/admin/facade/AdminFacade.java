@@ -15,4 +15,6 @@ public interface AdminFacade {
     public ResponseEntity<Object> sitesUpsert(Jwt jwt, AdminSitesUpsertRequest request);
 
     public ResponseEntity<Object> sitesDelete(Jwt jwt, String id);
+
+    public ResponseEntity<Object> getSubscriptions(Jwt jwt, int page, int size);
 }

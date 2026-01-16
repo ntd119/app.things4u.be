@@ -9,7 +9,10 @@ import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.stripe.Stripe;
@@ -19,6 +22,7 @@ import com.stripe.model.SubscriptionItem;
 
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.common.utils.ConstantUtils;
+import apinexo.core.modules.admin.dto.SubscriptionPageResponse;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -171,5 +175,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     private long addOneMonth(long timestampMillis) {
         return Instant.ofEpochMilli(timestampMillis).atZone(ZoneId.of("UTC")).plusMonths(1).toInstant().toEpochMilli();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public Page<SubscriptionPageResponse> getSubscriptions(Pageable pageable) {
+        return subscriptionRepository.findAllWithUser(pageable);
     }
 }

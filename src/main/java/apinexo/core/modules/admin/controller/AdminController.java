@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import apinexo.core.modules.admin.dto.AdminCreateApiRequest;
@@ -43,5 +44,11 @@ public class AdminController {
     @DeleteMapping("/sites/{id}")
     public ResponseEntity<Object> sitesDelete(@AuthenticationPrincipal Jwt jwt, @PathVariable String id) {
         return adminFacade.sitesDelete(jwt, id);
+    }
+
+    @GetMapping("/subscriptions")
+    public ResponseEntity<Object> getSubscriptions(@AuthenticationPrincipal Jwt jwt,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
+        return adminFacade.getSubscriptions(jwt, page, size);
     }
 }

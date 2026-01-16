@@ -3,9 +3,13 @@ package apinexo.core.modules.subscription.service;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
 import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;
 
+import apinexo.core.modules.admin.dto.SubscriptionPageResponse;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.plans.entity.PlansEntity;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
@@ -35,4 +39,6 @@ public interface SubscriptionService {
     void updateBillingPeriodFree(SubscriptionEntity subscriptionEntity);
 
     void updateBillingPeriod(SubscriptionEntity subscriptionEntity) throws StripeException;
+
+    Page<SubscriptionPageResponse> getSubscriptions(Pageable pageable);
 }
