@@ -7,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -122,7 +123,19 @@ public class RateLimitWebFilter implements WebFilter {
             exchange.getAttributes().put("last_name", user.getLastName());
             exchange.getAttributes().put("location", "");
             exchange.getAttributes().put("startTime", System.currentTimeMillis());
-
+            response.beforeCommit(() -> {
+                HttpHeaders headers = response.getHeaders();
+                Long rateLimit = sub.getRateLimit();
+                String rateLimitPeriod = sub.getRateLimitPeriod();
+                if (rateLimit != null && StringUtils.isNotBlank(rateLimitPeriod)) {
+                    headers.set("X-Rate-Limit", rateLimit + " requests per " + rateLimitPeriod);
+                }
+                long quotaUsed = sub.getQuotaUsed() + 1;
+                headers.set("X-Quota", String.valueOf(sub.getQuota()));
+                headers.set("X-Quota-Used", String.valueOf(quotaUsed));
+                headers.set("X-Quota-Remaining", String.valueOf(sub.getQuota() - quotaUsed));
+                return Mono.empty();
+            });
             return chain.filter(exchange).doFinally(signal -> saveLog(exchange));
         });
     }
@@ -182,7 +195,6 @@ public class RateLimitWebFilter implements WebFilter {
         String requestQueryParameters = exchange.getRequest().getQueryParams().toSingleValueMap().toString();
 
         // request_body
-        MediaType contentType = exchange.getRequest().getHeaders().getContentType();
         String requestBody = (String) exchange.getAttribute("request_body");
         if (StringUtils.isNotBlank(requestBody) && requestBody.length() > 1000) {
             requestBody = requestBody.substring(0, 1000);
@@ -192,12 +204,9 @@ public class RateLimitWebFilter implements WebFilter {
         String responseHeaders = exchange.getResponse().getHeaders().toSingleValueMap().toString();
 
         // response_body
-        String responseBody = "";
-        if (MediaType.APPLICATION_JSON.equals(contentType)) {
-            responseBody = (String) exchange.getAttribute("response_body");
-            if (StringUtils.isNotBlank(responseBody) && responseBody.length() > 1000) {
-                responseBody = responseBody.substring(0, 1000);
-            }
+        String responseBody = (String) exchange.getAttribute("response_body");
+        if (StringUtils.isNotBlank(responseBody) && responseBody.length() > 1000) {
+            responseBody = responseBody.substring(0, 1000);
         }
 
         LogEntity entity = LogEntity.builder().id(utils.uuidRandom()).subscriptionId(subscriptionId)
