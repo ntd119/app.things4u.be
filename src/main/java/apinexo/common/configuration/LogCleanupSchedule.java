@@ -1,7 +1,5 @@
 package apinexo.common.configuration;
 
-import java.time.Duration;
-
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +16,8 @@ public class LogCleanupSchedule {
     @Scheduled(cron = "0 0 2 * * ?")
     public void deleteOldLogs() {
         // 8 days
-        long expiredTime = System.currentTimeMillis() - Duration.ofDays(8).toMillis();
+        long now = System.currentTimeMillis();
+        long expiredTime = now - (8L * 24 * 60 * 60 * 1000);
         logFacade.deleteByTimeBefore(expiredTime);
     }
 }
