@@ -17,8 +17,8 @@ public class LogCleanupSchedule {
     // Scheduled to run every day at 2:00 AM
     @Scheduled(cron = "0 0 2 * * ?")
     public void deleteOldLogs() {
-        // 7 days
-        long expiredTime = System.currentTimeMillis() - Duration.ofDays(7).toMillis();
+        // 8 days
+        long expiredTime = System.currentTimeMillis() - Duration.ofDays(8).toMillis();
         logFacade.deleteByTimeBefore(expiredTime);
     }
 }
