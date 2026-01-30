@@ -26,6 +26,11 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
 
     @Modifying
     @Transactional
+    @Query("UPDATE SubscriptionEntity s SET s.quotaUsed = COALESCE(s.quotaUsed, 0) + :value WHERE s.id = :id")
+    void increaseQuotaUsed(@Param("id") String id, @Param("value") long value);
+
+    @Modifying
+    @Transactional
     @Query("UPDATE SubscriptionEntity s SET s.quotaUsed = COALESCE(s.quotaUsed, 0) + 1 WHERE s.id = :id")
     void increaseQuotaUsed(@Param("id") String id);
 

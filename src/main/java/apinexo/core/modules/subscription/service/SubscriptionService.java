@@ -32,6 +32,8 @@ public interface SubscriptionService {
 
     Optional<SubscriptionEntity> findById(String id);
 
+    void increaseQuotaUsed(String subId, long value);
+
     void increaseQuotaUsed(String id);
 
     Long getQuotaUsedById(String id);

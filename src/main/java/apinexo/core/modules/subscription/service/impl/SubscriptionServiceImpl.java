@@ -115,6 +115,11 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     }
 
     @Override
+    public void increaseQuotaUsed(String subId, long value) {
+        subscriptionRepository.increaseQuotaUsed(subId, value);
+    }
+    
+    @Override
     public void increaseQuotaUsed(String id) {
         subscriptionRepository.increaseQuotaUsed(id);
     }

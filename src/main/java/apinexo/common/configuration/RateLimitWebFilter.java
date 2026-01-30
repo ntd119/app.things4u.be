@@ -18,6 +18,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
 import apinexo.common.redis.RateLimitService;
+import apinexo.common.service.QuotaSyncService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.common.utils.RateLimitEnum;
 import apinexo.core.modules.logs.entity.LogEntity;
@@ -54,6 +55,9 @@ public class RateLimitWebFilter implements WebFilter {
 
     @Autowired
     private RateLimitService rateLimitService;
+
+    @Autowired
+    private QuotaSyncService quotaSyncService;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -140,7 +144,10 @@ public class RateLimitWebFilter implements WebFilter {
                 headers.set("X-Quota-Remaining", String.valueOf(sub.getQuota() - quotaUsed));
                 return Mono.empty();
             });
-            return chain.filter(exchange).doFinally(signal -> saveLog(exchange));
+            return chain.filter(exchange).doFinally(signal -> {
+                quotaSyncService.increaseQuota(sub.getId());
+                saveLog(exchange);
+            });
         });
     }
 
@@ -218,9 +225,7 @@ public class RateLimitWebFilter implements WebFilter {
                 .endpoint(endpoint).method(method).location(location).responseStatus(responseStatus).latency(latency)
                 .requestHeaders(requestHeaders).requestQueryParameters(requestQueryParameters).requestBody(requestBody)
                 .requestBody(responseHeaders).responseBody(responseBody).build();
-
         logService.save(entity);
-        subscriptionService.increaseQuotaUsed(subscriptionId);
     }
 
     private String resolveApiName(String path) {
