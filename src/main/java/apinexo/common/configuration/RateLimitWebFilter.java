@@ -110,17 +110,8 @@ public class RateLimitWebFilter implements WebFilter {
 
             // rate limit
             if (sub.getIsRateLimit()) {
-//                RateLimitEnum period = RateLimitEnum.valueOf(sub.getRateLimitPeriod().toUpperCase());
-//                long startTime = utils.milliseconds() - period.toMillis();
-//                long count = logService.countRequests(sub.getId(), startTime);
-//                if (count >= sub.getRateLimit()) {
-//                    return writeError(response, HttpStatus.TOO_MANY_REQUESTS, "Rate limit exceeded ("
-//                            + sub.getRateLimit() + " requests per " + sub.getRateLimitPeriod() + ").");
-//                }
                 RateLimitEnum period = RateLimitEnum.valueOf(sub.getRateLimitPeriod().toUpperCase());
-
                 long count = rateLimitService.incrementAndGet(sub.getId(), period.toSeconds());
-
                 if (count > sub.getRateLimit()) {
                     return writeError(response, HttpStatus.TOO_MANY_REQUESTS, "Rate limit exceeded ("
                             + sub.getRateLimit() + " requests per " + sub.getRateLimitPeriod() + ").");
