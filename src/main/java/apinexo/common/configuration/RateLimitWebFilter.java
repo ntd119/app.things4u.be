@@ -17,6 +17,7 @@ import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
+import apinexo.common.redis.RateLimitService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.common.utils.RateLimitEnum;
 import apinexo.core.modules.logs.entity.LogEntity;
@@ -50,6 +51,9 @@ public class RateLimitWebFilter implements WebFilter {
 
     @Autowired
     private ApinexoUtils utils;
+
+    @Autowired
+    private RateLimitService rateLimitService;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -106,10 +110,18 @@ public class RateLimitWebFilter implements WebFilter {
 
             // rate limit
             if (sub.getIsRateLimit()) {
+//                RateLimitEnum period = RateLimitEnum.valueOf(sub.getRateLimitPeriod().toUpperCase());
+//                long startTime = utils.milliseconds() - period.toMillis();
+//                long count = logService.countRequests(sub.getId(), startTime);
+//                if (count >= sub.getRateLimit()) {
+//                    return writeError(response, HttpStatus.TOO_MANY_REQUESTS, "Rate limit exceeded ("
+//                            + sub.getRateLimit() + " requests per " + sub.getRateLimitPeriod() + ").");
+//                }
                 RateLimitEnum period = RateLimitEnum.valueOf(sub.getRateLimitPeriod().toUpperCase());
-                long startTime = utils.milliseconds() - period.toMillis();
-                long count = logService.countRequests(sub.getId(), startTime);
-                if (count >= sub.getRateLimit()) {
+
+                long count = rateLimitService.incrementAndGet(sub.getId(), period.toSeconds());
+
+                if (count > sub.getRateLimit()) {
                     return writeError(response, HttpStatus.TOO_MANY_REQUESTS, "Rate limit exceeded ("
                             + sub.getRateLimit() + " requests per " + sub.getRateLimitPeriod() + ").");
                 }
@@ -125,8 +137,7 @@ public class RateLimitWebFilter implements WebFilter {
             exchange.getAttributes().put("startTime", System.currentTimeMillis());
             response.beforeCommit(() -> {
                 HttpHeaders headers = response.getHeaders();
-                headers.add("Access-Control-Expose-Headers",
-                        "X-Quota, X-Quota-Used, X-Quota-Remaining, X-Rate-Limit");
+                headers.add("Access-Control-Expose-Headers", "X-Quota, X-Quota-Used, X-Quota-Remaining, X-Rate-Limit");
                 Long rateLimit = sub.getRateLimit();
                 String rateLimitPeriod = sub.getRateLimitPeriod();
                 if (rateLimit != null && StringUtils.isNotBlank(rateLimitPeriod)) {

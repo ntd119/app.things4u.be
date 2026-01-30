@@ -1,4 +1,4 @@
-package apinexo.common.utils;
+package apinexo.common.configuration;
 
 public enum RateLimitEnum {
     SECOND(1), MINUTE(60), HOUR(3600), DAY(86400);

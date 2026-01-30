@@ -3,6 +3,7 @@ package apinexo.core.modules.subscription.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -18,6 +19,7 @@ public interface SubscriptionRepository extends JpaRepository<SubscriptionEntity
 
     Optional<SubscriptionEntity> findByUser_IdAndApi_Id(String userId, String apiId);
 
+    @Cacheable(value = "subscription", key = "#userId + ':' + #apiId")
     Optional<SubscriptionEntity> findByUser_IdAndApi_IdAndActiveTrue(String userId, String apiId);
 
     List<SubscriptionEntity> findByUser_IdAndActiveTrue(String userId);

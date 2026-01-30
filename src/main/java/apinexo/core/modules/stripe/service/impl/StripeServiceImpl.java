@@ -15,11 +15,7 @@ import org.springframework.util.MultiValueMap;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
-import com.stripe.model.Invoice;
-import com.stripe.model.InvoiceItem;
 import com.stripe.model.Subscription;
-import com.stripe.param.InvoiceCreateParams;
-import com.stripe.param.InvoiceItemCreateParams;
 
 import apinexo.common.dtos.AbstractService;
 import apinexo.common.utils.ApinexoUtils;
@@ -85,29 +81,28 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
     public ResponseEntity<Object> cancelSubscription(SubscriptionEntity subscription) throws StripeException {
         Stripe.apiKey = stripeSecret;
         String subscriptionId = subscription.getId();
-        boolean isSoftLimit = subscription.getIsSoftLimit();
-        if (isSoftLimit) {
-            long quota = subscription.getQuota();
-            long currentUsage = this.getCurrentUsage(subscription.getSubscriptionItemId());
-            long billableUsage = currentUsage - quota;
-            if (billableUsage > 0) {
-                double overagePrices = subscription.getOveragePrices();
-                long totalCents = Math.round(billableUsage * overagePrices * 100);
-                String customerId = subscription.getUser().getStripeCustomerId();
-                String description = String.format("%s %s (%d × $%.2f / request)", subscription.getApi().getName(),
-                        subscription.getCurrentPlan(), billableUsage, overagePrices);
-                InvoiceItemCreateParams itemParams = InvoiceItemCreateParams.builder().setCustomer(customerId)
-                        .setSubscription(subscriptionId).setCurrency("usd").setAmount(totalCents)
-                        .setDescription(description).build();
-                InvoiceItem.create(itemParams);
-                InvoiceCreateParams createParams = InvoiceCreateParams.builder().setCustomer(customerId)
-                        .setSubscription(subscriptionId).setAutoAdvance(true).build();
-                Invoice finalInvoice = Invoice.create(createParams);
-                finalInvoice = finalInvoice.finalizeInvoice();
-                finalInvoice.pay();
-            }
-
-        }
+//        boolean isSoftLimit = subscription.getIsSoftLimit();
+//        if (isSoftLimit) {
+//            long quota = subscription.getQuota();
+//            long currentUsage = this.getCurrentUsage(subscription.getSubscriptionItemId());
+//            long billableUsage = currentUsage - quota;
+//            if (billableUsage > 0) {
+//                double overagePrices = subscription.getOveragePrices();
+//                long totalCents = Math.round(billableUsage * overagePrices * 100);
+//                String customerId = subscription.getUser().getStripeCustomerId();
+//                String description = String.format("%s %s (%d × $%.2f / request)", subscription.getApi().getName(),
+//                        subscription.getCurrentPlan(), billableUsage, overagePrices);
+//                InvoiceItemCreateParams itemParams = InvoiceItemCreateParams.builder().setCustomer(customerId)
+//                        .setSubscription(subscriptionId).setCurrency("usd").setAmount(totalCents)
+//                        .setDescription(description).build();
+//                InvoiceItem.create(itemParams);
+//                InvoiceCreateParams createParams = InvoiceCreateParams.builder().setCustomer(customerId)
+//                        .setSubscription(subscriptionId).setAutoAdvance(true).build();
+//                Invoice finalInvoice = Invoice.create(createParams);
+//                finalInvoice = finalInvoice.finalizeInvoice();
+//                finalInvoice.pay();
+//            }
+//        }
         Subscription sub = Subscription.retrieve(subscriptionId);
         sub = sub.cancel();
         return ResponseEntity.ok(sub);
