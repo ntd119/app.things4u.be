@@ -1,12 +1,14 @@
 package apinexo.common.configuration;
 
 import java.nio.charset.StandardCharsets;
+import java.time.Duration;
 import java.util.Optional;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.buffer.DataBuffer;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,6 +18,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import apinexo.common.redis.RateLimitService;
 import apinexo.common.service.LogSyncService;
@@ -59,6 +63,12 @@ public class RateLimitWebFilter implements WebFilter {
     @Autowired
     private LogSyncService logSyncService;
 
+    @Autowired
+    private StringRedisTemplate redis;
+
+    @Autowired
+    private ObjectMapper objectMapper;;
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
 
@@ -75,7 +85,21 @@ public class RateLimitWebFilter implements WebFilter {
             return writeError(response, HttpStatus.UNAUTHORIZED, "Invalid API key.");
         }
 
-        return Mono.fromCallable(() -> userService.findByApiKey(apiKey)).flatMap(optionalUser -> {
+        return Mono.fromCallable(() -> {
+            String key = "auth:apikey:" + apiKey;
+            String cached = redis.opsForValue().get(key);
+            if (cached != null) {
+                return Optional.of(objectMapper.readValue(cached, UserEntity.class));
+            }
+            Optional<UserEntity> userOpt = userService.findByApiKey(apiKey);
+            userOpt.ifPresent(user -> {
+                try {
+                    redis.opsForValue().set(key, objectMapper.writeValueAsString(user), Duration.ofMinutes(10));
+                } catch (Exception e) {
+                }
+            });
+            return userOpt;
+        }).flatMap(optionalUser -> {
 
             if (optionalUser.isEmpty()) {
                 return writeError(response, HttpStatus.FORBIDDEN, "You are not subscribed to this API.");
