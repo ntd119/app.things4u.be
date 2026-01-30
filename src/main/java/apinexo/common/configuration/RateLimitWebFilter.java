@@ -18,11 +18,11 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 
 import apinexo.common.redis.RateLimitService;
+import apinexo.common.service.LogSyncService;
 import apinexo.common.service.QuotaSyncService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.common.utils.RateLimitEnum;
 import apinexo.core.modules.logs.entity.LogEntity;
-import apinexo.core.modules.logs.service.LogService;
 import apinexo.core.modules.stripe.service.StripeService;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.service.SubscriptionService;
@@ -42,9 +42,6 @@ public class RateLimitWebFilter implements WebFilter {
     private UserService userService;
 
     @Autowired
-    private LogService logService;
-
-    @Autowired
     private SubscriptionService subscriptionService;
 
     @Autowired
@@ -58,6 +55,9 @@ public class RateLimitWebFilter implements WebFilter {
 
     @Autowired
     private QuotaSyncService quotaSyncService;
+
+    @Autowired
+    private LogSyncService logSyncService;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -225,7 +225,7 @@ public class RateLimitWebFilter implements WebFilter {
                 .endpoint(endpoint).method(method).location(location).responseStatus(responseStatus).latency(latency)
                 .requestHeaders(requestHeaders).requestQueryParameters(requestQueryParameters).requestBody(requestBody)
                 .requestBody(responseHeaders).responseBody(responseBody).build();
-        logService.save(entity);
+        logSyncService.push(entity);
     }
 
     private String resolveApiName(String path) {

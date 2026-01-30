@@ -1,5 +1,6 @@
 package apinexo.core.modules.logs.service;
 
+import java.util.Collection;
 import java.util.List;
 
 import apinexo.core.modules.logs.entity.LogEntity;
@@ -7,6 +8,8 @@ import apinexo.core.modules.logs.entity.LogEntity;
 public interface LogService {
 
     LogEntity save(LogEntity entity);
+
+    void saveAll(Collection<LogEntity> entities);
 
     void deleteBySubscriptionId(String subscriptionId);
 

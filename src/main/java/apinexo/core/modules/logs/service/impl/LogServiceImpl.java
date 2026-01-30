@@ -1,5 +1,6 @@
 package apinexo.core.modules.logs.service.impl;
 
+import java.util.Collection;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -18,6 +19,11 @@ public class LogServiceImpl implements LogService {
     @Override
     public LogEntity save(LogEntity entity) {
         return logRepository.save(entity);
+    }
+
+    @Override
+    public void saveAll(Collection<LogEntity> entities) {
+        logRepository.saveAll(entities);
     }
 
     @Override
