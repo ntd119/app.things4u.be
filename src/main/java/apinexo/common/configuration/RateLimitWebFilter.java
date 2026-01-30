@@ -86,7 +86,7 @@ public class RateLimitWebFilter implements WebFilter {
         }
 
         return Mono.fromCallable(() -> {
-            String key = "auth:apikey:" + apiKey;
+            String key = "user:apikey:" + apiKey;
             String cached = redis.opsForValue().get(key);
             if (cached != null) {
                 return Optional.of(objectMapper.readValue(cached, UserEntity.class));
