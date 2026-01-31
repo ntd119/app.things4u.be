@@ -244,7 +244,6 @@ public class SubscriptionServiceImpl implements SubscriptionService {
                 redis.opsForValue().set(key, objectMapper.writeValueAsString(dto), Duration.ofMinutes(5) // TTL
                 );
             } catch (Exception ignored) {
-                System.out.println("Erro");
             }
         });
 
