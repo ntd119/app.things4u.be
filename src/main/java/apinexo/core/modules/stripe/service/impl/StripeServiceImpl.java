@@ -34,7 +34,7 @@ public class StripeServiceImpl extends AbstractService implements StripeService 
 
     @Override
     public JsonNode createPriceSoftLimit(String apiName, String upTo, String price) {
-        BigDecimal unitAmount = new BigDecimal(price).multiply(new BigDecimal("100")).setScale(2, RoundingMode.HALF_UP);
+        BigDecimal unitAmount = new BigDecimal(price).multiply(new BigDecimal("100"));
         HttpHeaders headers = utils.buildHeader();
         headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
         headers.setBasicAuth(stripeSecret, "");
