@@ -15,7 +15,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import apinexo.common.utils.ConstantUtils;
 import apinexo.core.modules.subscription.service.SubscriptionService;
 import lombok.RequiredArgsConstructor;
 
@@ -29,7 +28,7 @@ public class QuotaSyncService {
     @Scheduled(fixedDelay = 60000 * 5) // every 5 minute
     public void syncQuotaToDb() {
 
-        Set<String> keys = redis.keys(ConstantUtils.REDIS_KEY_QUOTA + ":*");
+        Set<String> keys = redis.keys("quota:prod:*");
 
         if (keys == null || keys.isEmpty()) {
             return;
@@ -60,7 +59,7 @@ public class QuotaSyncService {
 
     public void increaseQuota(String subId) {
         String yyyyMM = YearMonth.now(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("yyyyMM"));
-        String key = ConstantUtils.REDIS_KEY_QUOTA + ":" + subId + ":" + yyyyMM;
+        String key = "quota:prod:" + subId + ":" + yyyyMM;
         Long count = redis.opsForValue().increment(key);
         // Set TTL only the first time
         if (count != null && count == 1) {
