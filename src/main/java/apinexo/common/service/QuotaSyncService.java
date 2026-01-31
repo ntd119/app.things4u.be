@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.YearMonth;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
@@ -58,8 +57,7 @@ public class QuotaSyncService {
     }
 
     public void increaseQuota(String subId) {
-        String yyyyMM = YearMonth.now(ZoneId.of("UTC")).format(DateTimeFormatter.ofPattern("yyyyMM"));
-        String key = "quota:prod:" + subId + ":" + yyyyMM;
+        String key = "quota:prod:" + subId;
         Long count = redis.opsForValue().increment(key);
         // Set TTL only the first time
         if (count != null && count == 1) {
@@ -67,5 +65,11 @@ public class QuotaSyncService {
                     YearMonth.now(ZoneId.of("UTC")).atEndOfMonth().atTime(23, 59, 59).toInstant(ZoneOffset.UTC));
             redis.expire(key, secondsToEndOfMonth, TimeUnit.SECONDS);
         }
+    }
+
+    public long getQuotaOrZero(String subId) {
+        String key = "quota:prod:" + subId;
+        String value = redis.opsForValue().get(key);
+        return value != null ? Long.valueOf(value) : 0L;
     }
 }

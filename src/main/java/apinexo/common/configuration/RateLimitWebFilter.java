@@ -162,7 +162,7 @@ public class RateLimitWebFilter implements WebFilter {
                 if (rateLimit != null && StringUtils.isNotBlank(rateLimitPeriod)) {
                     headers.set("X-Rate-Limit", rateLimit + " requests per " + rateLimitPeriod);
                 }
-                long quotaUsed = sub.getQuotaUsed() + 1;
+                long quotaUsed = sub.getQuotaUsed() + quotaSyncService.getQuotaOrZero(sub.getId()) + 1;
                 headers.set("X-Quota", String.valueOf(sub.getQuota()));
                 headers.set("X-Quota-Used", String.valueOf(quotaUsed));
                 headers.set("X-Quota-Remaining", String.valueOf(sub.getQuota() - quotaUsed));

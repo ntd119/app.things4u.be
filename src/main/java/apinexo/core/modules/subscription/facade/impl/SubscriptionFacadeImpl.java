@@ -20,6 +20,7 @@ import org.springframework.util.MultiValueMap;
 import com.fasterxml.jackson.databind.JsonNode;
 
 import apinexo.common.dtos.AbstractService;
+import apinexo.common.service.QuotaSyncService;
 import apinexo.common.utils.ApinexoUtils;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.api.service.ApiService;
@@ -68,6 +69,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     private final PlansConverter plansConverter;
 
     private final SubscriptionConverter subscriptionConverter;
+
+    private final QuotaSyncService quotaSyncService;
 
     @Autowired
     private LogService logService;
@@ -241,7 +244,8 @@ public class SubscriptionFacadeImpl extends AbstractService implements Subscript
     @Override
     public ResponseEntity<Object> getQuotaUsed(String subscriptionId) {
         try {
-            long quotaUsed = subscriptionService.getQuotaUsedById(subscriptionId);
+            long quotaUsed = subscriptionService.getQuotaUsedById(subscriptionId)
+                    + quotaSyncService.getQuotaOrZero(subscriptionId);
             return ResponseEntity.ok(SubscriptionGetQuotaUsedResponse.builder().total(quotaUsed).build());
         } catch (Exception ex) {
             return ResponseEntity.badRequest().body(ex.getMessage());
