@@ -1,5 +1,6 @@
 package apinexo.core.modules.subscription.service.impl;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -11,10 +12,12 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
 import com.stripe.model.Subscription;
@@ -25,6 +28,7 @@ import apinexo.common.utils.ConstantUtils;
 import apinexo.core.modules.admin.dto.AdminSubscriptionPageResponse;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.plans.entity.PlansEntity;
+import apinexo.core.modules.subscription.dto.SubscriptionCached;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.subscription.repository.SubscriptionRepository;
 import apinexo.core.modules.subscription.service.SubscriptionService;
@@ -38,6 +42,10 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     private final ApinexoUtils utils;
 
     private final SubscriptionRepository subscriptionRepository;
+
+    private final StringRedisTemplate redis;
+
+    private final ObjectMapper objectMapper;
 
     @Value("${stripe.secret.key}")
     private String stripeSecret;
@@ -118,7 +126,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     public void increaseQuotaUsed(String subId, long value) {
         subscriptionRepository.increaseQuotaUsed(subId, value);
     }
-    
+
     @Override
     public void increaseQuotaUsed(String id) {
         subscriptionRepository.increaseQuotaUsed(id);
@@ -127,6 +135,28 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Override
     public Long getQuotaUsedById(String id) {
         return subscriptionRepository.getQuotaUsedById(id);
+    }
+
+    @Override
+    public void updateBillingPeriodFree(SubscriptionCached subscriptionEntity) {
+        long currentDate = utils.milliseconds();
+        long toDate = subscriptionEntity.getBillingPeriodTo();
+        if (currentDate > toDate) {
+            Boolean isFree = subscriptionEntity.isFree();
+            long fromDate;
+            if (Objects.isNull(isFree) || isFree.booleanValue()) {
+                fromDate = subscriptionEntity.getBillingPeriodFrom();
+                while (currentDate > toDate) {
+                    fromDate = toDate;
+                    // +1 month
+                    toDate = addOneMonth(fromDate);
+                }
+                subscriptionEntity.setBillingPeriodFrom(fromDate);
+                subscriptionEntity.setBillingPeriodTo(toDate);
+                subscriptionEntity.setQuotaUsed(0);
+                subscriptionRepository.updateBillingPeriod(subscriptionEntity.getId(), fromDate, toDate);
+            }
+        }
     }
 
     @Override
@@ -186,5 +216,44 @@ public class SubscriptionServiceImpl implements SubscriptionService {
     @Transactional(readOnly = true)
     public Page<AdminSubscriptionPageResponse> getSubscriptions(String keyword, Pageable pageable) {
         return subscriptionRepository.findAllWithUser(keyword, pageable);
+    }
+
+    @Override
+    public Optional<SubscriptionCached> getSubscriptionCached(String userId, String apiId) {
+        String key = "sub:" + userId + ":" + apiId;
+        String cached = redis.opsForValue().get(key);
+        if (cached != null) {
+            try {
+                return Optional.of(objectMapper.readValue(cached, SubscriptionCached.class));
+            } catch (Exception e) {
+                redis.delete(key); // corrupted cache
+            }
+        }
+
+        Optional<SubscriptionEntity> opt = findByUserIdAndApiIdAndActiveTrue(userId, apiId);
+
+        opt.ifPresent(sub -> {
+            SubscriptionCached dto = SubscriptionCached.builder().id(sub.getId())
+                    .billingPeriodFrom(sub.getBillingPeriodFrom()).billingPeriodTo(sub.getBillingPeriodTo())
+                    .active(sub.isActive()).isFree(sub.isFree()).currentPlan(sub.getCurrentPlan()).quota(sub.getQuota())
+                    .period(sub.getPeriod()).quotaUsed(sub.getQuotaUsed()).rateLimit(sub.getRateLimit())
+                    .rateLimitPeriod(sub.getRateLimitPeriod()).isSoftLimit(sub.getIsSoftLimit())
+                    .overagePrices(sub.getOveragePrices()).isRateLimit(sub.getIsRateLimit()).price(sub.getPrice())
+                    .subscriptionItemId(sub.getSubscriptionItemId()).apiId(sub.getApi().getId()).build();
+            try {
+                redis.opsForValue().set(key, objectMapper.writeValueAsString(dto), Duration.ofMinutes(5) // TTL
+                );
+            } catch (Exception ignored) {
+                System.out.println("Erro");
+            }
+        });
+
+        return opt.map(sub -> SubscriptionCached.builder().id(sub.getId()).billingPeriodFrom(sub.getBillingPeriodFrom())
+                .billingPeriodTo(sub.getBillingPeriodTo()).active(sub.isActive()).isFree(sub.isFree())
+                .currentPlan(sub.getCurrentPlan()).quota(sub.getQuota()).period(sub.getPeriod())
+                .quotaUsed(sub.getQuotaUsed()).rateLimit(sub.getRateLimit()).rateLimitPeriod(sub.getRateLimitPeriod())
+                .isSoftLimit(sub.getIsSoftLimit()).overagePrices(sub.getOveragePrices())
+                .isRateLimit(sub.getIsRateLimit()).price(sub.getPrice()).subscriptionItemId(sub.getSubscriptionItemId())
+                .apiId(sub.getApi().getId()).build());
     }
 }

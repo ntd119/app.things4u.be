@@ -12,6 +12,7 @@ import com.stripe.model.Subscription;
 import apinexo.core.modules.admin.dto.AdminSubscriptionPageResponse;
 import apinexo.core.modules.api.entity.ApiEntity;
 import apinexo.core.modules.plans.entity.PlansEntity;
+import apinexo.core.modules.subscription.dto.SubscriptionCached;
 import apinexo.core.modules.subscription.entity.SubscriptionEntity;
 import apinexo.core.modules.user.entity.UserEntity;
 
@@ -38,9 +39,13 @@ public interface SubscriptionService {
 
     Long getQuotaUsedById(String id);
 
+    void updateBillingPeriodFree(SubscriptionCached subscriptionEntity);
+
     void updateBillingPeriodFree(SubscriptionEntity subscriptionEntity);
 
     void updateBillingPeriod(SubscriptionEntity subscriptionEntity) throws StripeException;
 
     Page<AdminSubscriptionPageResponse> getSubscriptions(String keyword, Pageable pageable);
+
+    Optional<SubscriptionCached> getSubscriptionCached(String userId, String apiId);
 }

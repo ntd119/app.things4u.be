@@ -28,7 +28,7 @@ import apinexo.common.utils.ApinexoUtils;
 import apinexo.common.utils.RateLimitEnum;
 import apinexo.core.modules.logs.entity.LogEntity;
 import apinexo.core.modules.stripe.service.StripeService;
-import apinexo.core.modules.subscription.entity.SubscriptionEntity;
+import apinexo.core.modules.subscription.dto.SubscriptionCached;
 import apinexo.core.modules.subscription.service.SubscriptionService;
 import apinexo.core.modules.user.entity.UserEntity;
 import apinexo.core.modules.user.service.UserService;
@@ -67,7 +67,7 @@ public class RateLimitWebFilter implements WebFilter {
     private StringRedisTemplate redis;
 
     @Autowired
-    private ObjectMapper objectMapper;;
+    private ObjectMapper objectMapper;
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
@@ -108,14 +108,14 @@ public class RateLimitWebFilter implements WebFilter {
             UserEntity user = optionalUser.get();
             String apiId = resolveApiName(path);
 
-            Optional<SubscriptionEntity> optSub = subscriptionService.findByUserIdAndApiIdAndActiveTrue(user.getId(),
+            Optional<SubscriptionCached> optSub = subscriptionService.getSubscriptionCached(user.getId(),
                     apiId);
 
             if (optSub.isEmpty()) {
                 return writeError(response, HttpStatus.FORBIDDEN, "You are not subscribed to this API.");
             }
 
-            SubscriptionEntity sub = optSub.get();
+            SubscriptionCached sub = optSub.get();
 
             // reset quota
             subscriptionService.updateBillingPeriodFree(sub);
@@ -125,7 +125,7 @@ public class RateLimitWebFilter implements WebFilter {
                 return writeError(response, HttpStatus.TOO_MANY_REQUESTS,
                         "You have exceeded the MONTHLY quota for Requests on your current plan, "
                                 + sub.getCurrentPlan().toUpperCase() + ". Upgrade at " + feServer + "/api/"
-                                + sub.getApi().getId());
+                                + sub.getApiId());
             }
 
             // soft limit
