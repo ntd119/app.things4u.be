@@ -220,7 +220,7 @@ public class SubscriptionServiceImpl implements SubscriptionService {
 
     @Override
     public Optional<SubscriptionCached> getSubscriptionCached(String userId, String apiId) {
-        String key = "sub:" + userId + ":" + apiId;
+        String key = ConstantUtils.REDIS_KEY_SUB + ":" + userId + ":" + apiId;
         String cached = redis.opsForValue().get(key);
         if (cached != null) {
             try {
