@@ -32,49 +32,64 @@ public class LogSyncService {
     }
 
     public void syncLogToDb(String subscriptionId) {
-        Boolean locked = redis.opsForValue().setIfAbsent("lock:sync-log", "1", 4, TimeUnit.MINUTES);
+        String lockKey = StringUtils.isNotBlank(subscriptionId) ? "lock:sync-log:" + subscriptionId
+                : "lock:sync-log:all";
 
-        if (locked == null || !locked) {
+        Boolean locked = redis.opsForValue().setIfAbsent(lockKey, "1", 4, TimeUnit.MINUTES);
+
+        if (locked == null || !locked)
             return;
-        }
 
         try {
-            while (true) {
-                List<String> batch = null;
-                if (StringUtils.isNotBlank(subscriptionId)) {
-                    batch = redis.opsForList().leftPop("log:prod:" + subscriptionId, 500);
-                } else {
-                    batch = redis.opsForList().leftPop("log:prod", 500);
-                }
-
-                if (CollectionUtils.isEmpty(batch)) {
-                    return;
-                }
-
-                List<LogEntity> logs = new ArrayList<>();
-                for (String json : batch) {
-                    try {
-                        logs.add(objectMapper.readValue(json, LogEntity.class));
-                    } catch (Exception e) {
-                        // log.error("Failed to parse log json", e);
-                    }
-                }
-
-                if (CollectionUtils.isNotEmpty(logs)) {
-                    logService.saveAll(logs);
-                }
+            if (StringUtils.isNotBlank(subscriptionId)) {
+                syncOneSubscription(subscriptionId);
+            } else {
+                syncAllSubscriptions();
             }
         } finally {
-            redis.delete("lock:sync-log");
+            redis.delete(lockKey);
         }
     }
 
     public void push(LogEntity entity, String subscriptionId) {
         try {
             String json = objectMapper.writeValueAsString(entity);
+            redis.opsForSet().add("log:subs", subscriptionId);
             redis.opsForList().rightPush("log:prod:" + subscriptionId, json);
         } catch (Exception e) {
             // log.error("Failed to push log to Redis", e);
+        }
+    }
+
+    private void syncAllSubscriptions() {
+        var subs = redis.opsForSet().members("log:subs");
+        if (CollectionUtils.isEmpty(subs))
+            return;
+
+        for (String subId : subs) {
+            syncOneSubscription(subId);
+        }
+    }
+
+    private void syncOneSubscription(String subscriptionId) {
+        String key = "log:prod:" + subscriptionId;
+
+        while (true) {
+            List<String> batch = redis.opsForList().leftPop(key, 500);
+            if (CollectionUtils.isEmpty(batch))
+                break;
+
+            List<LogEntity> logs = new ArrayList<>(batch.size());
+            for (String json : batch) {
+                try {
+                    logs.add(objectMapper.readValue(json, LogEntity.class));
+                } catch (Exception ignored) {
+                }
+            }
+
+            if (!logs.isEmpty()) {
+                logService.saveAll(logs);
+            }
         }
     }
 }
