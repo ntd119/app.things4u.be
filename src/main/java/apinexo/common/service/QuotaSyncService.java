@@ -24,7 +24,7 @@ public class QuotaSyncService {
     private final StringRedisTemplate redis;
     private final SubscriptionService subscriptionService;
 
-    @Scheduled(fixedDelay = 60000 * 5) // every 5 minute
+    @Scheduled(fixedDelay = 60000 * 7) // every 7 minute
     public void syncQuotaToDb() {
 
         Set<String> keys = redis.keys("quota:prod:*");

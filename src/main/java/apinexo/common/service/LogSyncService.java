@@ -26,7 +26,7 @@ public class LogSyncService {
 
     private final ObjectMapper objectMapper;
 
-    @Scheduled(fixedDelay = 60000 * 2) // every 5 minute
+    @Scheduled(fixedDelay = 60000 * 5) // every 5 minute
     public void scheduledSaveLog() {
         this.syncLogToDb(null);
     }
