@@ -39,28 +39,30 @@ public class LogSyncService {
         }
 
         try {
-            List<String> batch = null;
-            if (StringUtils.isNotBlank(subscriptionId)) {
-                batch = redis.opsForList().leftPop("log:prod:" + subscriptionId, 500);
-            } else {
-                batch = redis.opsForList().leftPop("log:prod", 500);
-            }
-
-            if (CollectionUtils.isEmpty(batch)) {
-                return;
-            }
-
-            List<LogEntity> logs = new ArrayList<>();
-            for (String json : batch) {
-                try {
-                    logs.add(objectMapper.readValue(json, LogEntity.class));
-                } catch (Exception e) {
-                    // log.error("Failed to parse log json", e);
+            while (true) {
+                List<String> batch = null;
+                if (StringUtils.isNotBlank(subscriptionId)) {
+                    batch = redis.opsForList().leftPop("log:prod:" + subscriptionId, 500);
+                } else {
+                    batch = redis.opsForList().leftPop("log:prod", 500);
                 }
-            }
 
-            if (CollectionUtils.isNotEmpty(logs)) {
-                logService.saveAll(logs);
+                if (CollectionUtils.isEmpty(batch)) {
+                    return;
+                }
+
+                List<LogEntity> logs = new ArrayList<>();
+                for (String json : batch) {
+                    try {
+                        logs.add(objectMapper.readValue(json, LogEntity.class));
+                    } catch (Exception e) {
+                        // log.error("Failed to parse log json", e);
+                    }
+                }
+
+                if (CollectionUtils.isNotEmpty(logs)) {
+                    logService.saveAll(logs);
+                }
             }
         } finally {
             redis.delete("lock:sync-log");
