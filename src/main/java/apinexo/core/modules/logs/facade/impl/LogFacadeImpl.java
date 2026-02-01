@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Component;
 
+import apinexo.common.service.LogSyncService;
 import apinexo.core.modules.logs.dto.DayLogResponse;
 import apinexo.core.modules.logs.facade.LogFacade;
 import apinexo.core.modules.logs.service.LogService;
@@ -23,9 +24,12 @@ public class LogFacadeImpl implements LogFacade {
 
     private final LogService logService;
 
+    private final LogSyncService logSyncService;
+
     @Override
     public ResponseEntity<Object> getChart(String subscriptionId, Long from, Long to) {
         try {
+            logSyncService.syncLogToDb(subscriptionId);
             List<Object[]> rows = logService.getDailyLogs(subscriptionId, from, to);
 
             Map<LocalDate, Long> totalMap = new HashMap<>();

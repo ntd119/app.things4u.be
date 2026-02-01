@@ -108,8 +108,7 @@ public class RateLimitWebFilter implements WebFilter {
             UserEntity user = optionalUser.get();
             String apiId = resolveApiName(path);
 
-            Optional<SubscriptionCached> optSub = subscriptionService.getSubscriptionCached(user.getId(),
-                    apiId);
+            Optional<SubscriptionCached> optSub = subscriptionService.getSubscriptionCached(user.getId(), apiId);
 
             if (optSub.isEmpty()) {
                 return writeError(response, HttpStatus.FORBIDDEN, "You are not subscribed to this API.");
@@ -249,7 +248,7 @@ public class RateLimitWebFilter implements WebFilter {
                 .endpoint(endpoint).method(method).location(location).responseStatus(responseStatus).latency(latency)
                 .requestHeaders(requestHeaders).requestQueryParameters(requestQueryParameters).requestBody(requestBody)
                 .requestBody(responseHeaders).responseBody(responseBody).build();
-        logSyncService.push(entity);
+        logSyncService.push(entity, subscriptionId);
     }
 
     private String resolveApiName(String path) {
